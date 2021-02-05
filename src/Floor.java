@@ -1,28 +1,21 @@
 
-public class Floor implements Runnable {
+public class Floor {
 	
+
 	private int floorNumber;
-	private FloorLamp directionLamp;
 	private FloorButton upButton;
 	private FloorButton downButton;
 	
-	public Floor(int floorNumber, FloorLamp directionLamp, 
-			FloorButton upButton, FloorButton downButton) {
+	public Floor(int floorNumber) {
 		this.floorNumber = floorNumber;
-		this.directionLamp = directionLamp;
-		this.upButton = upButton;
-		this.downButton = downButton;
 	}
 	
 	public void click() {
 		
 	}
-
-	@Override
-	public void run() {
-		
+	
+	public int getFloorNumber() {
+		return floorNumber;
 	}
-	
-	
 
 }
