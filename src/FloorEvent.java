@@ -1,24 +1,30 @@
-import java.awt.Event;
 import java.util.Date;
 
-public class FloorEvent extends Event{
+public class FloorEvent{
 	
-	private int Floor;
+	private int source;
 	private Direction direction;
 	private Date time;
+	private int destination;
 
-	public FloorEvent(Object arg0, int arg1, Object arg2) {
-		super(arg0, arg1, arg2);
-		// TODO Auto-generated constructor stub
+	public FloorEvent(Date time, int source, Direction direction, int destination) {
+		this.time = time;
+		this.source = source;
+		this.direction = direction;
+		this.destination = destination;
+
 	}
-	public int getFloor() {
-		return Floor;
+	public int getSource() {
+		return source;
 	}
 	public Direction getDirection() {
 		return direction;
 	}
 	public Date getTime() {
 		return time;
+	}
+	public int getDestination() {
+		return destination;
 	}
 	
 
