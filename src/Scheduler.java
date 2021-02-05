@@ -1,14 +1,11 @@
 import java.util.ArrayList;
 
-public class Scheduler implements Runnable{
+public class Scheduler implements Runnable {
 	private ArrayList<FloorEvent> floorEvents;
 	private ArrayList<ArrivalEvent> arrivalEvents;
 	private int floor;
 	private MiddleMan box;
 	private MiddleMan box2;
-	// private static final int NUM_FLOORS = 3;
-	// might need an object to hold the event to give to elevator and wait() if null
-	// private Event elevatorEvent
 	
 	/**
 	 * Public constructor to create Scheduler object and instantiate instance variables
