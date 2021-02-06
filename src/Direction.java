@@ -1,4 +1,4 @@
 
 public enum Direction {
-	UP, DOWN, ArrivalSTOP; 
+	UP, DOWN;
 }
