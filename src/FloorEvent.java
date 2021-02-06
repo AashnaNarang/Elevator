@@ -1,13 +1,13 @@
-import java.util.Date;
+import java.time.LocalTime;
 
 public class FloorEvent{
 	
 	private int source;
 	private Direction direction;
-	private Date time;
+	private LocalTime time;
 	private int destination;
 
-	public FloorEvent(Date time, int source, Direction direction, int destination) {
+	public FloorEvent(LocalTime time, int source, Direction direction, int destination) {
 		this.time = time;
 		this.source = source;
 		this.direction = direction;
@@ -20,12 +20,11 @@ public class FloorEvent{
 	public Direction getDirection() {
 		return direction;
 	}
-	public Date getTime() {
+	public LocalTime getTime() {
 		return time;
 	}
 	public int getDestination() {
 		return destination;
 	}
-	
 
 }
