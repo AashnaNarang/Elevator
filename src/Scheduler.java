@@ -3,19 +3,20 @@ import java.util.ArrayList;
 public class Scheduler implements Runnable {
 	private ArrayList<FloorEvent> floorEvents;
 	private ArrayList<ArrivalEvent> arrivalEvents;
-	private int floor;
-	private MiddleMan box;
-	private MiddleMan box2;
+	private MiddleMan middleMan;
+	private MiddleMan middleMan2;
+	
 	
 	/**
 	 * Public constructor to create Scheduler object and instantiate instance variables
+	 * @param middleMan Object to hold and pass events to/from the floor
+	 * @param middleMan2 Object to hold and pass events to/from the elevator
 	 */
-	public Scheduler(MiddleMan box, MiddleMan box2) {
+	public Scheduler(MiddleMan middleMan, MiddleMan middleMan2) {
 		this.floorEvents = new ArrayList<FloorEvent>();
 		this.arrivalEvents = new ArrayList<ArrivalEvent>();
-		this.box = box;
-		this.box2 = box2;
-		floor = -1;
+		this.middleMan = middleMan;
+		this.middleMan2 = middleMan2;
 	}
 	
 	/**
@@ -24,10 +25,10 @@ public class Scheduler implements Runnable {
 	@Override
 	public void run() {
 		while(true) {
-			floorEvents.add(box.getFloorEvent());
-			box2.putFloorEvent(floorEvents.remove(0));
-			arrivalEvents.add(box2.getArrivalEvent());
-			box.putArrivalEvent(arrivalEvents.remove(0));
+			floorEvents.add(middleMan.getFloorEvent());
+			middleMan2.putFloorEvent(floorEvents.remove(0));
+			arrivalEvents.add(middleMan2.getArrivalEvent());
+			middleMan.putArrivalEvent(arrivalEvents.remove(0));
 		}
 	}
 	
