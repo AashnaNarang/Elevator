@@ -2,7 +2,7 @@
  * The Lamp class is responsible for keeping track of the lamp's (on/off)
  * status.
  */
-public class Lamp {
+public class FloorLamp {
 	private boolean lampStatus;
 
 	/**

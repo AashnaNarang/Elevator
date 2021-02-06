@@ -4,7 +4,7 @@
  */
 public class FloorButton {
 	private Direction direction;
-	private Lamp lamp;
+	private FloorLamp lamp;
 
 	/**
 	 * Constructor for FloorButton
@@ -13,7 +13,7 @@ public class FloorButton {
 	 */
 	public FloorButton(Direction direction) {
 		this.direction = direction;
-		this.lamp = new Lamp(); 
+		this.lamp = new FloorLamp();
 	}
 
 	/**

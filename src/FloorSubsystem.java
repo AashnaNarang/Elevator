@@ -19,7 +19,7 @@ public class FloorSubsystem implements Runnable {
 	private Queue<FloorEvent> eventList;
 	private List<Floor> floors;
 	private int numOfFloors;
-	private MiddleMan box;
+	private MiddleMan middleMan;
 	private String filename;
 
 	/**
@@ -27,31 +27,34 @@ public class FloorSubsystem implements Runnable {
 	 * 
 	 * @param filename    the file to be parsed
 	 * @param numOfFloors the number of floors
-	 * @param box         where events will be put and received
+	 * @param middleMan   where events will be put and received
 	 */
-	public FloorSubsystem(String filename, int numOfFloors, MiddleMan box) {
+	public FloorSubsystem(String filename, int numOfFloors, MiddleMan middleMan) {
 		this.filename = filename;
-		this.box = box;
+		this.middleMan = middleMan;
 		this.numOfFloors = numOfFloors;
 		this.eventList = new LinkedList<>();
 		this.floors = new ArrayList<>();
+		for (int floorNumber = 1; floorNumber <= numOfFloors; floorNumber++) {
+			floors.add(new Floor(floorNumber));
+		}
 	}
 
 	/**
-	 * The run method passes to box the events parsed and then receives from the box
-	 * arrivalEvent, triggers the buttons pressed to be on/off
+	 * The run method passes to middleMan the events parsed and then receives from
+	 * the middleMan arrivalEvent, triggers the buttons pressed to be on/off
 	 * 
 	 */
 	@Override
 	public void run() {
-		eventList = parseFile(filename);
+		parseFile(filename);
 		while (true) {
 			if (!eventList.isEmpty()) {
 				FloorEvent eventSent = eventList.remove();
-				box.putFloorEvent(eventSent);
+				middleMan.putFloorEvent(eventSent);
 				floors.get(eventSent.getSource()).switchButton(eventSent.getDirection(), true);
 			}
-			ArrivalEvent arrivalEvent = box.getArrivalEvent();
+			ArrivalEvent arrivalEvent = middleMan.getArrivalEvent();
 			int currentFloor = arrivalEvent.getCurrentFloor();
 			if (floors.get(currentFloor - 1).isUpButtonOn()) {
 				floors.get(currentFloor - 1).switchButton(Direction.UP, false);
@@ -65,17 +68,15 @@ public class FloorSubsystem implements Runnable {
 	 * Parsed the file to return a list of events
 	 * 
 	 * @param filename the file to be parsed
-	 * @return A queue of events parsed from the file
 	 */
-	private Queue<FloorEvent> parseFile(String filename) {
-		Queue<FloorEvent> events = new LinkedList<FloorEvent>();
+	private void parseFile(String filename) {
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 			String currentLine = br.readLine();
 			while (currentLine != null) {
 				String[] inputEvent = currentLine.split(" ");
 				FloorEvent event = new FloorEvent(LocalTime.parse(inputEvent[0]), Integer.parseInt(inputEvent[1]),
 						Direction.valueOf(inputEvent[2].toUpperCase()), Integer.parseInt(inputEvent[3]));
-				events.add(event);
+				eventList.add(event);
 				currentLine = br.readLine();
 			}
 
@@ -84,7 +85,6 @@ public class FloorSubsystem implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return events;
 	}
 
 }

@@ -15,7 +15,7 @@ public class Floor {
 	 */
 	public Floor(int floorNumber) {
 		this.floorNumber = floorNumber;
-		upButton = new FloorButton(Direction.UP); 
+		upButton = new FloorButton(Direction.UP);
 		downButton = new FloorButton(Direction.DOWN);
 	}
 
@@ -23,8 +23,8 @@ public class Floor {
 	 * Turns on the Lamp depending on the direction of the elevator. If the elevator
 	 * is going up, then the lamp will turn on the up lamp.
 	 * 
-	 * @param direction - The direction that the elevator is going to
-	 * @param buttonStatus - The status of the lamps in the elevator. 
+	 * @param direction    - The direction that the elevator is going to
+	 * @param buttonStatus - The status of the lamps in the elevator.
 	 */
 	public void switchButton(Direction direction, boolean buttonStatus) {
 		if (direction == Direction.UP) {
