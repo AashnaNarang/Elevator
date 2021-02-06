@@ -1,39 +1,49 @@
 /**
- * The floor class is responsible for tracking the floor number and also toggling the lights for the up/down buttons. 
- * @author danih
+ * The floor class is responsible for tracking the floor number and also
+ * toggling the lights for the up/down buttons.
  *
  */
 public class Floor {
 	private int floorNumber;
 	private FloorButton upButton;
 	private FloorButton downButton;
-	
+
 	/**
-	 * Constructor for Floor. 
-	 * @param floorNumber - The current floor of the elevator. 
+	 * Constructor for Floor.
+	 * 
+	 * @param floorNumber - The current floor of the elevator.
 	 */
 	public Floor(int floorNumber) {
 		this.floorNumber = floorNumber;
 	}
-	
+
 	/**
-	 * Turns on the Lamp depending on the direction of the elevator. 
-	 * If the elevator is going up, then the lamp will turn on the up lamp. 
+	 * Turns on the Lamp depending on the direction of the elevator. If the elevator
+	 * is going up, then the lamp will turn on the up lamp.
+	 * 
 	 * @param direction
 	 * @param lampStatus
 	 */
 	public void turnButtonOn(Direction direction, boolean lampStatus) {
-		if(direction == Direction.UP){
+		if (direction == Direction.UP) {
 			upButton.switchOn(lampStatus);
-		}
-		else {
+		} else {
 			downButton.switchOn(lampStatus);
 		}
 	}
-	
+
+	public boolean getLampStatusForUpButton() {
+		return upButton.getLampStatus();
+	}
+
+	public boolean getLampStatusForDownButton() {
+		return downButton.getLampStatus();
+	}
+
 	/**
 	 * Getter method for the floor number
-	 * @return the current floor number of the elevator. 
+	 * 
+	 * @return the current floor number of the elevator.
 	 */
 	public int getFloorNumber() {
 		return floorNumber;
