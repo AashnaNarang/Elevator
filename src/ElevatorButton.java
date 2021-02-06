@@ -6,7 +6,7 @@ public class ElevatorButton {
   }
 
   public void click() {
-    if(lamp.isOn) {
+    if(lamp.isOn()) {
       lamp.setOn(false);
     }
     else {
