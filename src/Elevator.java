@@ -12,7 +12,7 @@ public class Elevator implements Runnable {
   int numFloor;
   private MiddleMan middleMan;
   private Direction direction;
-  private ArrayList<ElevatorButton> buttons;
+  private ArrayList<ButtonLamp> buttons;
 
   /* constructor for Elevator
    * Defining the middleclass parameters that are by to the scheduler.
@@ -23,10 +23,10 @@ public class Elevator implements Runnable {
     this.middleMan = middleMan;
     currentFloor = 0;
     direction = Direction.UP;
-    buttons = new ArrayList<ElevatorButton>();
+    buttons = new ArrayList<ButtonLamp>();
 
     for (int i = 0; i < numFloor; i++) {
-      buttons.add(new ElevatorButton());
+      buttons.add(new ButtonLamp());
     }
   }
 

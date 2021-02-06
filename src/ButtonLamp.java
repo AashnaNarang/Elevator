@@ -8,7 +8,10 @@ public class ButtonLamp {
    *
    * @param
    */
-  public ButtonLamp() { lamp = new FloorLamp(); }
+  public ButtonLamp() {
+    lamp = new FloorLamp();
+    lamp.switchLampStatus(false);
+  }
   /*
    * When the button is clicked the lamp will turn on/off
    *
