@@ -1,21 +1,25 @@
-
+/**
+ * The Lamp class is responsible for keeping track of the lamp's (on/off)
+ * status.
+ */
 public class FloorLamp {
-	private boolean isOn;
-	
-	public FloorLamp(boolean isOn) {
-		this.isOn = isOn; 
+	private boolean lampStatus;
+
+	/**
+	 * Sets the status of the lamp based on the boolean parameter.
+	 * 
+	 * @param lampStatus - boolean TRUE if the lamp is on, FALSE if its off.
+	 */
+	public void switchLampStatus(boolean lampStatus) {
+		this.lampStatus = lampStatus;
 	}
 
-	public boolean isOn() {
-		return isOn;
+	/**
+	 * Gets the lamp status.
+	 * 
+	 * @return boolean lampStatus.
+	 */
+	public boolean getLampStatus() {
+		return lampStatus;
 	}
-
-	public void setOn(boolean isOn) {
-		this.isOn = isOn;
-	}
-
-	@Override
-	public String toString() {
-		return "FloorLamp [isOn=" + isOn + "]";
-	} 
 }
