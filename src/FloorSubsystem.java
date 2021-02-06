@@ -9,6 +9,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ * The FloorSubsystem Class parses events and processes the information from the
+ * events, sending floorEvents and taking arrival events from scheduler
+ * 
+ */
 public class FloorSubsystem implements Runnable {
 
 	private Queue<FloorEvent> eventList;
@@ -17,6 +22,13 @@ public class FloorSubsystem implements Runnable {
 	private MiddleMan box;
 	private String filename;
 
+	/**
+	 * Constructor for FloorSubsystem
+	 * 
+	 * @param filename    the file to be parsed
+	 * @param numOfFloors the number of floors
+	 * @param box         where events will be put and received
+	 */
 	public FloorSubsystem(String filename, int numOfFloors, MiddleMan box) {
 		this.filename = filename;
 		this.box = box;
@@ -25,6 +37,11 @@ public class FloorSubsystem implements Runnable {
 		this.floors = new ArrayList<>();
 	}
 
+	/**
+	 * The run method passes to box the events parsed and then receives from the box
+	 * arrivalEvent, triggers the buttons pressed to be on/off
+	 * 
+	 */
 	@Override
 	public void run() {
 		eventList = parseFile(filename);
@@ -44,6 +61,12 @@ public class FloorSubsystem implements Runnable {
 		}
 	}
 
+	/**
+	 * Parsed the file to return a list of events
+	 * 
+	 * @param filename the file to be parsed
+	 * @return A queue of events parsed from the file
+	 */
 	private Queue<FloorEvent> parseFile(String filename) {
 		Queue<FloorEvent> events = new LinkedList<FloorEvent>();
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {

@@ -32,10 +32,20 @@ public class Floor {
 		}
 	}
 
+	/**
+	 * Getter for the upButton lampStatus
+	 * 
+	 * @return true if lamp is on
+	 */
 	public boolean getLampStatusForUpButton() {
 		return upButton.getLampStatus();
 	}
 
+	/**
+	 * Getter for the downButton lampStatus
+	 * 
+	 * @return true if lamp is on
+	 */
 	public boolean getLampStatusForDownButton() {
 		return downButton.getLampStatus();
 	}
