@@ -1,12 +1,15 @@
+import java.lang.Math;
+import java.time.LocalTime;
+
 public class Elevator implements Runnable {
   private int currentFloor;
   private boolean isStationary;
-  private Scheduler scheduler;
+  private Middleman middleman;
   private Direction direction;
   private ArrayList<ElevatorButton> buttons;
 
-  public Elevator(Scheduler scheduler) {
-    this.scheduler = scheduler;
+  public Elevator(Middleman middleman) {
+    this.middleman = middleman;
     isStationary = true;
     currentFloor = 0;
     direction = Direction.UP;
@@ -18,14 +21,21 @@ public class Elevator implements Runnable {
     }
   }
 
-  public void clickButton(int button) {
+  /*public void clickButton(int button) {
     buttons.get(button).click();
 
     //TODO Time, how long?
     scheduler.putEvent(new ElevatorEvent(this.currentFloor, button, new Time(), this);
-  }
+  }*/
 
   public void run() {
+    FloorEvent floorevent = middleman.getFloorEvent();
+    int floors = floorevent.getDestination() - floorevent.getSource();
+    currentFloor += floors;
+
+    ArrivalEvent arrivalEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this);
+    middleman.putArrivalEvent();
+
 
   }
 }
