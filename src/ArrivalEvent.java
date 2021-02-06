@@ -1,17 +1,26 @@
-import java.sql.Time;
+import java.time.LocalTime;
 
-public class ArrivalEvent {
+public class ArrivalEvent() {
   int currentFloor;
-  int destinationFloor;
-  Time time;
+  LocalTime time;
   Elevator elevator;
 
-  public ArrivalEvent(int currentFloor, int destinationFloor, Time time, Elevator elevator) {
+  public ArrivalEvent(int currentFloor, LocalTime time, Elevator elevator) {
     this.currentFloor = currentFloor;
-    this.destinationFloor = destinationFloor;
     this.time = time;
     this.elevator = elevator;
   }
+
+  public LocalTime getTime() {
+    return time;
+  }
+
+  public Elevator getElevator() {
+    return elevator;
+  }
+
+  public int getCurrentFloor() {
+    return currentFloor;
+  }
+
 }
-
-
