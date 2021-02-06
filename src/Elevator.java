@@ -1,6 +1,6 @@
 import java.lang.Math;
 import java.time.LocalTime;
-import java.util.ArrayList; 
+import java.util.ArrayList;
 
 public class Elevator implements Runnable {
   private int currentFloor;
@@ -30,13 +30,15 @@ public class Elevator implements Runnable {
   }*/
 
   public void run() {
-    FloorEvent floorevent = middleman.getFloorEvent();
-    int floors = floorevent.getDestination() - floorevent.getSource();
-    currentFloor += floors;
+    while(true) {
+        FloorEvent floorevent = middleman.getFloorEvent();
+        if(floorevent != null) {
+          int floors = floorevent.getDestination() - floorevent.getSource();
+          currentFloor += floors;
 
-    ArrivalEvent arrivalEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this);
-    middleman.putArrivalEvent();
-
-
+          ArrivalEvent arrivalEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this);
+          middleman.putArrivalEvent();
+        }
+    }
   }
 }
