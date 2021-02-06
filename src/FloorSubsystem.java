@@ -51,7 +51,7 @@ public class FloorSubsystem implements Runnable {
 			while (currentLine != null) {
 				String[] inputEvent = currentLine.split(" ");
 				FloorEvent event = new FloorEvent(LocalTime.parse(inputEvent[0]), Integer.parseInt(inputEvent[1]),
-						Direction.valueOf(inputEvent[2].toUpperCase()), Integer.parseInt(inputEvent[1]));
+						Direction.valueOf(inputEvent[2].toUpperCase()), Integer.parseInt(inputEvent[3]));
 				events.add(event);
 				currentLine = br.readLine();
 			}

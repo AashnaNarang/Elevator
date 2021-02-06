@@ -1,7 +1,7 @@
 import java.time.LocalTime;
 
-public class FloorEvent{
-	
+public class FloorEvent {
+
 	private int source;
 	private Direction direction;
 	private LocalTime time;
@@ -18,12 +18,15 @@ public class FloorEvent{
 	public int getSource() {
 		return source;
 	}
+
 	public Direction getDirection() {
 		return direction;
 	}
+
 	public LocalTime getTime() {
 		return time;
 	}
+
 	public int getDestination() {
 		return destination;
 	}
