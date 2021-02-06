@@ -15,7 +15,7 @@ public class FloorEvent {
 	/**
 	 * Constructor for FloorEvent
 	 * 
-	 * @param time        - a time stamp for when the passenger clicks button
+	 * @param time        a time stamp for when the passenger clicks button
 	 * @param source      the current floor the passenger is making the request on
 	 * @param direction   the direction the passenger wants to go, up or down
 	 * @param destination the floor the passenger wants to go to

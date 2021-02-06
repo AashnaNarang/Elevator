@@ -10,11 +10,10 @@ public class FloorButton {
 	 * Constructor for FloorButton
 	 * 
 	 * @param direction - The direction of the elevator (UP/DOWN)
-	 * @param lamp      - Contains the status of the lamp for the elevator.
 	 */
-	public FloorButton(Direction direction, Lamp lamp) {
+	public FloorButton(Direction direction) {
 		this.direction = direction;
-		this.lamp = lamp;
+		this.lamp = new Lamp(); 
 	}
 
 	/**
