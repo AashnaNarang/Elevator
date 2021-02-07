@@ -13,7 +13,7 @@ public class DirectionLamp {
 	public DirectionLamp(Direction direction) {
 		this.direction = direction;
 		this.lamp = new Lamp();
-		this.lamp.switchLampStatus(false);
+		this.lamp.switchLampState(false);
 	}
 
 	/**
@@ -30,11 +30,22 @@ public class DirectionLamp {
 	 * @param on True if lamp should be on, otherwise false
 	 */
 	public void switchOn(boolean on) {
-		lamp.switchLampStatus(on);
+		lamp.switchLampState(on);
 	}
 
+	/**
+	 * String representation of the direction lamp
+	 */
 	@Override
 	public String toString() {
-		return "DirectionalLamp [direction=" + direction + "]";
-	} 
+		return "DirectionalLamp [direction=" + direction + " on=" + lamp.getLampState() + "]";
+	}
+	
+	/**
+	 * Get the lamp's state
+	 * @return True if the lamp is on, otherwise false
+	 */
+	public boolean getLampStatus() {
+		return lamp.getLampState();
+	}
 }

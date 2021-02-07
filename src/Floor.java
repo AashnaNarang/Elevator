@@ -5,8 +5,8 @@
  */
 public class Floor {
 	private int floorNumber;
-	private FloorButton upButton;
-	private FloorButton downButton;
+	private DirectionLamp upButton;
+	private DirectionLamp downButton;
 
 	/**
 	 * Constructor for Floor.
@@ -15,8 +15,8 @@ public class Floor {
 	 */
 	public Floor(int floorNumber) {
 		this.floorNumber = floorNumber;
-		this.upButton = new FloorButton(Direction.UP);
-		this.downButton = new FloorButton(Direction.DOWN);
+		this.upButton = new DirectionLamp(Direction.UP);
+		this.downButton = new DirectionLamp(Direction.DOWN);
 	}
 
 	/**
