@@ -15,8 +15,8 @@ public class Floor {
 	 */
 	public Floor(int floorNumber) {
 		this.floorNumber = floorNumber;
-		upButton = new FloorButton(Direction.UP);
-		downButton = new FloorButton(Direction.DOWN);
+		this.upButton = new FloorButton(Direction.UP);
+		this.downButton = new FloorButton(Direction.DOWN);
 	}
 
 	/**
