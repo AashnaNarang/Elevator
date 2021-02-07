@@ -46,20 +46,16 @@ public class Elevator implements Runnable {
 			if (floorEvent != null) {
 				buttons.get(floorEvent.getDestination()-1).switchOn(true);
 
+				
 				int floors = floorEvent.getDestination() - floorEvent.getSource();
 				direction = floors < 0 ? Direction.DOWN : Direction.UP;
 				this.switchLamps(true);
 
-				for (int i = 0; i < Math.abs(floors); i++) {
-					if (direction == Direction.UP) {
-						currentFloor++;
-					} else {
-						currentFloor--;
-					}
-					ArrivalEvent arrivalEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), direction, this);
-					middleMan.putArrivalEvent(arrivalEvent);
-				}
+				currentFloor = floorEvent.getDestination();
 
+				ArrivalEvent arrivalEvent = new ArrivalEvent(currentFloor, LocalTime.now(), direction, this);
+				middleMan.putArrivalEvent(arrivalEvent);
+				
 				buttons.get(this.currentFloor - 1).switchOn(false);
 				this.switchLamps(false);
 			}

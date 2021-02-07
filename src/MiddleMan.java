@@ -18,8 +18,13 @@ public class MiddleMan {
 	 * @return The event object
 	 */
 	public synchronized FloorEvent getFloorEvent() {
-		if (floorEvents.isEmpty()) {
-			return null;
+		while (floorEvents.isEmpty()) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		System.out.println(Thread.currentThread().getName() + " is receiving FloorEvent.");
 		notifyAll();
@@ -42,8 +47,13 @@ public class MiddleMan {
 	 * @return The event object
 	 */
 	public synchronized ArrivalEvent getArrivalEvent() {
-		if (arrivalEvents.isEmpty()) {
-			return null;
+		while (arrivalEvents.isEmpty()) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		System.out.println(Thread.currentThread().getName() + " is receiving ArrivalEvent.");
 		notifyAll();
