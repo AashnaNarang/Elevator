@@ -52,3 +52,7 @@ Make sure you extract the zip folder first.
 2. Click on the green button "Code"
 3. Download the ZIP folder.  
 4. Use steps 1-7 in the instructions shown [Here](#Instructions-for-running-the-file-using-the-ZIP-folder:). 
+
+## Instructions for testing
+1. Go to TestElevatorSystem inside src 
+2. Click on the Run as Junit test
