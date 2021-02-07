@@ -45,7 +45,7 @@ public class DirectionLamp {
 	 * Get the lamp's state
 	 * @return True if the lamp is on, otherwise false
 	 */
-	public boolean getLampStatus() {
+	public boolean getLampState() {
 		return lamp.getLampState();
 	}
 }

@@ -40,7 +40,7 @@ public class Floor {
 	 * @return true if lamp is on
 	 */
 	public boolean isUpButtonOn() {
-		return upButton.getLampStatus();
+		return upButton.getLampState();
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class Floor {
 	 * @return true if lamp is on
 	 */
 	public boolean isDownButtonOn() {
-		return downButton.getLampStatus();
+		return downButton.getLampState();
 	}
 
 	/**
