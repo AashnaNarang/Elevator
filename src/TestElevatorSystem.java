@@ -42,8 +42,6 @@ public class TestElevatorSystem {
 			TimeUnit.SECONDS.sleep(5);
 			assertEquals("The elevator is currently on floor: 3", elevator.toString());
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 

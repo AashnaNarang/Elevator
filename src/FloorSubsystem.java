@@ -83,9 +83,7 @@ public class FloorSubsystem implements Runnable {
 			}
 
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 

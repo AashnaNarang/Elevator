@@ -22,8 +22,7 @@ public class MiddleMan {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return null;
 			}
 		}
 		System.out.println(Thread.currentThread().getName() + " is receiving FloorEvent.");
@@ -36,6 +35,13 @@ public class MiddleMan {
 	 * @param floorEvent The event object to add
 	 */
 	public synchronized void putFloorEvent(FloorEvent floorEvent) {
+		while (!floorEvents.isEmpty()) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				return;
+			}
+		}
 		floorEvents.add(floorEvent);
 		System.out.println(Thread.currentThread().getName() + " is sending FloorEvent.");
 		notifyAll();
@@ -51,8 +57,7 @@ public class MiddleMan {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return null;
 			}
 		}
 		System.out.println(Thread.currentThread().getName() + " is receiving ArrivalEvent.");
@@ -65,6 +70,13 @@ public class MiddleMan {
 	 * @param arrivalEvent The event object to add
 	 */
 	public synchronized void putArrivalEvent(ArrivalEvent arrivalEvent) {
+		while (!arrivalEvents.isEmpty()) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				return;
+			}
+		}
 		System.out.println(Thread.currentThread().getName() + " is sending ArrivalEvent.");
 		arrivalEvents.add(arrivalEvent);
 		notifyAll();
