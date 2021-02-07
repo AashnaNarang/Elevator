@@ -59,6 +59,6 @@ public class ArrivalEvent {
 	 * @return String representation of the event.
 	 */
 	public String toString() {
-		return getCurrentFloor() + " " + getDirection();
+		return "{Current floor:"+ getCurrentFloor() + ", Direction:" + getDirection()+"}";
 	}
 }

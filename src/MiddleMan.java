@@ -25,7 +25,8 @@ public class MiddleMan {
 				return null;
 			}
 		}
-		System.out.println(Thread.currentThread().getName() + " is receiving FloorEvent.");
+		System.out.println(Thread.currentThread().getName() + " is receiving FloorEvent. " +
+				floorEvents.peek());
 		notifyAll();
 		return floorEvents.remove();
 	}
@@ -43,7 +44,8 @@ public class MiddleMan {
 			}
 		}
 		floorEvents.add(floorEvent);
-		System.out.println(Thread.currentThread().getName() + " is sending FloorEvent.");
+		System.out.println(Thread.currentThread().getName() + " is sending FloorEvent. " + 
+				floorEvent);
 		notifyAll();
 	}
 	
@@ -60,7 +62,8 @@ public class MiddleMan {
 				return null;
 			}
 		}
-		System.out.println(Thread.currentThread().getName() + " is receiving ArrivalEvent.");
+		System.out.println(Thread.currentThread().getName() + " is receiving ArrivalEvent. " + 
+				arrivalEvents.peek());
 		notifyAll();
 		return arrivalEvents.remove();
 	}
@@ -77,7 +80,8 @@ public class MiddleMan {
 				return;
 			}
 		}
-		System.out.println(Thread.currentThread().getName() + " is sending ArrivalEvent.");
+		System.out.println(Thread.currentThread().getName() + " is sending ArrivalEvent. " + 
+				arrivalEvent);
 		arrivalEvents.add(arrivalEvent);
 		notifyAll();
 		

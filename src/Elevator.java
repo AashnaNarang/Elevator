@@ -74,6 +74,10 @@ public class Elevator implements Runnable {
 		}
 	}
 
+	
+	/**
+	 * @return String representation of the elevator.
+	 */
 	public String toString() {
 		return "The elevator is currently on floor: "+ this.currentFloor;
 	}
