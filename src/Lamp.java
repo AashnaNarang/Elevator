@@ -3,15 +3,15 @@
  * status.
  */
 public class Lamp {
-	private boolean lampStatus;
+	private boolean lampState;
 
 	/**
 	 * Sets the status of the lamp based on the boolean parameter.
 	 * 
-	 * @param lampStatus - boolean TRUE if the lamp is on, FALSE if its off.
+	 * @param lampState - boolean TRUE if the lamp is on, FALSE if its off.
 	 */
-	public void switchLampStatus(boolean lampStatus) {
-		this.lampStatus = lampStatus;
+	public void switchLampState(boolean lampState) {
+		this.lampState = lampState;
 	}
 
 	/**
@@ -19,7 +19,7 @@ public class Lamp {
 	 * 
 	 * @return boolean lampStatus.
 	 */
-	public boolean getLampStatus() {
-		return lampStatus;
+	public boolean getLampState() {
+		return lampState;
 	}
 }
