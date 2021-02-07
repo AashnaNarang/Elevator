@@ -54,4 +54,11 @@ public class ArrivalEvent {
 	public Direction getDirection() {
 		return direction;
 	}
+	
+	/**
+	 * @return String representation of the event.
+	 */
+	public String toString() {
+		return getCurrentFloor() + " " + getDirection();
+	}
 }
