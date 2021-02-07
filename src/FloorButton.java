@@ -1,10 +1,6 @@
-/**
- * FloorButton class which contains the direction that the elevator is going and
- * the lamp status.
- */
 public class FloorButton {
 	private Direction direction;
-	private FloorLamp lamp;
+	private Lamp lamp;
 
 	/**
 	 * Constructor for FloorButton
@@ -13,7 +9,8 @@ public class FloorButton {
 	 */
 	public FloorButton(Direction direction) {
 		this.direction = direction;
-		this.lamp = new FloorLamp();
+		this.lamp = new Lamp();
+		this.lamp.switchLampStatus(false);
 	}
 
 	/**
@@ -26,6 +23,10 @@ public class FloorButton {
 		lamp.switchLampStatus(lampStatus);
 	}
 
+	/**
+	 * Get the lamp's state
+	 * @return True if the lamp is on, otherwise false
+	 */
 	public boolean getLampStatus() {
 		return lamp.getLampStatus();
 	}
