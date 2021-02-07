@@ -13,7 +13,7 @@ public class ElevatorButton {
 	 */
 	public ElevatorButton(int floorNumber) {
 		this.lamp = new Lamp();
-		this.lamp.switchLampStatus(false);
+		this.lamp.switchLampState(false);
 		this.floorNumber = floorNumber;
 	}
 
@@ -22,7 +22,7 @@ public class ElevatorButton {
 	 * @param on True if lamp should be on, otherwise false
 	 */
 	public void switchOn(boolean on) {
-		lamp.switchLampStatus(on);
+		lamp.switchLampState(on);
 	}
 	
 	/**
@@ -38,7 +38,7 @@ public class ElevatorButton {
 	 * @return True if lamp is on or false if it is off
 	 */
 	public boolean getLampStatus() {
-		return lamp.getLampStatus();
+		return lamp.getLampState();
 	}
 
 }
