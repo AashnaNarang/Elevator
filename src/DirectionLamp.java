@@ -1,5 +1,5 @@
 /**
- * This class represents the direction lamp in the elevator (UP/DOWN arrow). 
+ * This class represents the direction lamp in the elevator (UP/DOWN arrow).
  *
  */
 public class DirectionLamp {
