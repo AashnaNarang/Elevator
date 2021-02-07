@@ -64,4 +64,11 @@ public class FloorEvent {
 		return destination;
 	}
 
+	/**
+	 * @return String representation of the event.
+	 */
+	public String toString() {
+		return "{Time:"+ time + ", Source:" + source+ ", Direction:" + direction + ", Destination:" + destination+"}";
+	}
+	
 }

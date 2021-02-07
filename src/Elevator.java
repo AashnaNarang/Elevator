@@ -23,7 +23,7 @@ public class Elevator implements Runnable {
 	 */
 	public Elevator(MiddleMan middleMan, int numFloor) {
 		this.middleMan = middleMan;
-		this.currentFloor = -1;
+		this.currentFloor = 1;
 		this.upLamp = new DirectionLamp(Direction.UP);
 		this.downLamp = new DirectionLamp(Direction.DOWN);
 		this.direction = Direction.UP;
@@ -44,23 +44,19 @@ public class Elevator implements Runnable {
 		while (true) {
 			FloorEvent floorEvent = middleMan.getFloorEvent();
 			if (floorEvent != null) {
-				buttons.get(floorEvent.getDestination()).switchOn(true);
+				buttons.get(floorEvent.getDestination()-1).switchOn(true);
 
+				
 				int floors = floorEvent.getDestination() - floorEvent.getSource();
 				direction = floors < 0 ? Direction.DOWN : Direction.UP;
 				this.switchLamps(true);
 
-				for (int i = 0; i < Math.abs(floors); i++) {
-					if (direction == Direction.UP) {
-						currentFloor++;
-					} else {
-						currentFloor--;
-					}
-					ArrivalEvent arrivalEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), direction, this);
-					middleMan.putArrivalEvent(arrivalEvent);
-				}
+				currentFloor = floorEvent.getDestination();
 
-				buttons.get(this.currentFloor).switchOn(false);
+				ArrivalEvent arrivalEvent = new ArrivalEvent(currentFloor, LocalTime.now(), direction, this);
+				middleMan.putArrivalEvent(arrivalEvent);
+				
+				buttons.get(this.currentFloor - 1).switchOn(false);
 				this.switchLamps(false);
 			}
 		}
@@ -78,4 +74,12 @@ public class Elevator implements Runnable {
 		}
 	}
 
+	
+	/**
+	 * @return String representation of the elevator.
+	 */
+	public String toString() {
+		return "The elevator is currently on floor: "+ this.currentFloor;
+	}
+	
 }

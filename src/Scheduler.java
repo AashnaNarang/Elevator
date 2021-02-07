@@ -25,10 +25,20 @@ public class Scheduler implements Runnable {
 	@Override
 	public void run() {
 		while(true) {
-			floorEvents.add(middleMan.getFloorEvent());
-			middleMan2.putFloorEvent(floorEvents.remove(0));
-			arrivalEvents.add(middleMan2.getArrivalEvent());
-			middleMan.putArrivalEvent(arrivalEvents.remove(0));
+			FloorEvent floorEvent = middleMan.getFloorEvent();
+			if (floorEvent != null) {
+				floorEvents.add(floorEvent);
+			}
+			if (!floorEvents.isEmpty()) {
+				middleMan2.putFloorEvent(floorEvents.remove(0));
+			}
+			ArrivalEvent arrEvent = middleMan2.getArrivalEvent();
+			if (arrEvent != null) {
+				arrivalEvents.add(arrEvent);
+			}
+			if (!arrivalEvents.isEmpty()) {
+				middleMan.putArrivalEvent(arrivalEvents.remove(0));
+			}
 		}
 	}
 	

@@ -6,7 +6,7 @@ public class MiddleMan {
 	private Queue<ArrivalEvent> arrivalEvents;
 	
 	/**
-	 * Public constructor to intialize MiddleMan's instance variables
+	 * Public constructor to initialize MiddleMan's instance variables
 	 */
 	public MiddleMan() {
 		this.floorEvents = new LinkedList<>();
@@ -18,14 +18,17 @@ public class MiddleMan {
 	 * @return The event object
 	 */
 	public synchronized FloorEvent getFloorEvent() {
-		if (floorEvents.isEmpty()) {
+		while (floorEvents.isEmpty()) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
 				return null;
 			}
 		}
-		return floorEvents.poll();
+		System.out.println(Thread.currentThread().getName() + " is receiving FloorEvent. " +
+				floorEvents.peek());
+		notifyAll();
+		return floorEvents.remove();
 	}
 	
 	/**
@@ -33,7 +36,16 @@ public class MiddleMan {
 	 * @param floorEvent The event object to add
 	 */
 	public synchronized void putFloorEvent(FloorEvent floorEvent) {
+		while (!floorEvents.isEmpty()) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				return;
+			}
+		}
 		floorEvents.add(floorEvent);
+		System.out.println(Thread.currentThread().getName() + " is sending FloorEvent. " + 
+				floorEvent);
 		notifyAll();
 	}
 	
@@ -43,7 +55,17 @@ public class MiddleMan {
 	 * @return The event object
 	 */
 	public synchronized ArrivalEvent getArrivalEvent() {
-		return arrivalEvents.poll();
+		while (arrivalEvents.isEmpty()) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				return null;
+			}
+		}
+		System.out.println(Thread.currentThread().getName() + " is receiving ArrivalEvent. " + 
+				arrivalEvents.peek());
+		notifyAll();
+		return arrivalEvents.remove();
 	}
 	
 	/**
@@ -51,7 +73,18 @@ public class MiddleMan {
 	 * @param arrivalEvent The event object to add
 	 */
 	public synchronized void putArrivalEvent(ArrivalEvent arrivalEvent) {
+		while (!arrivalEvents.isEmpty()) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				return;
+			}
+		}
+		System.out.println(Thread.currentThread().getName() + " is sending ArrivalEvent. " + 
+				arrivalEvent);
 		arrivalEvents.add(arrivalEvent);
+		notifyAll();
+		
 	}
 	
 }

@@ -52,14 +52,16 @@ public class FloorSubsystem implements Runnable {
 			if (!eventList.isEmpty()) {
 				FloorEvent eventSent = eventList.remove();
 				middleMan.putFloorEvent(eventSent);
-				floors.get(eventSent.getSource()).switchButton(eventSent.getDirection(), true);
+				floors.get(eventSent.getSource() - 1).switchButton(eventSent.getDirection(), true);
 			}
 			ArrivalEvent arrivalEvent = middleMan.getArrivalEvent();
-			int currentFloor = arrivalEvent.getCurrentFloor();
-			if (floors.get(currentFloor - 1).isUpButtonOn()) {
-				floors.get(currentFloor - 1).switchButton(Direction.UP, false);
-			} else if (floors.get(currentFloor - 1).isDownButtonOn()) {
-				floors.get(currentFloor - 1).switchButton(Direction.DOWN, false);
+			if (arrivalEvent != null) {
+				int currentFloor = arrivalEvent.getCurrentFloor();
+				if (floors.get(currentFloor - 1).isUpButtonOn()) {
+					floors.get(currentFloor - 1).switchButton(Direction.UP, false);
+				} else if (floors.get(currentFloor - 1).isDownButtonOn()) {
+					floors.get(currentFloor - 1).switchButton(Direction.DOWN, false);
+				}
 			}
 		}
 	}
@@ -81,9 +83,7 @@ public class FloorSubsystem implements Runnable {
 			}
 
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
