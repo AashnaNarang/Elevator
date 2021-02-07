@@ -1,8 +1,15 @@
-
+/**
+ * This class represents the direction lamp in the elevator (UP/DOWN arrow). 
+ *
+ */
 public class DirectionLamp {
 	private Direction direction;
 	private Lamp lamp;
 	
+	/**
+	 * Constructor for the DirectionLamp
+	 * @param direction - UP/DOWN direction of the elevator. 
+	 */
 	public DirectionLamp(Direction direction) {
 		this.direction = direction;
 		this.lamp = new Lamp();
@@ -10,6 +17,7 @@ public class DirectionLamp {
 	}
 
 	/**
+	 * Getter method for direction. 
 	 * @return the direction
 	 */
 	public Direction getDirection() {
@@ -24,7 +32,6 @@ public class DirectionLamp {
 	public void switchOn(boolean on) {
 		lamp.switchLampStatus(on);
 	}
-
 
 	@Override
 	public String toString() {

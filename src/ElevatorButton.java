@@ -1,8 +1,16 @@
+/**
+ * This class represents the buttons in the elevator. 
+ *
+ */
 public class ElevatorButton {
 
 	private Lamp lamp;
 	private int floorNumber;
 
+	/**
+	 * Constructor for the ElevatorButton class. 
+	 * @param floorNumber - the floor number the user presses in the elevator. 
+	 */
 	public ElevatorButton(int floorNumber) {
 		this.lamp = new Lamp();
 		this.lamp.switchLampStatus(false);
