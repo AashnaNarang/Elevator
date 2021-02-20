@@ -1,3 +1,4 @@
+package elevator;
 import static org.junit.Assert.*;
 
 import java.util.concurrent.TimeUnit;
