@@ -1,3 +1,4 @@
+package elevator;
 /**
  * This class represents the buttons in the elevator. 
  *

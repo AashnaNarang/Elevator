@@ -1,6 +1,10 @@
+package elevator;
 import java.lang.Math;
 import java.time.LocalTime;
 import java.util.ArrayList;
+
+import events.ArrivalEvent;
+import events.FloorEvent;
 
 /*
  * The Elevator class is designed so that it takes the task form the middleman
@@ -80,6 +84,14 @@ public class Elevator implements Runnable {
 	 */
 	public String toString() {
 		return "The elevator is currently on floor: "+ this.currentFloor;
+	}
+
+
+	/**
+	 * @return the currentFloor
+	 */
+	public int getCurrentFloor() {
+		return currentFloor;
 	}
 	
 }

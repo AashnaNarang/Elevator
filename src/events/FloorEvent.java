@@ -1,4 +1,7 @@
+package events;
 import java.time.LocalTime;
+
+import elevator.Direction;
 
 /**
  * The FloorEvent Class handles the request being sent to scheduler It takes in

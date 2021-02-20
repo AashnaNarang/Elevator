@@ -1,5 +1,9 @@
+package elevator;
 import java.util.LinkedList;
 import java.util.Queue;
+
+import events.ArrivalEvent;
+import events.FloorEvent;
 
 public class MiddleMan {
 	private Queue<FloorEvent> floorEvents;
