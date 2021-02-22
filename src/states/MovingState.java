@@ -13,7 +13,8 @@ public class MovingState extends State {
 	@Override
 	public State handleFloorEvent(FloorEvent e) {
 		if (e.getDestination() == elevator.getCurrentFloor()) {
-			elevator.handleFloorEvent(e);
+			// this part might need to fix. Need to set elevators state to stationary then make elevator call handle floor event again
+			// elevator.handleFloorEvent(e);
 			// either elevator.handleFloorEvent(e) or stationaryState.handleFloorEvent(e)
 			return new StationaryState(elevator);
 		} else {
