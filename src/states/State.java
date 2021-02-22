@@ -14,7 +14,15 @@ public abstract class State {
 		return new StationaryState(elevator);
 	}
 	
-	public abstract State handleFloorEvent(FloorEvent e);
-	public abstract State sendArrivalEvent();
-	public abstract State handleDoorTimerExpiry();
+	public State handleFloorEvent(FloorEvent e) {
+		return null;
+	}
+	
+	public State sendArrivalEvent() {
+		return null;
+	}
+	
+	public State handleDoorTimerExpiry() {
+		return null;
+	}
 }

@@ -10,16 +10,6 @@ public class DoorOpenState extends State {
 		super(e);
 		elevator.startTimer();
 	}
-	
-	@Override
-	public State handleFloorEvent(FloorEvent e) {
-		return null;
-	}
-
-	@Override
-	public State sendArrivalEvent() {
-		return null;
-	}
 
 	@Override
 	public State handleDoorTimerExpiry() {

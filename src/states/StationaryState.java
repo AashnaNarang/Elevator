@@ -26,9 +26,4 @@ public class StationaryState extends State {
 		return this;
 	}
 
-	@Override
-	public State handleDoorTimerExpiry() {
-		return null;
-	}
-
 }

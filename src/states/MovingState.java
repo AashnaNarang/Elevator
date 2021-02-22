@@ -28,9 +28,4 @@ public class MovingState extends State {
 		return this;
 	}
 
-	@Override
-	public State handleDoorTimerExpiry() {
-		return null;
-	}
-
 }
