@@ -10,7 +10,11 @@ public abstract class State {
 		this.elevator = e;
 	}
 	
-	public abstract void handleFloorEvent(FloorEvent e);
-	public abstract void sendArrivalEvent();
-	public abstract void handleDoorTimerExpiry();
+	public State start() {
+		return new StationaryState(elevator);
+	}
+	
+	public abstract State handleFloorEvent(FloorEvent e);
+	public abstract State sendArrivalEvent();
+	public abstract State handleDoorTimerExpiry();
 }

@@ -12,18 +12,18 @@ public class DoorOpenState extends State {
 	}
 	
 	@Override
-	public void handleFloorEvent(FloorEvent e) {
-		// Do nothing
+	public State handleFloorEvent(FloorEvent e) {
+		return null;
 	}
 
 	@Override
-	public void sendArrivalEvent() {
-		// Do nothing 
+	public State sendArrivalEvent() {
+		return null;
 	}
 
 	@Override
-	public void handleDoorTimerExpiry() {
-		elevator.setState(new StationaryState(elevator));
+	public State handleDoorTimerExpiry() {
+		return new StationaryState(elevator);
 	}
 
 }

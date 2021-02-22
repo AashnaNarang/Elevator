@@ -11,25 +11,26 @@ public class MovingState extends State {
 	}
 	
 	@Override
-	public void handleFloorEvent(FloorEvent e) {
+	public State handleFloorEvent(FloorEvent e) {
 		if (e.getDestination() == elevator.getCurrentFloor()) {
-			elevator.setState(new StationaryState(elevator));
 			elevator.handleFloorEvent(e);
 			// either elevator.handleFloorEvent(e) or stationaryState.handleFloorEvent(e)
+			return new StationaryState(elevator);
 		} else {
-			elevator.setState(new MovingState(elevator));
+			return new MovingState(elevator);
 		}
 	}
 
 	@Override
-	public void sendArrivalEvent() {
+	public State sendArrivalEvent() {
 		ArrivalEvent e = new ArrivalEvent(elevator.getCurrentFloor(), null, null, elevator);
 		elevator.sendArrivalEvent(e);
+		return this;
 	}
 
 	@Override
-	public void handleDoorTimerExpiry() {
-		// Not applicable
+	public State handleDoorTimerExpiry() {
+		return null;
 	}
 
 }
