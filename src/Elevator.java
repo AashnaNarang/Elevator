@@ -19,7 +19,7 @@ public class Elevator implements Runnable {
 	 * constructor for Elevator Defining the middleclass parameters that are by to
 	 * the scheduler.
 	 *
-	 * @param middleman - sending information to Middleman
+	 * @param middleman - sending information to Middleman via middleman.
 	 */
 	public Elevator(MiddleMan middleMan, int numFloor) {
 		this.middleMan = middleMan;
