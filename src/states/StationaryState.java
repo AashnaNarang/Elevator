@@ -12,15 +12,19 @@ public class StationaryState extends State {
 	
 	@Override
 	public State handleFloorEvent(FloorEvent e) {
-		if (e.getDestination() == elevator.getCurrentFloor()) {
-			return new DoorOpenState(elevator);
-		} else {
-			return new MovingState(elevator);
+		FloorEvent e = elevator.getFloorEvent();
+		if (floorEvent != null) {
+			if (e.getDestination() == elevator.getCurrentFloor()) {
+				return new DoorOpenState(elevator);
+			} else {
+				return new MovingState(elevator);
+			}
 		}
+		return this;
 	}
 
 	@Override
-	public State sendArrivalEvent() {
+	public State handleArrivedAtFloor() {
 		ArrivalEvent e = new ArrivalEvent(elevator.getCurrentFloor(), null, null, elevator);
 		elevator.sendArrivalEvent(e);
 		return this;

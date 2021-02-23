@@ -23,7 +23,7 @@ public class MovingState extends State {
 	}
 
 	@Override
-	public State sendArrivalEvent() {
+	public State handleArrivedAtFloor() {
 		ArrivalEvent e = new ArrivalEvent(elevator.getCurrentFloor(), null, null, elevator);
 		elevator.sendArrivalEvent(e);
 		return this;

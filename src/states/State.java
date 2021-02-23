@@ -14,7 +14,7 @@ public abstract class State {
 		return null;
 	}
 	
-	public State sendArrivalEvent() {
+	public State handleArrivedAtFloor() {
 		return null;
 	}
 	
