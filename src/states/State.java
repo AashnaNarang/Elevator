@@ -10,10 +10,6 @@ public abstract class State {
 		this.elevator = e;
 	}
 	
-	public State start() {
-		return new StationaryState(elevator);
-	}
-	
 	public State handleFloorEvent(FloorEvent e) {
 		return null;
 	}
