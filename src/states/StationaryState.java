@@ -13,10 +13,11 @@ public class StationaryState extends State {
 	@Override
 	public State handleFloorEvent(FloorEvent e) {
 		FloorEvent e = elevator.getFloorEvent();
-		if (floorEvent != null) {
-			if (e.getDestination() == elevator.getCurrentFloor()) {
-				return new DoorOpenState(elevator);
+		if (e != null) {
+			if (e.getSource() == elevator.getCurrentFloor()) {
+				return new DoorOpenState(elevator, e);
 			} else {
+				// lamp ?
 				return new MovingState(elevator);
 			}
 		}

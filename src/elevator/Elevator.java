@@ -45,6 +45,7 @@ public class Elevator implements Runnable {
 	 * floor elevator is moving through.
 	 */
 	public void run() {
+		currentState.handleFloorEvent();
 		while (true) {
 			FloorEvent floorEvent = middleMan.getFloorEvent();
 			if (floorEvent != null) {

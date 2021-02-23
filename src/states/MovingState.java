@@ -8,6 +8,7 @@ public class MovingState extends State {
 
 	public MovingState(Elevator e) {
 		super(e);
+		// elevator.move()
 	}
 	
 	@Override
@@ -26,6 +27,13 @@ public class MovingState extends State {
 	public State handleArrivedAtFloor() {
 		ArrivalEvent e = new ArrivalEvent(elevator.getCurrentFloor(), null, null, elevator);
 		elevator.sendArrivalEvent(e);
+//		FloorEvent e = elevator.getShouldStop(e);
+//		if (e != null) {
+//			return Door Open State(e) --> startTimer --> 
+		// handleTimerExpiry -->  then return new StationaryState(elevator,e)
+		// stationary state can check if null --> if not send destination event
+//		}
+		// if e == null then dont need to stop
 		return this;
 	}
 
