@@ -1,7 +1,7 @@
 package states;
-import elevator.Elevator;
 import events.ArrivalEvent;
 import events.FloorEvent;
+import main.Elevator;
 
 public abstract class State {
 	protected Elevator elevator;
@@ -10,7 +10,7 @@ public abstract class State {
 		this.elevator = e;
 	}
 	
-	public State handleFloorEvent(FloorEvent e) {
+	public State handleFloorEvent() {
 		return null;
 	}
 	

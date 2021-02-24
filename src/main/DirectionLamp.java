@@ -1,4 +1,4 @@
-package elevator;
+package main;
 /**
  * This class represents the direction lamp in the elevator (UP/DOWN arrow).
  *

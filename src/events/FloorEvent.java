@@ -1,19 +1,17 @@
 package events;
 import java.time.LocalTime;
 
-import elevator.Direction;
+import main.Direction;
 
 /**
  * The FloorEvent Class handles the request being sent to scheduler It takes in
  * the parsed information from the input and creates an event
  *
  */
-public class FloorEvent {
-
+public class FloorEvent extends Event {
 	private int source;
 	private Direction direction;
-	private LocalTime time;
-	private int destination;
+	private boolean isAtSource;
 
 	/**
 	 * Constructor for FloorEvent
@@ -24,10 +22,10 @@ public class FloorEvent {
 	 * @param destination the floor the passenger wants to go to
 	 */
 	public FloorEvent(LocalTime time, int source, Direction direction, int destination) {
-		this.time = time;
+		super(time, destination);
 		this.source = source;
 		this.direction = direction;
-		this.destination = destination;
+		this.isAtSource = false;
 
 	}
 
@@ -49,22 +47,19 @@ public class FloorEvent {
 		return direction;
 	}
 
+
 	/**
-	 * getter method for time
-	 * 
-	 * @return the time the passenger clicks the button
+	 * @return the isAtSource
 	 */
-	public LocalTime getTime() {
-		return time;
+	public boolean isAtSource() {
+		return isAtSource;
 	}
 
 	/**
-	 * getter method for destination
-	 * 
-	 * @return the floor the passenger wants to go to
+	 * @param isAtSource the isAtSource to set
 	 */
-	public int getDestination() {
-		return destination;
+	public void setAtSource(boolean isAtSource) {
+		this.isAtSource = isAtSource;
 	}
 
 	/**

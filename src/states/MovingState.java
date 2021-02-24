@@ -1,39 +1,33 @@
 package states;
 
-import elevator.Elevator;
-import events.ArrivalEvent;
-import events.FloorEvent;
+import java.time.LocalTime;
+
+import events.*;
+import main.Elevator;
 
 public class MovingState extends State {
 
-	public MovingState(Elevator e) {
+	public MovingState(Elevator e, Event event) {
 		super(e);
-		// elevator.move()
-	}
-	
-	@Override
-	public State handleFloorEvent(FloorEvent e) {
-		if (e.getDestination() == elevator.getCurrentFloor()) {
-			// this part might need to fix. Need to set elevators state to stationary then make elevator call handle floor event again
-			// elevator.handleFloorEvent(e);
-			// either elevator.handleFloorEvent(e) or stationaryState.handleFloorEvent(e)
-			return new StationaryState(elevator);
-		} else {
-			return new MovingState(elevator);
+		if (event.isAtSource()) {
+			Event destinationEvent = new Event(LocalTime.now(), event.getDestination());
+			elevator.sendDestinationEvent(destinationEvent);
+			elevator.switchOnButton(event.getDestination()-1, true);
 		}
+		 elevator.move(event);
 	}
 
 	@Override
 	public State handleArrivedAtFloor() {
-		ArrivalEvent e = new ArrivalEvent(elevator.getCurrentFloor(), null, null, elevator);
+		ArrivalEvent e = new ArrivalEvent(elevator.getCurrentFloor(), LocalTime.now(), elevator.getDirection(), elevator);
 		elevator.sendArrivalEvent(e);
-//		FloorEvent e = elevator.getShouldStop(e);
-//		if (e != null) {
-//			return Door Open State(e) --> startTimer --> 
-		// handleTimerExpiry -->  then return new StationaryState(elevator,e)
-		// stationary state can check if null --> if not send destination event
-//		}
-		// if e == null then dont need to stop
+		Event e2 = elevator.askShouldIStop();
+		if (e2 != null) {
+			if (!(e2 instanceof FloorEvent) {
+				elevator.switchOnButton(e2.getDestination()-1, true);
+			}
+			return new DoorOpenState(elevator, e2);
+		}
 		return this;
 	}
 

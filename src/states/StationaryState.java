@@ -1,33 +1,26 @@
 package states;
 
-import elevator.Elevator;
 import events.ArrivalEvent;
 import events.FloorEvent;
+import main.Elevator;
 
 public class StationaryState extends State {
 
 	public StationaryState(Elevator e) {
 		super(e);
 	}
+
 	
 	@Override
-	public State handleFloorEvent(FloorEvent e) {
+	public State handleFloorEvent() {
 		FloorEvent e = elevator.getFloorEvent();
 		if (e != null) {
 			if (e.getSource() == elevator.getCurrentFloor()) {
 				return new DoorOpenState(elevator, e);
 			} else {
-				// lamp ?
-				return new MovingState(elevator);
+				return new MovingState(elevator, e);
 			}
 		}
-		return this;
-	}
-
-	@Override
-	public State handleArrivedAtFloor() {
-		ArrivalEvent e = new ArrivalEvent(elevator.getCurrentFloor(), null, null, elevator);
-		elevator.sendArrivalEvent(e);
 		return this;
 	}
 

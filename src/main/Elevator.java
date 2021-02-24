@@ -1,4 +1,4 @@
-package elevator;
+package main;
 import java.lang.Math;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -38,6 +38,15 @@ public class Elevator implements Runnable {
 		}
 	}
 	
+	public void move(FloorEvent e) {
+		// set direction 
+		// this.switchLamps(true);
+		// while(currentState == movingState)
+			// if moving up then floor++, else floor--
+			// move floor
+			// currentState = state.handleArrivedAtFloor()
+		// NOTE: scheduler keeps floor event in its list until elevator reaches it 
+	}
 
 	/*
 	 * This run method will set the information to the middleman as we try to update
@@ -47,6 +56,8 @@ public class Elevator implements Runnable {
 	public void run() {
 		currentState.handleFloorEvent();
 		while (true) {
+			// State s = currentState.handleFloorEvent(); 
+			// currentState = currentState.handleFloorEvent() == null ? currentState : state;
 			FloorEvent floorEvent = middleMan.getFloorEvent();
 			if (floorEvent != null) {
 				buttons.get(floorEvent.getDestination()-1).switchOn(true);

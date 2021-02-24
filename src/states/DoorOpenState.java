@@ -1,19 +1,23 @@
 package states;
 
-import elevator.Elevator;
-import events.ArrivalEvent;
-import events.FloorEvent;
+import events.*;
+import main.Elevator;
 
 public class DoorOpenState extends State {
-
-	public DoorOpenState(Elevator e) {
+	private Event event;
+	public DoorOpenState(Elevator e, Event event) {
 		super(e);
+		this.event = event;
 		elevator.startTimer();
 	}
 
 	@Override
 	public State handleDoorTimerExpiry() {
-		return new StationaryState(elevator);
+		if (event instanceof FloorEvent) {
+			return new MovingState(elevator, event);
+		} else {
+			return new StationaryState(elevator, event);
+		}
 	}
 
 }

@@ -1,4 +1,4 @@
-package elevator;
+package main;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
