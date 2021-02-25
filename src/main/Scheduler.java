@@ -7,8 +7,9 @@ import events.FloorEvent;
 public class Scheduler implements Runnable {
 	private ArrayList<FloorEvent> floorEvents;
 	private ArrayList<ArrivalEvent> arrivalEvents;
-	private MiddleMan middleMan;
-	private MiddleMan middleMan2;
+	private ArrayList<DestinationEvent> destinationEvents; 
+	private MiddleMan middleManFloor;
+	private MiddleMan middleManElevator;
 	
 	
 	/**
@@ -16,11 +17,12 @@ public class Scheduler implements Runnable {
 	 * @param middleMan Object to hold and pass events to/from the floor
 	 * @param middleMan2 Object to hold and pass events to/from the elevator
 	 */
-	public Scheduler(MiddleMan middleMan, MiddleMan middleMan2) {
+	public Scheduler(MiddleMan middleManFloor, MiddleMan middleManElevator) {
 		this.floorEvents = new ArrayList<FloorEvent>();
 		this.arrivalEvents = new ArrayList<ArrivalEvent>();
-		this.middleMan = middleMan;
-		this.middleMan2 = middleMan2;
+		this.destinationEvents = new ArrayList<DestinationEvent>(); 
+		this.middleManFloor = middleManFloor;
+		this.middleManElevator = middleManElevator;
 	}
 	
 	/**
@@ -29,19 +31,27 @@ public class Scheduler implements Runnable {
 	@Override
 	public void run() {
 		while(true) {
-			FloorEvent floorEvent = middleMan.getFloorEvent();
+			FloorEvent floorEvent = middleManFloor.getFloorEvent();
 			if (floorEvent != null) {
 				floorEvents.add(floorEvent);
 			}
 			if (!floorEvents.isEmpty()) {
-				middleMan2.putFloorEvent(floorEvents.remove(0));
+				middleManElevator.putFloorEvent(floorEvents.remove(0));
 			}
-			ArrivalEvent arrEvent = middleMan2.getArrivalEvent();
+			
+			//To:DO 
+			//DestinationEvent destinationEvent = middleManDestination.
+			
+			ArrivalEvent arrEvent = middleManElevator.getArrivalEvent();
+			if(arrEvent.getCurrentFloor() == floorEvent.getSource()) {
+				floorEvent.setAtSource(true);
+				middleManElevator.putFloorEvent(floorEvent);
+			}
 			if (arrEvent != null) {
 				arrivalEvents.add(arrEvent);
 			}
 			if (!arrivalEvents.isEmpty()) {
-				middleMan.putArrivalEvent(arrivalEvents.remove(0));
+				middleManFloor.putArrivalEvent(arrivalEvents.remove(0));
 			}
 		}
 	}
