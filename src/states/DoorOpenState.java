@@ -16,7 +16,7 @@ public class DoorOpenState extends State {
 		if (event instanceof FloorEvent) {
 			return new MovingState(elevator, event);
 		} else {
-			return new StationaryState(elevator, event);
+			return new StationaryState(elevator);
 		}
 	}
 
