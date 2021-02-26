@@ -25,8 +25,6 @@ public class FloorEvent extends Event {
 		super(time, destination);
 		this.source = source;
 		this.direction = direction;
-		this.isAtSource = false;
-
 	}
 
 	/**
