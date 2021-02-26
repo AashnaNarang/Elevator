@@ -3,8 +3,8 @@ package events;
 import java.time.LocalTime;
 
 public class Event {
-	private LocalTime time;
-	private int destination;
+	protected LocalTime time;
+	protected int destination;
 	
 	public Event(LocalTime time, int destination) {
 		this.destination = destination;

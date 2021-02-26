@@ -1,6 +1,5 @@
 package states;
 
-import events.ArrivalEvent;
 import events.FloorEvent;
 import main.Elevator;
 

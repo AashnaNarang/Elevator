@@ -1,10 +1,13 @@
 package main;
-import java.lang.Math;
-import java.time.LocalTime;
 import java.util.ArrayList;
 
 import events.ArrivalEvent;
+import events.Event;
 import events.FloorEvent;
+import events.SchedulerEvent;
+import states.MovingState;
+import states.State;
+import states.StationaryState;
 
 /*
  * The Elevator class is designed so that it takes the task form the middleman
@@ -18,6 +21,7 @@ public class Elevator implements Runnable {
 	private DirectionLamp downLamp;
 	private Direction direction;
 	private ArrayList<ElevatorButton> buttons;
+	private State currentState;
 
 	/*
 	 * constructor for Elevator Defining the middleclass parameters that are by to
@@ -32,13 +36,38 @@ public class Elevator implements Runnable {
 		this.downLamp = new DirectionLamp(Direction.DOWN);
 		this.direction = Direction.UP;
 		this.buttons = new ArrayList<ElevatorButton>();
+		this.currentState = new StationaryState(this);
 
 		for (int i = 0; i < numFloor; i++) {
 			buttons.add(new ElevatorButton(i));
 		}
 	}
 	
+	public void move(SchedulerEvent e) {
+		this.direction = e.getDirection();
+		this.switchLamps(true);
+		while(currentState.getClass() == MovingState.class) {
+			currentFloor += direction == Direction.UP ? 1 : -1;
+			currentState = currentState.handleArrivedAtFloor();
+		}
+	}
+	
 	public void move(FloorEvent e) {
+		
+		int diffFloors = e.getSource() - currentFloor;
+		
+		//might have to move logic to scheduler
+		if (diffFloors != 0) {
+			Direction direction = diffFloors < 0 ? Direction.DOWN : Direction.UP; 
+			e = new FloorEvent(e.getTime(), currentFloor, direction, e.getSource()); 
+		}
+		
+		this.direction = e.getDirection();
+		this.switchLamps(true);
+		while(currentState.getClass() == MovingState.class) {
+			currentFloor += direction == Direction.UP ? 1 : -1;
+			currentState = currentState.handleArrivedAtFloor();
+		}
 		// set direction 
 		// this.switchLamps(true);
 		// while(currentState == movingState)
@@ -54,27 +83,10 @@ public class Elevator implements Runnable {
 	 * floor elevator is moving through.
 	 */
 	public void run() {
-		currentState.handleFloorEvent();
 		while (true) {
-			// State s = currentState.handleFloorEvent(); 
-			// currentState = currentState.handleFloorEvent() == null ? currentState : state;
+			State s = currentState.handleFloorEvent();
+			currentState = currentState.handleFloorEvent() == null ? currentState : s;
 			FloorEvent floorEvent = middleMan.getFloorEvent();
-			if (floorEvent != null) {
-				buttons.get(floorEvent.getDestination()-1).switchOn(true);
-
-				
-				int floors = floorEvent.getDestination() - floorEvent.getSource();
-				direction = floors < 0 ? Direction.DOWN : Direction.UP;
-				this.switchLamps(true);
-
-				currentFloor = floorEvent.getDestination();
-
-				ArrivalEvent arrivalEvent = new ArrivalEvent(currentFloor, LocalTime.now(), direction, this);
-				middleMan.putArrivalEvent(arrivalEvent);
-				
-				buttons.get(this.currentFloor - 1).switchOn(false);
-				this.switchLamps(false);
-			}
 		}
 	}
 	
@@ -104,6 +116,42 @@ public class Elevator implements Runnable {
 	 */
 	public int getCurrentFloor() {
 		return currentFloor;
+	}
+
+	public void startTimer() {
+		try {
+			Thread.sleep(3000); //add correct time after
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.currentState.handleDoorTimerExpiry();
+	}
+
+	public void sendDestinationEvent(Event destinationEvent) {
+		this.middleMan.putDestinationEvent(destinationEvent);
+	}
+
+	public void switchOnButton(int i, boolean b) {
+		this.buttons.get(i).switchOn(b);
+		
+	}
+
+	public void sendArrivalEvent(ArrivalEvent e) {
+		this.middleMan.putArrivalEvent(e);
+		
+	}
+
+	public SchedulerEvent askShouldIStop() {
+		return this.middleMan.getSchedulerEvent();
+	}
+
+	public Direction getDirection() {
+		return this.direction;
+	}
+
+	public FloorEvent getFloorEvent() {
+		return this.middleMan.getFloorEvent();
 	}
 	
 }
