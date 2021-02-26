@@ -18,7 +18,7 @@ public class StationaryState extends State {
 			if (e.getSource() == elevator.getCurrentFloor()) {
 				return new DoorOpenState(elevator, e);
 			} else {
-				return new MovingState(elevator, e);
+				return new MovingState(elevator, e, false);
 			}
 		}
 		return this;
