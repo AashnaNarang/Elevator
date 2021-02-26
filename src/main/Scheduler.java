@@ -39,8 +39,14 @@ public class Scheduler implements Runnable {
 				middleManElevator.putFloorEvent(floorEvents.remove(0));
 			}
 			
-			//To:DO 
-			//DestinationEvent destinationEvent = middleManDestination.
+			DestinationEvent destinationEvent = middleManElevator.getDestinationEvent(); 
+			if(destinationEvent != null) {
+				destinationEvents.add(destinationEvent);
+			}
+			if (!destinationEvents.isEmpty()) {
+				middleManElevator.putDestinationEvent(destinationEvents.remove(0));
+			}
+					
 			
 			ArrivalEvent arrEvent = middleManElevator.getArrivalEvent();
 			if(arrEvent.getCurrentFloor() == floorEvent.getSource()) {
