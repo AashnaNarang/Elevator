@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import events.*;
 import main.Elevator;
 
-public class MovingState extends State {
+public class MovingState extends ElevatorState {
 
 	public MovingState(Elevator e, SchedulerEvent event) {
 		super(e);
@@ -29,7 +29,7 @@ public class MovingState extends State {
 
 
 	@Override
-	public State handleArrivedAtFloor() {
+	public ElevatorState handleArrivedAtFloor() {
 		System.out.println("Arrived at floor " + elevator.getCurrentFloor() + " and sending arrival event");
 		ArrivalEvent e = new ArrivalEvent(elevator.getCurrentFloor(), LocalTime.now(), elevator.getDirection(), elevator);
 		elevator.sendArrivalEvent(e);

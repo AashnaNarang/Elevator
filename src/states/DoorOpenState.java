@@ -3,7 +3,7 @@ package states;
 import events.*;
 import main.Elevator;
 
-public class DoorOpenState extends State {
+public class DoorOpenState extends ElevatorState {
 	private SchedulerEvent stopEvent;
 	private FloorEvent floorEvent;
 	
@@ -20,7 +20,7 @@ public class DoorOpenState extends State {
 	}
 
 	@Override
-	public State handleDoorTimerExpiry() {
+	public ElevatorState handleDoorTimerExpiry() {
 		if((floorEvent != null) && (stopEvent == null)) {
 			System.out.println("In handleDoorTimerExpiry because elevator is already at source floor");
 			return new MovingState(elevator, floorEvent, true);

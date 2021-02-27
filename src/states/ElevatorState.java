@@ -1,6 +1,4 @@
 package states;
-import events.ArrivalEvent;
-import events.FloorEvent;
 import main.Elevator;
 
 public abstract class ElevatorState {
@@ -8,6 +6,7 @@ public abstract class ElevatorState {
 	
 	public ElevatorState(Elevator e) {
 		this.elevator = e;
+		System.out.println("Moving into "+this.getClass().getSimpleName());
 	}
 	
 	public ElevatorState handleFloorEvent() {
