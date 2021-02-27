@@ -1,5 +1,6 @@
 package main;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 
 import events.ArrivalEvent;
@@ -28,17 +29,15 @@ public class MiddleMan {
 	 * @return The event object
 	 */
 	public synchronized FloorEvent getFloorEvent() {
-		while (floorEvents.isEmpty()) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				return null;
-			}
+		try {
+			FloorEvent tempEvent = floorEvents.remove();
+			System.out.println(Thread.currentThread().getName() + " is receiving FloorEvent. " +
+					tempEvent);
+			return tempEvent;
+		} catch (NoSuchElementException e) {
+			return null;
 		}
-		System.out.println(Thread.currentThread().getName() + " is receiving FloorEvent. " +
-				floorEvents.peek());
-		notifyAll();
-		return floorEvents.remove();
+		
 	}
 	
 	/**
@@ -65,17 +64,15 @@ public class MiddleMan {
 	 * @return The event object
 	 */
 	public synchronized ArrivalEvent getArrivalEvent() {
-		while (arrivalEvents.isEmpty()) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				return null;
-			}
+		try {
+			ArrivalEvent tempEvent = arrivalEvents.remove();
+			System.out.println(Thread.currentThread().getName() + " is receiving ArrivalEvent. " + 
+					tempEvent);
+			return tempEvent;
+		} catch (NoSuchElementException e) {
+			return null;
 		}
-		System.out.println(Thread.currentThread().getName() + " is receiving ArrivalEvent. " + 
-				arrivalEvents.peek());
-		notifyAll();
-		return arrivalEvents.remove();
+		
 	}
 	
 	/**
@@ -103,17 +100,14 @@ public class MiddleMan {
 	 * @return The event object
 	 */
 	public synchronized Event getDestinationEvent() {
-		while (destinationEvents.isEmpty()) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				return null;
-			}
+		try {
+			Event tempEvent = destinationEvents.remove();
+			System.out.println(Thread.currentThread().getName() + " is receiving DestinationEvent. " + 
+					tempEvent);
+			return tempEvent;
+		} catch (NoSuchElementException e) {
+			return null;
 		}
-		System.out.println(Thread.currentThread().getName() + " is receiving DestinationEvent. " + 
-				destinationEvents.peek());
-		notifyAll();
-		return destinationEvents.remove();
 	}
 	
 	/**
@@ -132,7 +126,6 @@ public class MiddleMan {
 				event);
 		destinationEvents.add(event);
 		notifyAll();
-		
 	}
 
 	
@@ -141,13 +134,6 @@ public class MiddleMan {
 	 * @param arrivalEvent The event object to add
 	 */
 	public synchronized SchedulerEvent getSchedulerEvent() {
-		while (schedEvent == null) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				return null;
-			}
-		}
 		System.out.println(Thread.currentThread().getName() + " is receiving SchedulerEvent. " + 
 				schedEvent);
 		SchedulerEvent tempEvent = schedEvent;
