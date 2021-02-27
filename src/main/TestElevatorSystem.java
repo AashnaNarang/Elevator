@@ -94,7 +94,7 @@ public class TestElevatorSystem {
 		}
 	}
 	
-	
+
 	public void test3() {
 		try {
 			middleMan1 = new MiddleMan();
