@@ -57,7 +57,7 @@ public class Elevator implements Runnable {
 		
 		int diffFloors = e.getSource() - currentFloor;
 		
-		//might have to move logic to scheduler
+		//might have to move logic to scheduler maybe
 		if (diffFloors != 0) {
 			Direction direction = diffFloors < 0 ? Direction.DOWN : Direction.UP; 
 			e = new FloorEvent(e.getTime(), currentFloor, direction, e.getSource()); 
