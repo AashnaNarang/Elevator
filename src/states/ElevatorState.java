@@ -1,23 +1,23 @@
 package states;
 import main.Elevator;
 
-public abstract class State {
+public abstract class ElevatorState {
 	protected Elevator elevator;
 	
-	public State(Elevator e) {
+	public ElevatorState(Elevator e) {
 		this.elevator = e;
 		System.out.println("Moving into "+this.getClass().getSimpleName());
 	}
 	
-	public State handleFloorEvent() {
+	public ElevatorState handleFloorEvent() {
 		return null;
 	}
 	
-	public State handleArrivedAtFloor() {
+	public ElevatorState handleArrivedAtFloor() {
 		return null;
 	}
 	
-	public State handleDoorTimerExpiry() {
+	public ElevatorState handleDoorTimerExpiry() {
 		return null;
 	}
 }
