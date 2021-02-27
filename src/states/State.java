@@ -6,6 +6,7 @@ public abstract class State {
 	
 	public State(Elevator e) {
 		this.elevator = e;
+		System.out.println("Moving into "+this.getClass().getSimpleName());
 	}
 	
 	public State handleFloorEvent() {

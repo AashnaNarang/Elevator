@@ -1,4 +1,5 @@
 package main;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 import events.ArrivalEvent;
@@ -56,7 +57,7 @@ public class Elevator implements Runnable {
 		
 		int diffFloors = e.getSource() - currentFloor;
 		
-		//might have to move logic to scheduler
+		//might have to move logic to scheduler maybe
 		if (diffFloors != 0) {
 			Direction direction = diffFloors < 0 ? Direction.DOWN : Direction.UP; 
 			e = new FloorEvent(e.getTime(), currentFloor, direction, e.getSource()); 
@@ -64,17 +65,13 @@ public class Elevator implements Runnable {
 		
 		this.direction = e.getDirection();
 		this.switchLamps(true);
+
+		ArrivalEvent arrEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this.direction, this);
+		sendArrivalEvent(arrEvent);
 		while(currentState.getClass() == MovingState.class) {
 			currentFloor += direction == Direction.UP ? 1 : -1;
 			currentState = currentState.handleArrivedAtFloor();
 		}
-		// set direction 
-		// this.switchLamps(true);
-		// while(currentState == movingState)
-			// if moving up then floor++, else floor--
-			// move floor
-			// currentState = state.handleArrivedAtFloor()
-		// NOTE: scheduler keeps floor event in its list until elevator reaches it 
 	}
 
 	/*
