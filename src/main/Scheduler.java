@@ -36,21 +36,23 @@ public class Scheduler implements Runnable {
 	 */
 	@Override
 	public void run() {
+		//will be used to keep track of the elevator status. 
+		boolean elevatorKeepsGoing = false; 
+		
 		while(true) {
 			
 			ArrivalEvent arrivalEvent; 
 			DestinationEvent destinationEvent; 
 			SchedulerEvent schedulerEvent; 
 			FloorEvent floorEvent = getFloorEvent(), currentFloorEvent;
-			boolean floorEventFlag = false, destinationEventFlag = false, keepGoing = false; 
+			boolean floorEventFlag = false, destinationEventFlag = false; 
 			
 			currentState = currentState.handleFloorEvent(floorEvent);
 			currentState = currentState.handleArrivalEvent();
 			currentState = currentState.handleDestinationEvent(destinationEvent);
 			
 			if(currentState.getClass() == ActiveState.class) {
-				if (!floorEvents.isEmpty()) {
-					//TO:DO Check if needed. 
+				if (!floorEvents.isEmpty() && !elevatorKeepsGoing) {
 					floorEvent = floorEvents.get(floorEvents.size() - 1);
 					middleManElevator.putFloorEvent(floorEvent);
 				}
@@ -59,7 +61,7 @@ public class Scheduler implements Runnable {
 					arrivalEvent = arrivalEvents.remove(0);
 					
 					for(FloorEvent fEvent : floorEvents) {
-						if(arrivalEvent.getCurrentFloor() == fEvent.getSource()) {
+						if((arrivalEvent.getCurrentFloor() == fEvent.getSource()) && fEvent.getDirection() == arrivalEvent.getDirection()) {
 							currentFloorEvent = fEvent; 
 							floorEventFlag = true; 
 							break; 
@@ -69,29 +71,31 @@ public class Scheduler implements Runnable {
 					
 					for(DestinationEvent destEvent : destinationEvents) {
 						if(destEvent.getDestination() == arrivalEvent.getCurrentFloor()) {
-							keepGoing = !destinationEvents.isEmpty();
-							//set the floor event to null since thats what elevator wants. 
-							currentFloorEvent = null; 
 							destinationEventFlag = true; 
 							break; 
 						}
 					}
+					
+					//checks if the elevator should keep going. 
+					elevatorKeepsGoing = !destinationEvents.isEmpty();
 										
 					if(!floorEventFlag || !destinationEventFlag) {
 						//No-stop
-						schedulerEvent = new SchedulerEvent(arrivalEvent.getDirection(), LocalTime.now());
+						schedulerEvent = new SchedulerEvent(currentFloorEvent.getDirection(), LocalTime.now());
 					}
 					else if(destinationEventFlag && floorEventFlag) {
-						schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), keepGoing, true, 
-								true, currentFloorEvent, arrivalEvent.getDirection(), LocalTime.now());
+						schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), elevatorKeepsGoing, true, 
+								true, currentFloorEvent, currentFloorEvent.getDirection(), LocalTime.now());
 					}
 					else if(destinationEventFlag) {
-						schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), keepGoing, true, 
-								false, currentFloorEvent, arrivalEvent.getDirection(), LocalTime.now());
+						//set the floor event to null since thats what elevator wants. 
+						currentFloorEvent = null; 
+						schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), elevatorKeepsGoing, true, 
+								false, currentFloorEvent, currentFloorEvent.getDirection(), LocalTime.now());
 					}
 					else {
 						schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), true, false, 
-								true, currentFloorEvent, arrivalEvent.getDirection(), LocalTime.now());
+								true, currentFloorEvent, currentFloorEvent.getDirection(), LocalTime.now());
 					}
 					
 					middleManElevator.putSchedulerEvent(schedulerEvent);
