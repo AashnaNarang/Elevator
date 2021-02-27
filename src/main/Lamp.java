@@ -1,3 +1,4 @@
+package main;
 /**
  * The Lamp class is responsible for keeping track of the lamp's (on/off)
  * status.

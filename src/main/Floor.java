@@ -1,3 +1,4 @@
+package main;
 /**
  * The floor class is responsible for tracking the floor number and also
  * toggling the lights for the up/down buttons.

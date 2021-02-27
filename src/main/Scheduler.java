@@ -1,4 +1,8 @@
+package main;
 import java.util.ArrayList;
+
+import events.ArrivalEvent;
+import events.FloorEvent;
 
 public class Scheduler implements Runnable {
 	private ArrayList<FloorEvent> floorEvents;

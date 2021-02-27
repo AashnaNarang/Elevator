@@ -1,4 +1,8 @@
+package events;
 import java.time.LocalTime;
+
+import main.Direction;
+import main.Elevator;
 
 public class ArrivalEvent {
 	int currentFloor;

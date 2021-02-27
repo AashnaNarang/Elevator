@@ -1,3 +1,4 @@
+package main;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -8,6 +9,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
+import events.ArrivalEvent;
+import events.FloorEvent;
 
 /**
  * The FloorSubsystem Class parses events and processes the information from the
