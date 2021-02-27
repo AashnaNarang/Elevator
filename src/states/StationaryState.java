@@ -3,7 +3,7 @@ package states;
 import events.FloorEvent;
 import main.Elevator;
 
-public class StationaryState extends State {
+public class StationaryState extends ElevatorState {
 
 	public StationaryState(Elevator e) {
 		super(e);
@@ -11,7 +11,7 @@ public class StationaryState extends State {
 
 	
 	@Override
-	public State handleFloorEvent() {
+	public ElevatorState handleFloorEvent() {
 		FloorEvent e = elevator.getFloorEvent();
 		if (e != null) {
 			if (e.getSource() == elevator.getCurrentFloor()) {
