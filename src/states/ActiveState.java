@@ -1,7 +1,7 @@
 package states;
 import events.ArrivalEvent;
 import events.FloorEvent;
-import main.DestinationEvent;
+import events.Event;
 import main.Scheduler;
 
 /**
@@ -13,7 +13,7 @@ public class ActiveState extends SchedulerState{
 	private Scheduler scheduler; 
 	private FloorEvent floorEvent; 
 	private ArrivalEvent arrivalEvent; 
-	private DestinationEvent destinationEvent; 
+	private Event destinationEvent; 
 	
 	/**
 	 * Constructors to take in parameters passed in from idleState
@@ -39,7 +39,7 @@ public class ActiveState extends SchedulerState{
 	 * @param scheduler the scheduler
 	 * @param destinationEvent the destinationEvent
 	 */
-	public ActiveState(Scheduler scheduler, DestinationEvent destinationEvent) {
+	public ActiveState(Scheduler scheduler, Event destinationEvent) {
 		super(scheduler); 
 		this.destinationEvent = destinationEvent; 
 		scheduler.addToDestinationEventsList(destinationEvent);
@@ -80,7 +80,7 @@ public class ActiveState extends SchedulerState{
 	}
 	
 	@Override
-	public SchedulerState handleDestinationEvent(DestinationEvent newEvent) {
+	public SchedulerState handleDestinationEvent(Event newEvent) {
 		if(destinationEvent != null) {
 			scheduler.addToDestinationEventsList(destinationEvent);
 		}

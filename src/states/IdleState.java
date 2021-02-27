@@ -2,7 +2,7 @@ package states;
 
 import events.ArrivalEvent;
 import events.FloorEvent;
-import main.DestinationEvent;
+import events.Event;
 import main.MiddleMan;
 import main.Scheduler;
 
@@ -47,7 +47,7 @@ public class IdleState extends SchedulerState {
 	 * one is received
 	 */
 	@Override
-	public SchedulerState handleDestinationEvent(DestinationEvent destinationEvent) {
+	public SchedulerState handleDestinationEvent(Event destinationEvent) {
 		if (destinationEvent != null) {
 			return new ActiveState(scheduler, destinationEvent);
 		}

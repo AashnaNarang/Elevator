@@ -3,7 +3,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 import events.ArrivalEvent;
+import events.Event;
 import events.FloorEvent;
+import events.SchedulerEvent;
 import states.ActiveState;
 import states.IdleState;
 import states.SchedulerState;
@@ -11,7 +13,7 @@ import states.SchedulerState;
 public class Scheduler implements Runnable {
 	private ArrayList<FloorEvent> floorEvents;
 	private ArrayList<ArrivalEvent> arrivalEvents;
-	private ArrayList<DestinationEvent> destinationEvents; 
+	private ArrayList<Event> destinationEvents; 
 	private MiddleMan middleManFloor;
 	private MiddleMan middleManElevator;
 	private SchedulerState currentState; 
@@ -25,7 +27,7 @@ public class Scheduler implements Runnable {
 	public Scheduler(MiddleMan middleManFloor, MiddleMan middleManElevator) {
 		this.floorEvents = new ArrayList<FloorEvent>();
 		this.arrivalEvents = new ArrayList<ArrivalEvent>();
-		this.destinationEvents = new ArrayList<DestinationEvent>(); 
+		this.destinationEvents = new ArrayList<Event>(); 
 		this.middleManFloor = middleManFloor;
 		this.middleManElevator = middleManElevator;
 		this.currentState = new IdleState(this); 
@@ -42,9 +44,10 @@ public class Scheduler implements Runnable {
 		while(true) {
 			
 			ArrivalEvent arrivalEvent; 
-			DestinationEvent destinationEvent; 
+			Event destinationEvent; 
 			SchedulerEvent schedulerEvent; 
-			FloorEvent floorEvent = getFloorEvent(), currentFloorEvent;
+			FloorEvent floorEvent = getFloorEvent();
+			FloorEvent currentFloorEvent = null;
 			boolean floorEventFlag = false, destinationEventFlag = false; 
 			
 			currentState = currentState.handleFloorEvent(floorEvent);
@@ -70,7 +73,7 @@ public class Scheduler implements Runnable {
 												
 					}
 					
-					for(DestinationEvent destEvent : destinationEvents) {
+					for(Event destEvent : destinationEvents) {
 						if(destEvent.getDestination() == arrivalEvent.getCurrentFloor()) {
 							destinationEventFlag = true; 
 							destinationEvents.remove(destEvent);
@@ -78,13 +81,7 @@ public class Scheduler implements Runnable {
 						}
 					}
 					
-					if(!destinationEvents.isEmpty() || floorEventFlag) {
-						//checks if the elevator should keep going. 
-						elevatorKeepsGoing = true;
-					} 
-					else {
-						elevatorKeepsGoing = false; 
-					}
+					elevatorKeepsGoing = (!destinationEvents.isEmpty() || floorEventFlag);
 										
 					if(!floorEventFlag || !destinationEventFlag) {
 						//No-stop
@@ -118,8 +115,8 @@ public class Scheduler implements Runnable {
 		return arrEvent; 
 	}
 	
-	public DestinationEvent getDestinationEvent() {
-		DestinationEvent destinationEvent = middleManElevator.getDestinationEvent();
+	public Event getDestinationEvent() {
+		Event destinationEvent = middleManElevator.getDestinationEvent();
 		if (destinationEvent != null) {
 			destinationEvents.add(destinationEvent);
 		}
@@ -154,7 +151,7 @@ public class Scheduler implements Runnable {
 		arrivalEvents.add(event); 
 	}
 	
-	public void addToDestinationEventsList(DestinationEvent event) {
+	public void addToDestinationEventsList(Event event) {
 		destinationEvents.add(event); 
 	}
 }

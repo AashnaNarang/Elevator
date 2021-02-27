@@ -1,6 +1,6 @@
 package states;
 import events.FloorEvent;
-import main.DestinationEvent;
+import events.Event;
 import main.Scheduler;
 
 public abstract class SchedulerState {
@@ -19,7 +19,7 @@ protected Scheduler scheduler;
 		return null; 
 	}
 	
-	public SchedulerState handleDestinationEvent(DestinationEvent event) {
+	public SchedulerState handleDestinationEvent(Event event) {
 		return null; 
 	}
 }
