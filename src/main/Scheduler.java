@@ -50,7 +50,6 @@ public class Scheduler implements Runnable {
 				if (!floorEvents.isEmpty()) {
 					floorEvent = floorEvents.remove(0);
 					middleManElevator.putFloorEvent(floorEvent);
-					//TO;DO
 				}
 				
 				if (!arrivalEvents.isEmpty()) {
