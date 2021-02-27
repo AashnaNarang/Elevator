@@ -1,6 +1,4 @@
 package states;
-import events.ArrivalEvent;
-import events.FloorEvent;
 import main.Elevator;
 
 public abstract class State {
