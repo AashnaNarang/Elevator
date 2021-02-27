@@ -85,8 +85,7 @@ public class Elevator implements Runnable {
 	public void run() {
 		while (true) {
 			State s = currentState.handleFloorEvent();
-			currentState = currentState.handleFloorEvent() == null ? currentState : s;
-			FloorEvent floorEvent = middleMan.getFloorEvent();
+			currentState = s == null ? currentState : s;
 		}
 	}
 	
