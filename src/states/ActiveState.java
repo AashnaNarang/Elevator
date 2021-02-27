@@ -9,7 +9,6 @@ import main.Scheduler;
  * 
  */
 public class ActiveState extends SchedulerState{
-	//will implement the state interface
 	private Scheduler scheduler; 
 	private FloorEvent floorEvent; 
 	private ArrivalEvent arrivalEvent; 
