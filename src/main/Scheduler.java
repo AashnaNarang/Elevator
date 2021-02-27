@@ -53,7 +53,7 @@ public class Scheduler implements Runnable {
 			
 			if(currentState.getClass() == ActiveState.class) {
 				if (!floorEvents.isEmpty() && !elevatorKeepsGoing) {
-					floorEvent = floorEvents.get(floorEvents.size() - 1);
+					floorEvent = floorEvents.get(0);
 					middleManElevator.putFloorEvent(floorEvent);
 				}
 				
@@ -64,6 +64,7 @@ public class Scheduler implements Runnable {
 						if((arrivalEvent.getCurrentFloor() == fEvent.getSource()) && fEvent.getDirection() == arrivalEvent.getDirection()) {
 							currentFloorEvent = fEvent; 
 							floorEventFlag = true; 
+							floorEvents.remove(fEvent);
 							break; 
 						}
 												
@@ -72,24 +73,28 @@ public class Scheduler implements Runnable {
 					for(DestinationEvent destEvent : destinationEvents) {
 						if(destEvent.getDestination() == arrivalEvent.getCurrentFloor()) {
 							destinationEventFlag = true; 
+							destinationEvents.remove(destEvent);
 							break; 
 						}
 					}
 					
-					//checks if the elevator should keep going. 
-					elevatorKeepsGoing = !destinationEvents.isEmpty();
+					if(!destinationEvents.isEmpty() || floorEventFlag) {
+						//checks if the elevator should keep going. 
+						elevatorKeepsGoing = true;
+					} 
+					else {
+						elevatorKeepsGoing = false; 
+					}
 										
 					if(!floorEventFlag || !destinationEventFlag) {
 						//No-stop
-						schedulerEvent = new SchedulerEvent(currentFloorEvent.getDirection(), LocalTime.now());
+						schedulerEvent = new SchedulerEvent(arrivalEvent.getDirection(), LocalTime.now());
 					}
 					else if(destinationEventFlag && floorEventFlag) {
 						schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), elevatorKeepsGoing, true, 
 								true, currentFloorEvent, currentFloorEvent.getDirection(), LocalTime.now());
 					}
 					else if(destinationEventFlag) {
-						//set the floor event to null since thats what elevator wants. 
-						currentFloorEvent = null; 
 						schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), elevatorKeepsGoing, true, 
 								false, currentFloorEvent, currentFloorEvent.getDirection(), LocalTime.now());
 					}
