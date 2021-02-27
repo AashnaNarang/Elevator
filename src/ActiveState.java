@@ -1,17 +1,22 @@
+import events.ArrivalEvent;
+import events.FloorEvent;
+import main.Scheduler;
 
-public class ActiveState {
+public class ActiveState implements State{
 	//will implement the state interface
-	private SchedulerSubsystem schedulerSubsystem; 
+	private Scheduler scheduler; 
 	
 	public ActiveState(Scheduler scheduler) {
-		
+		this.scheduler = scheduler; 
 	}
 	
-	public void handleFloorEvent() {
-		
+	@Override
+	public void handleFloorEvent(FloorEvent event) {
+		scheduler.changeState(scheduler.getActiveState());
 	}
-	
-	public void sendArrivalEvent() {
+
+	@Override
+	public void handleArrivalEvent(ArrivalEvent event) {
 		
 	}
 }
