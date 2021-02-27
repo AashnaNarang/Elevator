@@ -14,6 +14,7 @@ public class ActiveState extends SchedulerState{
 	public ActiveState(Scheduler scheduler, FloorEvent floorEvent) {
 		super(scheduler); 
 		this.floorEvent = floorEvent; 
+		scheduler.addToFloorEventsList(floorEvent);
 	}
 	
 	public ActiveState(Scheduler scheduler, ArrivalEvent arrivalEvent) {
@@ -24,12 +25,16 @@ public class ActiveState extends SchedulerState{
 	public ActiveState(Scheduler scheduler, DestinationEvent destinationEvent) {
 		super(scheduler); 
 		this.destinationEvent = destinationEvent; 
+		scheduler.addToDestinationEventsList(destinationEvent);
 	}
 
 	@Override
-	public SchedulerState handleFloorEvent() {
+	public SchedulerState handleFloorEvent(FloorEvent newEvent) {
 		if(floorEvent != null) {
 			scheduler.addToFloorEventsList(floorEvent);
+		}
+		if(newEvent != null) {
+			scheduler.addToFloorEventsList(newEvent);
 		}
 		else if(scheduler.isFloorEventsListEmpty() && scheduler.isArrivalEventsListEmpty()
 				&& scheduler.isDestinationEventsListEmpty()) {
@@ -53,9 +58,12 @@ public class ActiveState extends SchedulerState{
 	}
 	
 	@Override
-	public SchedulerState handleDestinationEvent() {
+	public SchedulerState handleDestinationEvent(DestinationEvent newEvent) {
 		if(destinationEvent != null) {
 			scheduler.addToDestinationEventsList(destinationEvent);
+		}
+		if(newEvent != null) {
+			scheduler.addToDestinationEventsList(newEvent);
 		}
 		else if(scheduler.isArrivalEventsListEmpty() && scheduler.isFloorEventsListEmpty() 
 				&& scheduler.isDestinationEventsListEmpty()) {

@@ -40,38 +40,63 @@ public class Scheduler implements Runnable {
 			
 			ArrivalEvent arrivalEvent; 
 			DestinationEvent destinationEvent; 
-			FloorEvent floorEvent; 
+			SchedulerEvent schedulerEvent; 
+			FloorEvent floorEvent = getFloorEvent(), currentFloorEvent;
+			boolean floorEventFlag = false, destinationEventFlag = false, keepGoing = false; 
 			
-			currentState = currentState.handleFloorEvent();
+			currentState = currentState.handleFloorEvent(floorEvent);
 			currentState = currentState.handleArrivalEvent();
-			currentState = currentState.handleDestinationEvent();
+			currentState = currentState.handleDestinationEvent(destinationEvent);
 			
 			if(currentState.getClass() == ActiveState.class) {
 				if (!floorEvents.isEmpty()) {
-					floorEvent = floorEvents.remove(0);
+					//TO:DO Check if needed. 
+					floorEvent = floorEvents.get(floorEvents.size() - 1);
 					middleManElevator.putFloorEvent(floorEvent);
 				}
 				
 				if (!arrivalEvents.isEmpty()) {
 					arrivalEvent = arrivalEvents.remove(0);
-					if(arrivalEvent.getCurrentFloor() == floorEvent.getSource()) {
-						SchedulerEvent schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), true, false, 
-								true, floorEvent, arrivalEvent.getDirection(), LocalTime.now());
-						middleManElevator.putSchedulerEvent(schedulerEvent);
+					
+					for(FloorEvent fEvent : floorEvents) {
+						if(arrivalEvent.getCurrentFloor() == fEvent.getSource()) {
+							currentFloorEvent = fEvent; 
+							floorEventFlag = true; 
+							break; 
+						}
+												
 					}
+					
+					for(DestinationEvent destEvent : destinationEvents) {
+						if(destEvent.getDestination() == arrivalEvent.getCurrentFloor()) {
+							keepGoing = !destinationEvents.isEmpty();
+							//set the floor event to null since thats what elevator wants. 
+							currentFloorEvent = null; 
+							destinationEventFlag = true; 
+							break; 
+						}
+					}
+										
+					if(!floorEventFlag || !destinationEventFlag) {
+						//No-stop
+						schedulerEvent = new SchedulerEvent(arrivalEvent.getDirection(), LocalTime.now());
+					}
+					else if(destinationEventFlag && floorEventFlag) {
+						schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), keepGoing, true, 
+								true, currentFloorEvent, arrivalEvent.getDirection(), LocalTime.now());
+					}
+					else if(destinationEventFlag) {
+						schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), keepGoing, true, 
+								false, currentFloorEvent, arrivalEvent.getDirection(), LocalTime.now());
+					}
+					else {
+						schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), true, false, 
+								true, currentFloorEvent, arrivalEvent.getDirection(), LocalTime.now());
+					}
+					
+					middleManElevator.putSchedulerEvent(schedulerEvent);
 					middleManFloor.putArrivalEvent(arrivalEvent);
-				}
-				 
-				if (!destinationEvents.isEmpty()) {
-					destinationEvent = destinationEvents.remove(0);
-					if(destinationEvent.getDestination() == arrivalEvent.getCurrentFloor()) {
-						boolean keepGoing = !destinationEvents.isEmpty();
-						SchedulerEvent schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), keepGoing, true, 
-								false, floorEvent, arrivalEvent.getDirection(), LocalTime.now());
-						middleManElevator.putSchedulerEvent(schedulerEvent);
-					}
-					middleManElevator.putDestinationEvent(destinationEvent);
-				}			
+				}	
 			}		
 		}
 	}

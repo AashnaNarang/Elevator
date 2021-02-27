@@ -1,4 +1,6 @@
 package states;
+import events.FloorEvent;
+import main.DestinationEvent;
 import main.Scheduler;
 
 public abstract class SchedulerState {
@@ -9,7 +11,7 @@ protected Scheduler scheduler;
 		this.scheduler = e;
 	}
 	
-	public SchedulerState handleFloorEvent() {
+	public SchedulerState handleFloorEvent(FloorEvent event) {
 		return null; 
 	}
 	
@@ -17,7 +19,7 @@ protected Scheduler scheduler;
 		return null; 
 	}
 	
-	public SchedulerState handleDestinationEvent() {
+	public SchedulerState handleDestinationEvent(DestinationEvent event) {
 		return null; 
 	}
 }

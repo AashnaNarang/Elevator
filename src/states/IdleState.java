@@ -14,9 +14,7 @@ public class IdleState extends SchedulerState{
 	}
 
 	@Override
-	public SchedulerState handleFloorEvent() {
-		FloorEvent floorEvent = scheduler.getFloorEvent(); 
-		
+	public SchedulerState handleFloorEvent(FloorEvent floorEvent) {	
 		if (floorEvent != null) {
 			return new ActiveState(scheduler, floorEvent);
 		}
@@ -34,9 +32,7 @@ public class IdleState extends SchedulerState{
 	}
 	
 	@Override
-	public SchedulerState handleDestinationEvent() {
-		DestinationEvent destinationEvent = scheduler.getDestinationEvent();
-		
+	public SchedulerState handleDestinationEvent(DestinationEvent destinationEvent) {
 		if(destinationEvent != null) {
 			return new ActiveState(scheduler, destinationEvent); 
 		}
