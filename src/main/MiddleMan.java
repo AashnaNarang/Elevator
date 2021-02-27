@@ -134,25 +134,7 @@ public class MiddleMan {
 		notifyAll();
 		
 	}
-	
 
-	 * Add an event that signifies what the elevator should do. 
-	 * @param destinationEvent The event object to add
-	 */
-	public synchronized void putSchedulerEvent(SchedulerEvent schedulerEvent) {
-		while (!schedulerEvent.isEmpty()) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				return;
-			}
-		}
-		System.out.println(Thread.currentThread().getName() + " is sending SchedulerEvent. " + 
-				schedulerEvent);
-		schedulerEvents.add(schedulerEvent);
-		notifyAll();
-		
-	}
 	
 	/**
 	 * Add an event that signifies an elevator has arrived at a floor

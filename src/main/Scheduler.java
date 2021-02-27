@@ -44,9 +44,9 @@ public class Scheduler implements Runnable {
 		while(true) {
 			
 			ArrivalEvent arrivalEvent; 
-			Event destinationEvent; 
 			SchedulerEvent schedulerEvent; 
 			FloorEvent floorEvent = getFloorEvent();
+			Event destinationEvent = getDestinationEvent();
 			FloorEvent currentFloorEvent = null;
 			boolean floorEventFlag = false, destinationEventFlag = false; 
 			

@@ -7,7 +7,7 @@ import events.Event;
 import events.FloorEvent;
 import events.SchedulerEvent;
 import states.MovingState;
-import states.State;
+import states.ElevatorState;
 import states.StationaryState;
 
 /*
@@ -22,7 +22,7 @@ public class Elevator implements Runnable {
 	private DirectionLamp downLamp;
 	private Direction direction;
 	private ArrayList<ElevatorButton> buttons;
-	private State currentState;
+	private ElevatorState currentState;
 
 	/*
 	 * constructor for Elevator Defining the middleclass parameters that are by to
@@ -81,7 +81,7 @@ public class Elevator implements Runnable {
 	 */
 	public void run() {
 		while (true) {
-			State s = currentState.handleFloorEvent();
+			ElevatorState s = currentState.handleFloorEvent();
 			currentState = s == null ? currentState : s;
 		}
 	}
