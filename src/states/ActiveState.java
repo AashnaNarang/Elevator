@@ -8,8 +8,7 @@ import main.Scheduler;
  * This is the active state of the scheduler 
  * 
  */
-public class ActiveState extends SchedulerState{
-	private Scheduler scheduler; 
+public class ActiveState extends SchedulerState{ 
 	private FloorEvent floorEvent; 
 	private ArrivalEvent arrivalEvent; 
 	private Event destinationEvent; 
@@ -22,7 +21,7 @@ public class ActiveState extends SchedulerState{
 	public ActiveState(Scheduler scheduler, FloorEvent floorEvent) {
 		super(scheduler); 
 		this.floorEvent = floorEvent; 
-		scheduler.addToFloorEventsList(floorEvent);
+		this.scheduler.addToFloorEventsList(floorEvent);
 	}
 	/**
 	 * Constructors to take in parameters passed in from idleState
@@ -41,7 +40,7 @@ public class ActiveState extends SchedulerState{
 	public ActiveState(Scheduler scheduler, Event destinationEvent) {
 		super(scheduler); 
 		this.destinationEvent = destinationEvent; 
-		scheduler.addToDestinationEventsList(destinationEvent);
+		this.scheduler.addToDestinationEventsList(destinationEvent);
 	}
 
 	/**
