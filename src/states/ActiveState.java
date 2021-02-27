@@ -4,6 +4,10 @@ import events.FloorEvent;
 import main.DestinationEvent;
 import main.Scheduler;
 
+/**
+ * This is the active state of the scheduler 
+ * 
+ */
 public class ActiveState extends SchedulerState{
 	//will implement the state interface
 	private Scheduler scheduler; 
@@ -11,23 +15,41 @@ public class ActiveState extends SchedulerState{
 	private ArrivalEvent arrivalEvent; 
 	private DestinationEvent destinationEvent; 
 	
+	/**
+	 * Constructors to take in parameters passed in from idleState
+	 * @param scheduler the scheduler
+	 * @param floorEvent the floorEvent
+	 */
 	public ActiveState(Scheduler scheduler, FloorEvent floorEvent) {
 		super(scheduler); 
 		this.floorEvent = floorEvent; 
 		scheduler.addToFloorEventsList(floorEvent);
 	}
-	
+	/**
+	 * Constructors to take in parameters passed in from idleState
+	 * @param scheduler the scheduler
+	 * @param arrivalEvent the arrivalEvent
+	 */
 	public ActiveState(Scheduler scheduler, ArrivalEvent arrivalEvent) {
 		super(scheduler); 
 		this.arrivalEvent = arrivalEvent; 
 	}
-	
+	/**
+	 * Constructors to take in parameters passed in from idleState
+	 * @param scheduler the scheduler
+	 * @param destinationEvent the destinationEvent
+	 */
 	public ActiveState(Scheduler scheduler, DestinationEvent destinationEvent) {
 		super(scheduler); 
 		this.destinationEvent = destinationEvent; 
 		scheduler.addToDestinationEventsList(destinationEvent);
 	}
 
+	/**
+	 * Handles floorevents in active state, adding them to a list 
+	 * If there are no more events to handle, then the scheduler returns to idle state
+	 * 
+	 */
 	@Override
 	public SchedulerState handleFloorEvent(FloorEvent newEvent) {
 		if(floorEvent != null) {

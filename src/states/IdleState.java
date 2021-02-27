@@ -1,42 +1,57 @@
 package states;
+
 import events.ArrivalEvent;
 import events.FloorEvent;
 import main.DestinationEvent;
 import main.MiddleMan;
 import main.Scheduler;
 
-public class IdleState extends SchedulerState{
-	
-	private MiddleMan middleManFloor;
-	
+/**
+ * This is the Idle state of the Scheduler class
+ *
+ */
+public class IdleState extends SchedulerState {
+
 	public IdleState(Scheduler scheduler) {
 		super(scheduler);
 	}
 
+	/**
+	 * This listens to a FloorEvent that will be passed into activeState if one is
+	 * received
+	 */
 	@Override
-	public SchedulerState handleFloorEvent(FloorEvent floorEvent) {	
+	public SchedulerState handleFloorEvent(FloorEvent floorEvent) {
 		if (floorEvent != null) {
 			return new ActiveState(scheduler, floorEvent);
 		}
-		return this; 
+		return this;
 	}
 
+	/**
+	 * This listens to a ArrivalEvent that will be passed into activeState if one is
+	 * received
+	 */
 	@Override
 	public SchedulerState handleArrivalEvent() {
 		ArrivalEvent arrivalEvent = scheduler.getArrivalEvent();
-		
-		if(arrivalEvent != null) {
-			return new ActiveState(scheduler, arrivalEvent); 
+
+		if (arrivalEvent != null) {
+			return new ActiveState(scheduler, arrivalEvent);
 		}
-		return this; 
+		return this;
 	}
-	
+
+	/**
+	 * This listens to a DestinationEvent that will be passed into activeState if
+	 * one is received
+	 */
 	@Override
 	public SchedulerState handleDestinationEvent(DestinationEvent destinationEvent) {
-		if(destinationEvent != null) {
-			return new ActiveState(scheduler, destinationEvent); 
+		if (destinationEvent != null) {
+			return new ActiveState(scheduler, destinationEvent);
 		}
-		return this; 
+		return this;
 	}
 
 }
