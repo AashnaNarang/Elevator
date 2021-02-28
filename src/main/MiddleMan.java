@@ -134,6 +134,13 @@ public class MiddleMan {
 	 * @param arrivalEvent The event object to add
 	 */
 	public synchronized SchedulerEvent getSchedulerEvent() {
+		while (schedEvent == null) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				return null;
+			}
+		}
 		System.out.println(Thread.currentThread().getName() + " is receiving SchedulerEvent. " + 
 				schedEvent);
 		SchedulerEvent tempEvent = schedEvent;

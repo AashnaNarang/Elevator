@@ -111,7 +111,7 @@ public class Scheduler implements Runnable {
 	public ArrivalEvent getArrivalEvent() {
 		ArrivalEvent arrEvent = middleManElevator.getArrivalEvent();
 		if (arrEvent != null) {
-			arrivalEvents.add(arrEvent);
+			//arrivalEvents.add(arrEvent);
 		}
 		return arrEvent;
 	}
@@ -127,7 +127,7 @@ public class Scheduler implements Runnable {
 	public FloorEvent getFloorEvent() {
 		FloorEvent floorEvent = middleManFloor.getFloorEvent();
 		if (floorEvent != null) {
-			floorEvents.add(floorEvent);
+			//floorEvents.add(floorEvent);
 		}
 		return floorEvent;
 	}

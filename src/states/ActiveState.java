@@ -51,7 +51,7 @@ public class ActiveState extends SchedulerState{
 	@Override
 	public void handleFloorEvent(FloorEvent newEvent) {
 		if(floorEvent != null) {
-			scheduler.addToFloorEventsList(floorEvent);
+			//scheduler.addToFloorEventsList(floorEvent);
 		}
 		if(newEvent != null) {
 			scheduler.addToFloorEventsList(newEvent);
