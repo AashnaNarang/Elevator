@@ -9,6 +9,7 @@ protected Scheduler scheduler;
 	
 	public SchedulerState(Scheduler e) {
 		this.scheduler = e;
+		System.out.println("Moving into " + this.getClass().getSimpleName());
 	}
 	
 	public void handleFloorEvent(FloorEvent event) {

@@ -70,10 +70,11 @@ public class Elevator implements Runnable {
 		
 		this.direction = e.getDirection();
 		this.switchLamps(true);
-
+		
 		ArrivalEvent arrEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this.direction, this);
 		sendArrivalEvent(arrEvent);
 		while(currentState.getClass() == MovingState.class) {
+			System.out.println("Moving one floor " + direction);
 			currentFloor += direction == Direction.UP ? 1 : -1;
 			currentState.handleArrivedAtFloor();
 		}
@@ -155,7 +156,7 @@ public class Elevator implements Runnable {
 	}
 	
 	public void setState(ElevatorState state) {
-		System.out.println("setting state");
+		System.out.println("setting state to " + state.getClass().getSimpleName());
 		this.currentState = state;
 	}
 	

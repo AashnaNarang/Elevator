@@ -7,24 +7,38 @@ import main.Elevator;
 
 public class MovingState extends ElevatorState {
 
-	public MovingState(Elevator e, SchedulerEvent event) {
+	private MovingState(Elevator e, SchedulerEvent event) {
 		super(e);
 		if (event.isAtSource()) {
 			Event destinationEvent = new Event(LocalTime.now(), event.getDestination());
 			elevator.sendDestinationEvent(destinationEvent);
 			elevator.switchOnButton(event.getDestination()-1, true);
 		}
-		 elevator.move(event);
+//		 elevator.move(event);
 	}
 	
-	public MovingState(Elevator e, FloorEvent event, boolean isAtSource) {
+	private MovingState(Elevator e, FloorEvent event, boolean isAtSource) {
 		super(e);
 		if (isAtSource) {
 			Event destinationEvent = new Event(LocalTime.now(), event.getDestination());
 			elevator.sendDestinationEvent(destinationEvent);
 			elevator.switchOnButton(event.getDestination()-1, true);
 		}
-		elevator.move(event);
+//		elevator.move(event);
+	}
+	
+	public static void createWithFloorEvent(Elevator e, FloorEvent event, boolean isAtSource) {
+		// Factory Pattern
+		MovingState m = new MovingState(e, event, isAtSource);
+		e.setState(m);
+		e.move(event);
+	}
+	
+	public static void createWithSchedulerEvent(Elevator e, SchedulerEvent event) {
+		// Factory Pattern
+		MovingState m = new MovingState(e, event);
+		e.setState(m);
+		e.move(event);
 	}
 
 

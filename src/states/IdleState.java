@@ -14,7 +14,6 @@ public class IdleState extends SchedulerState {
 
 	public IdleState(Scheduler scheduler) {
 		super(scheduler);
-		System.out.println("Moving into " + this.getClass().getSimpleName());
 	}
 
 	/**
