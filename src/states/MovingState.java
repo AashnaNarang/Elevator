@@ -29,7 +29,7 @@ public class MovingState extends ElevatorState {
 
 
 	@Override
-	public ElevatorState handleArrivedAtFloor() {
+	public void handleArrivedAtFloor() {
 		System.out.println("Arrived at floor " + elevator.getCurrentFloor() + " and sending arrival event");
 		ArrivalEvent e = new ArrivalEvent(elevator.getCurrentFloor(), LocalTime.now(), elevator.getDirection(), elevator);
 		elevator.sendArrivalEvent(e);
@@ -40,9 +40,8 @@ public class MovingState extends ElevatorState {
 			if (e2.isAtDestination()) {
 				elevator.switchOnButton(e2.getFloor()-1, false);
 			}
-			return new DoorOpenState(elevator, e2);
+			elevator.setState(new DoorOpenState(elevator, e2));
 		}
-		return this;
 	}
 
 }

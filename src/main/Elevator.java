@@ -49,7 +49,7 @@ public class Elevator implements Runnable {
 		this.switchLamps(true);
 		while(currentState.getClass() == MovingState.class) {
 			currentFloor += direction == Direction.UP ? 1 : -1;
-			currentState = currentState.handleArrivedAtFloor();
+			currentState.handleArrivedAtFloor();
 		}
 	}
 	
@@ -70,7 +70,7 @@ public class Elevator implements Runnable {
 		sendArrivalEvent(arrEvent);
 		while(currentState.getClass() == MovingState.class) {
 			currentFloor += direction == Direction.UP ? 1 : -1;
-			currentState = currentState.handleArrivedAtFloor();
+			currentState.handleArrivedAtFloor();
 		}
 	}
 
@@ -81,8 +81,7 @@ public class Elevator implements Runnable {
 	 */
 	public void run() {
 		while (true) {
-			ElevatorState s = currentState.handleFloorEvent();
-			currentState = s == null ? currentState : s;
+			currentState.handleFloorEvent();
 		}
 	}
 	
@@ -148,6 +147,11 @@ public class Elevator implements Runnable {
 
 	public FloorEvent getFloorEvent() {
 		return this.middleMan.getFloorEvent();
+	}
+	
+	public void setState(ElevatorState state) {
+		System.out.println("setting state");
+		this.currentState = state;
 	}
 	
 }

@@ -49,7 +49,7 @@ public class ActiveState extends SchedulerState{
 	 * 
 	 */
 	@Override
-	public SchedulerState handleFloorEvent(FloorEvent newEvent) {
+	public void handleFloorEvent(FloorEvent newEvent) {
 		if(floorEvent != null) {
 			scheduler.addToFloorEventsList(floorEvent);
 		}
@@ -58,27 +58,23 @@ public class ActiveState extends SchedulerState{
 		}
 		else if(scheduler.isFloorEventsListEmpty() && scheduler.isArrivalEventsListEmpty()
 				&& scheduler.isDestinationEventsListEmpty()) {
-			return new IdleState(scheduler);
+			scheduler.setState(new IdleState(scheduler));
 		}
-		
-		return this; 
 	}
 
 	@Override
-	public SchedulerState handleArrivalEvent() {
+	public void handleArrivalEvent() {
 		if(arrivalEvent != null) {
 			scheduler.addToArrivalEventsList(arrivalEvent);
 		}
 		else if(scheduler.isArrivalEventsListEmpty() && scheduler.isFloorEventsListEmpty()
 				&& scheduler.isDestinationEventsListEmpty()) {
-			return new IdleState(scheduler);
+			scheduler.setState(new IdleState(scheduler));
 		}
-		
-		return this; 
 	}
 	
 	@Override
-	public SchedulerState handleDestinationEvent(Event newEvent) {
+	public void handleDestinationEvent(Event newEvent) {
 		if(destinationEvent != null) {
 			scheduler.addToDestinationEventsList(destinationEvent);
 		}
@@ -87,10 +83,8 @@ public class ActiveState extends SchedulerState{
 		}
 		else if(scheduler.isArrivalEventsListEmpty() && scheduler.isFloorEventsListEmpty() 
 				&& scheduler.isDestinationEventsListEmpty()) {
-			return new IdleState(scheduler);
+			scheduler.setState(new IdleState(scheduler));
 		}
-		
-		return this; 
 	}
 	
 }
