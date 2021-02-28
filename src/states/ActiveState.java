@@ -8,8 +8,7 @@ import main.Scheduler;
  * This is the active state of the scheduler 
  * 
  */
-public class ActiveState extends SchedulerState{
-	private Scheduler scheduler; 
+public class ActiveState extends SchedulerState{ 
 	private FloorEvent floorEvent; 
 	private ArrivalEvent arrivalEvent; 
 	private Event destinationEvent; 
@@ -22,7 +21,7 @@ public class ActiveState extends SchedulerState{
 	public ActiveState(Scheduler scheduler, FloorEvent floorEvent) {
 		super(scheduler); 
 		this.floorEvent = floorEvent; 
-		scheduler.addToFloorEventsList(floorEvent);
+		this.scheduler.addToFloorEventsList(floorEvent);
 	}
 	/**
 	 * Constructors to take in parameters passed in from idleState
@@ -41,7 +40,7 @@ public class ActiveState extends SchedulerState{
 	public ActiveState(Scheduler scheduler, Event destinationEvent) {
 		super(scheduler); 
 		this.destinationEvent = destinationEvent; 
-		scheduler.addToDestinationEventsList(destinationEvent);
+		this.scheduler.addToDestinationEventsList(destinationEvent);
 	}
 
 	/**
@@ -50,7 +49,7 @@ public class ActiveState extends SchedulerState{
 	 * 
 	 */
 	@Override
-	public SchedulerState handleFloorEvent(FloorEvent newEvent) {
+	public void handleFloorEvent(FloorEvent newEvent) {
 		if(floorEvent != null) {
 			scheduler.addToFloorEventsList(floorEvent);
 		}
@@ -59,27 +58,23 @@ public class ActiveState extends SchedulerState{
 		}
 		else if(scheduler.isFloorEventsListEmpty() && scheduler.isArrivalEventsListEmpty()
 				&& scheduler.isDestinationEventsListEmpty()) {
-			return new IdleState(scheduler);
+			scheduler.setState(new IdleState(scheduler));
 		}
-		
-		return this; 
 	}
 
 	@Override
-	public SchedulerState handleArrivalEvent() {
+	public void handleArrivalEvent() {
 		if(arrivalEvent != null) {
 			scheduler.addToArrivalEventsList(arrivalEvent);
 		}
 		else if(scheduler.isArrivalEventsListEmpty() && scheduler.isFloorEventsListEmpty()
 				&& scheduler.isDestinationEventsListEmpty()) {
-			return new IdleState(scheduler);
+			scheduler.setState(new IdleState(scheduler));
 		}
-		
-		return this; 
 	}
 	
 	@Override
-	public SchedulerState handleDestinationEvent(Event newEvent) {
+	public void handleDestinationEvent(Event newEvent) {
 		if(destinationEvent != null) {
 			scheduler.addToDestinationEventsList(destinationEvent);
 		}
@@ -88,10 +83,8 @@ public class ActiveState extends SchedulerState{
 		}
 		else if(scheduler.isArrivalEventsListEmpty() && scheduler.isFloorEventsListEmpty() 
 				&& scheduler.isDestinationEventsListEmpty()) {
-			return new IdleState(scheduler);
+			scheduler.setState(new IdleState(scheduler));
 		}
-		
-		return this; 
 	}
 	
 }

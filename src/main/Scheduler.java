@@ -50,9 +50,9 @@ public class Scheduler implements Runnable {
 			FloorEvent currentFloorEvent = null;
 			boolean floorEventFlag = false, destinationEventFlag = false; 
 			
-			currentState = currentState.handleFloorEvent(floorEvent);
-			currentState = currentState.handleArrivalEvent();
-			currentState = currentState.handleDestinationEvent(destinationEvent);
+			currentState.handleFloorEvent(floorEvent);
+			currentState.handleArrivalEvent();
+			currentState.handleDestinationEvent(destinationEvent);
 			
 			if(currentState.getClass() == ActiveState.class) {
 				if (!floorEvents.isEmpty() && !elevatorKeepsGoing) {
@@ -129,6 +129,10 @@ public class Scheduler implements Runnable {
 			floorEvents.add(floorEvent);
 		}
 		return floorEvent;
+	}
+	
+	public void setState(SchedulerState state) {
+		this.currentState = state;
 	}
 	
 	public boolean isFloorEventsListEmpty() {

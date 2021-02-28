@@ -11,15 +11,12 @@ protected Scheduler scheduler;
 		this.scheduler = e;
 	}
 	
-	public SchedulerState handleFloorEvent(FloorEvent event) {
-		return null; 
+	public void handleFloorEvent(FloorEvent event) {
 	}
 	
-	public SchedulerState handleArrivalEvent() {
-		return null; 
+	public void handleArrivalEvent() {
 	}
 	
-	public SchedulerState handleDestinationEvent(Event event) {
-		return null; 
+	public void handleDestinationEvent(Event event) {
 	}
 }
