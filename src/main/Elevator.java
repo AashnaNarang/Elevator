@@ -9,6 +9,9 @@ import events.SchedulerEvent;
 import states.MovingState;
 import states.ElevatorState;
 import states.StationaryState;
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 /*
  * The Elevator class is designed so that it takes the task form the middleman
@@ -23,6 +26,7 @@ public class Elevator implements Runnable {
 	private Direction direction;
 	private ArrayList<ElevatorButton> buttons;
 	private ElevatorState currentState;
+	private Timer timer;
 
 	/*
 	 * constructor for Elevator Defining the middleclass parameters that are by to
@@ -38,6 +42,7 @@ public class Elevator implements Runnable {
 		this.direction = Direction.UP;
 		this.buttons = new ArrayList<ElevatorButton>();
 		this.currentState = new StationaryState(this);
+		this.timer = new Timer("elevator");
 
 		for (int i = 0; i < numFloor; i++) {
 			buttons.add(new ElevatorButton(i));
@@ -114,13 +119,13 @@ public class Elevator implements Runnable {
 	}
 
 	public void startTimer() {
-		try {
-			Thread.sleep(3000); //add correct time after
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		this.currentState.handleDoorTimerExpiry();
+		Elevator tempElevator = this;
+		
+		timer.schedule(new TimerTask() {
+			  public void run() {
+				  tempElevator.currentState.handleDoorTimerExpiry();
+			  }
+			}, 2000);
 	}
 
 	public void sendDestinationEvent(Event destinationEvent) {
