@@ -73,6 +73,7 @@ Make sure you extract the zip folder first.
 6. Select the folder. 
 7. Run the java application using Main.java. 
 
+
 ## Instructions for running the file using git:
 1. Open the git project
 2. Click on the green button "Code"
