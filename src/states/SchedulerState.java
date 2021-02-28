@@ -1,5 +1,6 @@
 package states;
 import events.FloorEvent;
+import events.ArrivalEvent;
 import events.Event;
 import main.Scheduler;
 
@@ -15,7 +16,7 @@ protected Scheduler scheduler;
 	public void handleFloorEvent(FloorEvent event) {
 	}
 	
-	public void handleArrivalEvent() {
+	public void handleArrivalEvent(ArrivalEvent event) {
 	}
 	
 	public void handleDestinationEvent(Event event) {

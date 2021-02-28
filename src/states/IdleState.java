@@ -32,8 +32,7 @@ public class IdleState extends SchedulerState {
 	 * received
 	 */
 	@Override
-	public void handleArrivalEvent() {
-		ArrivalEvent arrivalEvent = scheduler.getArrivalEvent();
+	public void handleArrivalEvent(ArrivalEvent arrivalEvent) {
 		if (arrivalEvent != null) {
 			scheduler.setState(new ActiveState(scheduler, arrivalEvent));
 		}

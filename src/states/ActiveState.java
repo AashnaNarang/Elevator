@@ -44,8 +44,8 @@ public class ActiveState extends SchedulerState{
 	}
 
 	/**
-	 * Handles floorevents in active state, adding them to a list 
-	 * If there are no more events to handle, then the scheduler returns to idle state
+	 * Handles floorevents in active state, adding them to a list If there are no
+	 * more events to handle, then the scheduler returns to idle state
 	 * 
 	 */
 	@Override
@@ -63,9 +63,12 @@ public class ActiveState extends SchedulerState{
 	}
 
 	@Override
-	public void handleArrivalEvent() {
+	public void handleArrivalEvent(ArrivalEvent newEvent) {
 		if(arrivalEvent != null) {
 			scheduler.addToArrivalEventsList(arrivalEvent);
+		}
+		if(newEvent != null) {
+			scheduler.addToArrivalEventsList(newEvent);
 		}
 		else if(scheduler.isArrivalEventsListEmpty() && scheduler.isFloorEventsListEmpty()
 				&& scheduler.isDestinationEventsListEmpty()) {

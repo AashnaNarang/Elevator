@@ -1,4 +1,5 @@
 package events;
+
 import java.time.LocalTime;
 
 import main.Direction;
@@ -14,8 +15,11 @@ public class ArrivalEvent {
 	 * Constructor for Arrival event.
 	 *
 	 * @param currentFloor - The current floor the elevator is on.
+	 * 
 	 * @param time - The time stamp of the elevator event
+	 * 
 	 * @param direction - Direction the elevator is going in
+	 * 
 	 * @param elevator - The elevator itself
 	 */
 	public ArrivalEvent(int currentFloor, LocalTime time, Direction direction, Elevator elevator) {
@@ -58,11 +62,11 @@ public class ArrivalEvent {
 	public Direction getDirection() {
 		return direction;
 	}
-	
+
 	/**
 	 * @return String representation of the event.
 	 */
 	public String toString() {
-		return "{Current floor:"+ getCurrentFloor() + ", Direction:" + getDirection()+"}";
+		return "{Current floor:" + getCurrentFloor() + ", Direction:" + getDirection() + "}";
 	}
 }
