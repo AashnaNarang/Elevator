@@ -9,6 +9,9 @@ import events.SchedulerEvent;
 import states.MovingState;
 import states.ElevatorState;
 import states.StationaryState;
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 /*
  * The Elevator class is designed so that it takes the task form the middleman
@@ -23,6 +26,7 @@ public class Elevator implements Runnable {
 	private Direction direction;
 	private ArrayList<ElevatorButton> buttons;
 	private ElevatorState currentState;
+	private Timer timer;
 
 	/*
 	 * constructor for Elevator Defining the middleclass parameters that are by to
@@ -38,6 +42,7 @@ public class Elevator implements Runnable {
 		this.direction = Direction.UP;
 		this.buttons = new ArrayList<ElevatorButton>();
 		this.currentState = new StationaryState(this);
+		this.timer = new Timer("elevator");
 
 		for (int i = 0; i < numFloor; i++) {
 			buttons.add(new ElevatorButton(i));
@@ -49,7 +54,7 @@ public class Elevator implements Runnable {
 		this.switchLamps(true);
 		while(currentState.getClass() == MovingState.class) {
 			currentFloor += direction == Direction.UP ? 1 : -1;
-			currentState = currentState.handleArrivedAtFloor();
+			currentState.handleArrivedAtFloor();
 		}
 	}
 	
@@ -65,12 +70,13 @@ public class Elevator implements Runnable {
 		
 		this.direction = e.getDirection();
 		this.switchLamps(true);
-
+		
 		ArrivalEvent arrEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this.direction, this);
 		sendArrivalEvent(arrEvent);
 		while(currentState.getClass() == MovingState.class) {
+			System.out.println("Moving one floor " + direction);
 			currentFloor += direction == Direction.UP ? 1 : -1;
-			currentState = currentState.handleArrivedAtFloor();
+			currentState.handleArrivedAtFloor();
 		}
 	}
 
@@ -81,8 +87,7 @@ public class Elevator implements Runnable {
 	 */
 	public void run() {
 		while (true) {
-			ElevatorState s = currentState.handleFloorEvent();
-			currentState = s == null ? currentState : s;
+			currentState.handleFloorEvent();
 		}
 	}
 	
@@ -115,13 +120,13 @@ public class Elevator implements Runnable {
 	}
 
 	public void startTimer() {
-		try {
-			Thread.sleep(3000); //add correct time after
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		this.currentState.handleDoorTimerExpiry();
+		Elevator tempElevator = this;
+		
+		timer.schedule(new TimerTask() {
+			  public void run() {
+				  tempElevator.currentState.handleDoorTimerExpiry();
+			  }
+			}, 2000);
 	}
 
 	public void sendDestinationEvent(Event destinationEvent) {
@@ -148,6 +153,11 @@ public class Elevator implements Runnable {
 
 	public FloorEvent getFloorEvent() {
 		return this.middleMan.getFloorEvent();
+	}
+	
+	public void setState(ElevatorState state) {
+		System.out.println("setting state to " + state.getClass().getSimpleName());
+		this.currentState = state;
 	}
 	
 }

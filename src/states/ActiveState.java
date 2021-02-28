@@ -44,41 +44,40 @@ public class ActiveState extends SchedulerState{
 	}
 
 	/**
-	 * Handles floorevents in active state, adding them to a list 
-	 * If there are no more events to handle, then the scheduler returns to idle state
+	 * Handles floorevents in active state, adding them to a list If there are no
+	 * more events to handle, then the scheduler returns to idle state
 	 * 
 	 */
 	@Override
-	public SchedulerState handleFloorEvent(FloorEvent newEvent) {
+	public void handleFloorEvent(FloorEvent newEvent) {
 		if(floorEvent != null) {
-			scheduler.addToFloorEventsList(floorEvent);
+			//scheduler.addToFloorEventsList(floorEvent);
 		}
 		if(newEvent != null) {
 			scheduler.addToFloorEventsList(newEvent);
 		}
 		else if(scheduler.isFloorEventsListEmpty() && scheduler.isArrivalEventsListEmpty()
 				&& scheduler.isDestinationEventsListEmpty()) {
-			return new IdleState(scheduler);
+			scheduler.setState(new IdleState(scheduler));
 		}
-		
-		return this; 
 	}
 
 	@Override
-	public SchedulerState handleArrivalEvent() {
+	public void handleArrivalEvent(ArrivalEvent newEvent) {
 		if(arrivalEvent != null) {
 			scheduler.addToArrivalEventsList(arrivalEvent);
 		}
+		if(newEvent != null) {
+			scheduler.addToArrivalEventsList(newEvent);
+		}
 		else if(scheduler.isArrivalEventsListEmpty() && scheduler.isFloorEventsListEmpty()
 				&& scheduler.isDestinationEventsListEmpty()) {
-			return new IdleState(scheduler);
+			scheduler.setState(new IdleState(scheduler));
 		}
-		
-		return this; 
 	}
 	
 	@Override
-	public SchedulerState handleDestinationEvent(Event newEvent) {
+	public void handleDestinationEvent(Event newEvent) {
 		if(destinationEvent != null) {
 			scheduler.addToDestinationEventsList(destinationEvent);
 		}
@@ -87,10 +86,8 @@ public class ActiveState extends SchedulerState{
 		}
 		else if(scheduler.isArrivalEventsListEmpty() && scheduler.isFloorEventsListEmpty() 
 				&& scheduler.isDestinationEventsListEmpty()) {
-			return new IdleState(scheduler);
+			scheduler.setState(new IdleState(scheduler));
 		}
-		
-		return this; 
 	}
 	
 }

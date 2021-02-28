@@ -21,11 +21,10 @@ public class IdleState extends SchedulerState {
 	 * received
 	 */
 	@Override
-	public SchedulerState handleFloorEvent(FloorEvent floorEvent) {
+	public void handleFloorEvent(FloorEvent floorEvent) {
 		if (floorEvent != null) {
-			return new ActiveState(scheduler, floorEvent);
+			scheduler.setState(new ActiveState(scheduler, floorEvent));
 		}
-		return this;
 	}
 
 	/**
@@ -33,13 +32,10 @@ public class IdleState extends SchedulerState {
 	 * received
 	 */
 	@Override
-	public SchedulerState handleArrivalEvent() {
-		ArrivalEvent arrivalEvent = scheduler.getArrivalEvent();
-
+	public void handleArrivalEvent(ArrivalEvent arrivalEvent) {
 		if (arrivalEvent != null) {
-			return new ActiveState(scheduler, arrivalEvent);
+			scheduler.setState(new ActiveState(scheduler, arrivalEvent));
 		}
-		return this;
 	}
 
 	/**
@@ -47,11 +43,10 @@ public class IdleState extends SchedulerState {
 	 * one is received
 	 */
 	@Override
-	public SchedulerState handleDestinationEvent(Event destinationEvent) {
+	public void handleDestinationEvent(Event destinationEvent) {
 		if (destinationEvent != null) {
-			return new ActiveState(scheduler, destinationEvent);
+			scheduler.setState(new ActiveState(scheduler, destinationEvent));
 		}
-		return this;
 	}
 
 }

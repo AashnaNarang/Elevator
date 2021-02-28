@@ -9,15 +9,12 @@ public abstract class ElevatorState {
 		System.out.println("Moving into "+this.getClass().getSimpleName());
 	}
 	
-	public ElevatorState handleFloorEvent() {
-		return null;
+	public void handleFloorEvent() {
 	}
 	
-	public ElevatorState handleArrivedAtFloor() {
-		return null;
+	public void handleArrivedAtFloor() {
 	}
 	
-	public ElevatorState handleDoorTimerExpiry() {
-		return null;
+	public void handleDoorTimerExpiry() {
 	}
 }

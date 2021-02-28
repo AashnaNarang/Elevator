@@ -1,5 +1,6 @@
 package states;
 import events.FloorEvent;
+import events.ArrivalEvent;
 import events.Event;
 import main.Scheduler;
 
@@ -9,17 +10,15 @@ protected Scheduler scheduler;
 	
 	public SchedulerState(Scheduler e) {
 		this.scheduler = e;
+		System.out.println("Moving into " + this.getClass().getSimpleName());
 	}
 	
-	public SchedulerState handleFloorEvent(FloorEvent event) {
-		return null; 
+	public void handleFloorEvent(FloorEvent event) {
 	}
 	
-	public SchedulerState handleArrivalEvent() {
-		return null; 
+	public void handleArrivalEvent(ArrivalEvent event) {
 	}
 	
-	public SchedulerState handleDestinationEvent(Event event) {
-		return null; 
+	public void handleDestinationEvent(Event event) {
 	}
 }
