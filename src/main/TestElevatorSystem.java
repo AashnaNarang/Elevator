@@ -27,26 +27,27 @@ public class TestElevatorSystem {
 		} catch (InterruptedException e) {
 		}
 	}
-//	
-//	public void test2() {
-//		try {
-//			int numFloors = 6;
-//			middleMan1 = new MiddleMan();
-//			middleMan2 = new MiddleMan();
-//			elevator = new Elevator(middleMan2, numFloors);
-//			Thread floorSubsystemThread2 = new Thread(new FloorSubsystem("input2.txt", numFloors, middleMan1), "floorSubsystem");
-//			Thread schedThread2 = new Thread(new Scheduler(middleMan1, middleMan2), "scheduler");
-//			Thread elevatorThread2 = new Thread(elevator, "elevator");
-//			floorSubsystemThread2.start();
-//			schedThread2.start();
-//			elevatorThread2.start();
-//			TimeUnit.SECONDS.sleep(5);
-////			assertEquals("The elevator is currently on floor: 4", elevator.toString());
-////			assertEquals("The elevator is currently on floor: 2", elevator.toString());
-//			assertEquals("The elevator is currently on floor: 6", elevator.toString());
-//		}catch (InterruptedException e) {
-//		}
-//	}
+
+	@Test
+	public void test2() {
+		try {
+			int numFloors = 6;
+			MiddleMan middleMan1 = new MiddleMan();
+			MiddleMan middleMan2 = new MiddleMan();
+			Thread floorSubsystem = new Thread(new FloorSubsystem("input2.txt", 6, middleMan1), "floorSubsystem");
+			Thread sched = new Thread(new Scheduler(middleMan1, middleMan2), "scheduler");
+			Elevator e = new Elevator(middleMan2, 6);
+			Thread elevator = new Thread(e, "elevator");
+			floorSubsystem.start();
+			sched.start();
+			elevator.start();
+			TimeUnit.SECONDS.sleep(10);
+//			assertEquals("The elevator is currently on floor: 4", elevator.toString());
+//			assertEquals("The elevator is currently on floor: 2", elevator.toString());
+			assertEquals("The elevator is currently on floor: 6", e.toString());
+		}catch (InterruptedException e) {
+		}
+	}
 //	
 //	public void test3() {
 //		try {
