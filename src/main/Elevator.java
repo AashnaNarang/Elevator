@@ -71,7 +71,7 @@ public class Elevator implements Runnable {
 		this.direction = e.getDirection();
 		this.switchLamps(true);
 		
-		ArrivalEvent arrEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this.direction, this);
+		ArrivalEvent arrEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this.direction, this, true);
 		sendArrivalEvent(arrEvent);
 		while(currentState.getClass() == MovingState.class) {
 			System.out.println("Moving one floor " + direction);
