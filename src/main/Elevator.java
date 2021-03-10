@@ -159,5 +159,12 @@ public class Elevator implements Runnable {
 		System.out.println("setting state to " + state.getClass().getSimpleName());
 		this.currentState = state;
 	}
+	/**
+	 * This is for testing purposes
+	 * @return
+	 */
+	public ElevatorState getState() {
+		return currentState;	
+	}
 	
 }
