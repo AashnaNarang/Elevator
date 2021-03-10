@@ -21,9 +21,12 @@ public class IdleState extends SchedulerState {
 	 * received
 	 */
 	@Override
-	public void handleFloorEvent(FloorEvent floorEvent) {
+	public void handleFloorEvent() {
+		FloorEvent floorEvent = scheduler.getFloorEvent();
 		if (floorEvent != null) {
-			scheduler.setState(new ActiveState(scheduler, floorEvent));
+			System.out.println("Adding floor event from scheduler get floorevent " + floorEvent);
+			scheduler.addToFloorEventsList(floorEvent);
+			scheduler.setState(new ActiveState(scheduler));
 		}
 	}
 
@@ -32,9 +35,12 @@ public class IdleState extends SchedulerState {
 	 * received
 	 */
 	@Override
-	public void handleArrivalEvent(ArrivalEvent arrivalEvent) {
+	public void handleArrivalEvent() {
+		ArrivalEvent arrivalEvent = scheduler.getArrivalEvent();
 		if (arrivalEvent != null) {
-			scheduler.setState(new ActiveState(scheduler, arrivalEvent));
+			System.out.println("Adding arrival event from scheduler get arrivalevent " + arrivalEvent);
+			scheduler.addToArrivalEventsList(arrivalEvent);
+			scheduler.setState(new ActiveState(scheduler));
 		}
 	}
 
@@ -43,9 +49,12 @@ public class IdleState extends SchedulerState {
 	 * one is received
 	 */
 	@Override
-	public void handleDestinationEvent(Event destinationEvent) {
+	public void handleDestinationEvent() {
+		Event destinationEvent = scheduler.getDestinationEvent();
 		if (destinationEvent != null) {
-			scheduler.setState(new ActiveState(scheduler, destinationEvent));
+			System.out.println("Adding destination event from scheduler get destination event " + destinationEvent);
+			scheduler.addToDestinationEventsList(destinationEvent);
+			scheduler.setState(new ActiveState(scheduler));
 		}
 	}
 

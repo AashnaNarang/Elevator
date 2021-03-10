@@ -1,7 +1,4 @@
 package states;
-import events.FloorEvent;
-import events.ArrivalEvent;
-import events.Event;
 import main.Scheduler;
 
 public abstract class SchedulerState {
@@ -13,12 +10,12 @@ protected Scheduler scheduler;
 		System.out.println("Moving into " + this.getClass().getSimpleName());
 	}
 	
-	public void handleFloorEvent(FloorEvent event) {
+	public void handleFloorEvent() {
 	}
 	
-	public void handleArrivalEvent(ArrivalEvent event) {
+	public void handleArrivalEvent() {
 	}
 	
-	public void handleDestinationEvent(Event event) {
+	public void handleDestinationEvent() {
 	}
 }
