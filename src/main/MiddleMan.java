@@ -33,6 +33,7 @@ public class MiddleMan {
 			FloorEvent tempEvent = floorEvents.remove();
 			System.out.println(Thread.currentThread().getName() + " is receiving FloorEvent. " +
 					tempEvent);
+			notifyAll();
 			return tempEvent;
 		} catch (NoSuchElementException e) {
 			return null;
@@ -47,6 +48,7 @@ public class MiddleMan {
 	public synchronized void putFloorEvent(FloorEvent floorEvent) {
 		while (!floorEvents.isEmpty()) {
 			try {
+				System.out.println("wait() put floor event");
 				wait();
 			} catch (InterruptedException e) {
 				return;
@@ -68,6 +70,7 @@ public class MiddleMan {
 			ArrivalEvent tempEvent = arrivalEvents.remove();
 			System.out.println(Thread.currentThread().getName() + " is receiving ArrivalEvent. " + 
 					tempEvent);
+			notifyAll();
 			return tempEvent;
 		} catch (NoSuchElementException e) {
 			return null;
@@ -82,6 +85,7 @@ public class MiddleMan {
 	public synchronized void putArrivalEvent(ArrivalEvent arrivalEvent) {
 		while (!arrivalEvents.isEmpty()) {
 			try {
+				System.out.println("wait() put arrival event");
 				wait();
 			} catch (InterruptedException e) {
 				return;
@@ -104,6 +108,7 @@ public class MiddleMan {
 			Event tempEvent = destinationEvents.remove();
 			System.out.println(Thread.currentThread().getName() + " is receiving DestinationEvent. " + 
 					tempEvent);
+			notifyAll();
 			return tempEvent;
 		} catch (NoSuchElementException e) {
 			return null;
@@ -117,6 +122,7 @@ public class MiddleMan {
 	public synchronized void putDestinationEvent(Event event) {
 		while (!destinationEvents.isEmpty()) {
 			try {
+				System.out.println("wait() put destination event");
 				wait();
 			} catch (InterruptedException e) {
 				return;
@@ -165,6 +171,5 @@ public class MiddleMan {
 				event);
 		schedEvent = event; //need to decide what type of event to send if no source event for arrival event
 		notifyAll();
-		
 	}
 }
