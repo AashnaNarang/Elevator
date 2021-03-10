@@ -1,5 +1,6 @@
 package states;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 import events.ArrivalEvent;
 import events.FloorEvent;
@@ -78,14 +79,18 @@ public class ActiveState extends SchedulerState {
 		}
 		System.out.println("Scheduler floorEventFlag " + floorEventFlag);
 
-		
+		ArrayList<Event> toRemove = new ArrayList<>();
 		for (Event destEvent : scheduler.getDestinationEventsList()) {
 			if (destEvent.getDestination() == arrivalEvent.getCurrentFloor()) {
 				destinationEventFlag = true;
-				scheduler.removeDestinationEvent(destEvent);
-				break;
+				toRemove.add(destEvent);
 			}
 		}
+		
+		for(Event e: toRemove) { 
+			scheduler.removeDestinationEvent(e);
+		}
+		
 		System.out.println("Scheduler destinatioEventFlag " + destinationEventFlag + " size " + scheduler.getDestinationEventsList());
 
 		if (arrivalEvent.didNotMoveYet()) {
