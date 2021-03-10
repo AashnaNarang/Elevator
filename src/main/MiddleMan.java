@@ -42,18 +42,19 @@ public class MiddleMan {
 	}
 	
 	/**
+	 * Remove event from the queue of events if it was already serviced
+	 * @return The event object
+	 */
+	public synchronized boolean removeFloorEvent(FloorEvent e) {
+		System.out.println(Thread.currentThread().getName() + " is removing FloorEvent. " + e);
+		return floorEvents.remove(e);
+	}
+	
+	/**
 	 * Add an event that signifies a user's request to use the elevator into the queue of events
 	 * @param floorEvent The event object to add
 	 */
 	public synchronized void putFloorEvent(FloorEvent floorEvent) {
-		while (!floorEvents.isEmpty()) {
-			try {
-				System.out.println("wait() put floor event");
-				wait();
-			} catch (InterruptedException e) {
-				return;
-			}
-		}
 		floorEvents.add(floorEvent);
 		System.out.println(Thread.currentThread().getName() + " is sending FloorEvent. " + 
 				floorEvent);

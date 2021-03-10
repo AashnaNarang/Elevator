@@ -16,7 +16,7 @@ public class StationaryState extends ElevatorState {
 		if (e != null) {
 			if (e.getSource() == elevator.getCurrentFloor()) {
 				System.out.println("On same floor as floorEvent src floor, on floor " + e.getSource());
-				elevator.setState(new DoorOpenState(elevator, e));
+				DoorOpenState.createWithFloorEvent(elevator, e);
 			} else {
 				System.out.println("Not on same floor as floorEvent src floor, on floor " + e.getSource());
 				MovingState.createWithFloorEvent(elevator, e, false);

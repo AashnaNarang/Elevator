@@ -24,7 +24,6 @@ public class MovingState extends ElevatorState {
 			elevator.sendDestinationEvent(destinationEvent);
 			elevator.switchOnButton(event.getDestination()-1, true);
 		}
-//		elevator.move(event);
 	}
 	
 	public static void createWithFloorEvent(Elevator e, FloorEvent event, boolean isAtSource) {
@@ -54,7 +53,7 @@ public class MovingState extends ElevatorState {
 			if (e2.isAtDestination()) {
 				elevator.switchOnButton(e2.getFloor()-1, false);
 			}
-			elevator.setState(new DoorOpenState(elevator, e2));
+			DoorOpenState.createWithSchedulerEvent(elevator, e2);
 		}
 	}
 

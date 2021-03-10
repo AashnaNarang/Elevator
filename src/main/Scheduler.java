@@ -101,12 +101,17 @@ public class Scheduler implements Runnable {
 		floorEvents.remove(e);
 	}
 	
+	
 	public void removeDestinationEvent(Event e) {
 		destinationEvents.remove(e);
 	}
 
 	public void removeSentFloorEvent(FloorEvent e) {
 		sentFloorEvents.remove(e);
+	}
+	
+	public boolean removeFloorEventFromMiddleMan(FloorEvent e) {
+		return middleManElevator.removeFloorEvent(e);
 	}
 
 	public boolean isFloorEventsListEmpty() {
