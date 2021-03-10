@@ -28,6 +28,7 @@ public class ActiveState extends SchedulerState {
 
 	@Override
 	public void handleFloorEvent() {
+		super.handleFloorEvent();
 		FloorEvent floorEvent = scheduler.getNextFloorEvent();
 		if(floorEvent != null) {
 			System.out.println("Scheduler putting floorevent in middleman " + floorEvent);
@@ -55,7 +56,6 @@ public class ActiveState extends SchedulerState {
 		System.out.println("Scheduler received arrival event " + arrivalEvent.getCurrentFloor());
 		System.out.println("FloorEvents size " + scheduler.getFloorEventsList().size());
 		for (FloorEvent fEvent : scheduler.getFloorEventsList()) {
-			System.out.println("FloorEvents looking at src flr " + fEvent.getSource());
 			if (isAtFloor(arrivalEvent, fEvent)) {
 				currentFloorEvent = fEvent;
 				floorEventFlag = true;
@@ -66,7 +66,6 @@ public class ActiveState extends SchedulerState {
 		if (currentFloorEvent == null) {
 			System.out.println("SentFloorEvents size " + scheduler.getSentFloorEventsList().size());
 			for (FloorEvent fEvent : scheduler.getSentFloorEventsList()) {
-				System.out.println("SentFloorEvents looking at src flr " + fEvent.getSource());
 				if (isAtFloor(arrivalEvent, fEvent)) {
 					currentFloorEvent = fEvent;
 					floorEventFlag = true;

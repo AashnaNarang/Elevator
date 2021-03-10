@@ -17,20 +17,6 @@ public class IdleState extends SchedulerState {
 	}
 
 	/**
-	 * This listens to a FloorEvent that will be passed into activeState if one is
-	 * received
-	 */
-	@Override
-	public void handleFloorEvent() {
-		FloorEvent floorEvent = scheduler.getFloorEvent();
-		if (floorEvent != null) {
-			System.out.println("Adding floor event from scheduler get floorevent " + floorEvent);
-			scheduler.addToFloorEventsList(floorEvent);
-			scheduler.setState(new ActiveState(scheduler));
-		}
-	}
-
-	/**
 	 * This listens to a ArrivalEvent that will be passed into activeState if one is
 	 * received
 	 */

@@ -48,8 +48,8 @@ public class Scheduler implements Runnable {
 	public void run() {
 		while (true) {
 			currentState.handleFloorEvent();
-			currentState.handleArrivalEvent();
 			currentState.handleDestinationEvent();
+			currentState.handleArrivalEvent();
 		}
 	}
 
