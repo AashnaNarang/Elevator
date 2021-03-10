@@ -60,6 +60,7 @@ public class ActiveState extends SchedulerState {
 				currentFloorEvent = fEvent;
 				floorEventFlag = true;
 				scheduler.removeFloorEvent(fEvent);
+				scheduler.removeFloorEventFromMiddleMan(fEvent);
 				break;
 			}
 		}
@@ -69,7 +70,8 @@ public class ActiveState extends SchedulerState {
 				if (isAtFloor(arrivalEvent, fEvent)) {
 					currentFloorEvent = fEvent;
 					floorEventFlag = true;
-					scheduler.removeFloorEvent(fEvent);
+					scheduler.removeSentFloorEvent(fEvent);
+					scheduler.removeFloorEventFromMiddleMan(fEvent);
 					break;
 				}
 			}
