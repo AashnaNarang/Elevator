@@ -47,9 +47,9 @@ public class MovingState extends ElevatorState {
 		ArrivalEvent e = new ArrivalEvent(elevator.getCurrentFloor(), LocalTime.now(), elevator.getDirection(), elevator);
 		elevator.sendArrivalEvent(e);
 		SchedulerEvent e2 = elevator.askShouldIStop();
-		System.out.println("Received scheduler event");
+		System.out.println("The Elevator received scheduler event");
 		if (e2.shouldStop()) {
-			System.out.println("Scheduler event said stop");
+			System.out.println("Scheduler event said stop the elevator");
 			if (e2.isAtDestination()) {
 				elevator.switchOnButton(e2.getFloor()-1, false);
 			}

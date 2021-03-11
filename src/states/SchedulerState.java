@@ -8,7 +8,7 @@ protected Scheduler scheduler;
 	
 	public SchedulerState(Scheduler e) {
 		this.scheduler = e;
-		System.out.println("Moving into " + this.getClass().getSimpleName());
+		System.out.println("The Scheduler is moving into " + this.getClass().getSimpleName());
 	}
 	
 	public void handleFloorEvent() {

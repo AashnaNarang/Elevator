@@ -71,7 +71,7 @@ public class Elevator implements Runnable {
 		ArrivalEvent arrEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this.direction, this, true);
 		sendArrivalEvent(arrEvent);
 		while(currentState.getClass() == MovingState.class) {
-			System.out.println("Moving one floor " + direction);
+			System.out.println("The Elevator is moving one floor " + direction);
 			currentFloor += direction == Direction.UP ? 1 : -1;
 			currentState.handleArrivedAtFloor();
 		}
@@ -152,7 +152,7 @@ public class Elevator implements Runnable {
 	}
 	
 	public void setState(ElevatorState state) {
-		System.out.println("setting state to " + state.getClass().getSimpleName());
+		System.out.println("The state of the Elevator is set to " + state.getClass().getSimpleName());
 		this.currentState = state;
 	}
 	
