@@ -14,7 +14,6 @@ public class MovingState extends ElevatorState {
 			elevator.sendDestinationEvent(destinationEvent);
 			elevator.switchOnButton(event.getDestination()-1, true);
 		}
-//		 elevator.move(event);
 	}
 	
 	private MovingState(Elevator e, FloorEvent event, boolean isAtSource) {
@@ -30,7 +29,11 @@ public class MovingState extends ElevatorState {
 		// Factory Pattern
 		MovingState m = new MovingState(e, event, isAtSource);
 		e.setState(m);
-		e.move(event);
+		if(isAtSource) {
+			e.move(event);
+		} else { 
+			e.moveToSourceFloor(event);
+		}
 	}
 	
 	public static void createWithSchedulerEvent(Elevator e, SchedulerEvent event) {
