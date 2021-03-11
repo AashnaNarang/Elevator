@@ -156,4 +156,8 @@ public class Elevator implements Runnable {
 		this.currentState = state;
 	}
 	
+	public ElevatorState getState() {
+		return currentState; 
+	}
+	
 }
