@@ -12,7 +12,7 @@ public class Main {
 		Thread elevator = new Thread(new Elevator(middleMan2, 6), "elevator");
 		floorSubsystem.start();
 		sched.start();
-		elevator.start();
+		elevator.start(); 
 		try {
 			TimeUnit.SECONDS.sleep(5);
 		} catch (InterruptedException e) {

@@ -46,13 +46,13 @@ public class MovingState extends ElevatorState {
 
 	@Override
 	public void handleArrivedAtFloor() {
-		System.out.println(Thread.currentThread().getName() + " arrived at floor " + elevator.getCurrentFloor() + " and sending arrival event");
+		System.out.println(Thread.currentThread().getName() + " arrived at floor " + elevator.getCurrentFloor() + " and sending arrival event" + ".  {Time: " + LocalTime.now() + "}");
 		ArrivalEvent e = new ArrivalEvent(elevator.getCurrentFloor(), LocalTime.now(), elevator.getDirection(), elevator);
 		elevator.sendArrivalEvent(e);
 		SchedulerEvent e2 = elevator.askShouldIStop();
-		System.out.println(Thread.currentThread().getName() + " received scheduler event");
+		System.out.println(Thread.currentThread().getName() + " received scheduler event" + ".  {Time: " + LocalTime.now() + "}");
 		if (e2.shouldStop()) {
-			System.out.println("Scheduler event said stop the elevator");
+			System.out.println("Scheduler event said stop the elevator" + ".  {Time: " + LocalTime.now() + "}");
 			if (e2.isAtDestination()) {
 				elevator.switchOnButton(e2.getFloor()-1, false);
 			}

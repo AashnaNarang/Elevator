@@ -53,7 +53,7 @@ public class ActiveState extends SchedulerState {
 			}
 		}
 		
-		System.out.println("Scheduler is analyzing arrival event for floor " + arrivalEvent.getCurrentFloor());
+		System.out.println("Scheduler is analyzing arrival event for floor " + arrivalEvent.getCurrentFloor() + ".  {Time: " + LocalTime.now() + "}");
 
 		currentFloorEvent = analyzeFloorEvents(arrivalEvent);
 		//System.out.println("Scheduler floorEventFlag " + floorEventFlag);

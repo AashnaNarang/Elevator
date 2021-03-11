@@ -50,10 +50,10 @@ public class Elevator implements Runnable {
 		this.direction = e.getDirection();
 		this.switchLamps(true);
 		
-		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", about to move " + this.direction);
+		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", about to move " + this.direction + ".  {Time: " + LocalTime.now() + "}");
 
 		while(currentState.getClass() == MovingState.class) {
-			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction);
+			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
 			currentFloor += direction == Direction.UP ? 1 : -1;
 			currentState.handleArrivedAtFloor();
 		}
@@ -72,11 +72,11 @@ public class Elevator implements Runnable {
 		this.direction = e.getDirection();
 		this.switchLamps(true);
 		
-		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", about to move " + this.direction);
+		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", about to move " + this.direction + ".  {Time: " + LocalTime.now() + "}");
 		ArrivalEvent arrEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this.direction, this, true);
 		sendArrivalEvent(arrEvent);
 		while(currentState.getClass() == MovingState.class) {
-			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction);
+			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
 			currentFloor += direction == Direction.UP ? 1 : -1;
 			currentState.handleArrivedAtFloor();
 		}
@@ -96,9 +96,9 @@ public class Elevator implements Runnable {
 		}
 		
 		this.switchLamps(true);
-		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", moving towards source floor " + e.getSource());
+		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", moving towards source floor " + e.getSource() + ".  {Time: " + LocalTime.now() + "}");
 		for (int i = 0; i < Math.abs(diffFloors); i++) {
-			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction);
+			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
 			currentFloor += direction == Direction.UP ? 1 : -1;
 		}
 		direction = e.getDirection();
@@ -181,7 +181,7 @@ public class Elevator implements Runnable {
 	
 	public void setState(ElevatorState state) {
 		this.currentState = state;
-		System.out.println("Set state of " + Thread.currentThread().getName() +  " to " + state.getClass().getSimpleName());
+		System.out.println("Set state of " + Thread.currentThread().getName() +  " to " + state.getClass().getSimpleName() + ".  {Time: " + LocalTime.now() + "}");
 	}
 
 	public ElevatorState getState() {
