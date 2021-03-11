@@ -1,4 +1,5 @@
 package main;
+
 import java.util.concurrent.TimeUnit;
 
 public class Main {
@@ -12,13 +13,13 @@ public class Main {
 		floorSubsystem.start();
 		sched.start();
 		elevator.start();
-//		try {
-//			TimeUnit.SECONDS.sleep(3);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		System.exit(0);
+		try {
+			TimeUnit.SECONDS.sleep(5);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.exit(0);
 		
 	}
 

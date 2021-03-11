@@ -8,13 +8,15 @@ protected Scheduler scheduler;
 	
 	public SchedulerState(Scheduler e) {
 		this.scheduler = e;
-		System.out.println("The Scheduler is moving into " + this.getClass().getSimpleName());
+		System.out.println(Thread.currentThread().getName() + " is moving into " + this.getClass().getSimpleName());
 	}
 	
+	/**
+	 * Poll for floor events from middle man floor, add to elevator's list if able to retrieve event 
+	 */
 	public void handleFloorEvent() {
-		FloorEvent floorEvent = scheduler.getFloorEvent();
+		FloorEvent floorEvent = scheduler.getFloorEventFromMiddleMan();
 		if (floorEvent != null) {
-			System.out.println("Adding floor event from scheduler get floorevent " + floorEvent);
 			scheduler.addToFloorEventsList(floorEvent);
 			scheduler.setState(new ActiveState(scheduler));
 		}

@@ -17,28 +17,24 @@ public class IdleState extends SchedulerState {
 	}
 
 	/**
-	 * This listens to a ArrivalEvent that will be passed into activeState if one is
-	 * received
+	 * Poll for arrival events from middle man, add to elevator's list if able to retrieve event 
 	 */
 	@Override
 	public void handleArrivalEvent() {
-		ArrivalEvent arrivalEvent = scheduler.getArrivalEvent();
+		ArrivalEvent arrivalEvent = scheduler.getArrivalEventFromMiddleMan();
 		if (arrivalEvent != null) {
-			System.out.println("Adding arrival event from scheduler get arrivalevent " + arrivalEvent);
 			scheduler.addToArrivalEventsList(arrivalEvent);
 			scheduler.setState(new ActiveState(scheduler));
 		}
 	}
 
 	/**
-	 * This listens to a DestinationEvent that will be passed into activeState if
-	 * one is received
+	 * Poll for destination events from middle man, add to elevator's list if able to retrieve event 
 	 */
 	@Override
 	public void handleDestinationEvent() {
-		Event destinationEvent = scheduler.getDestinationEvent();
+		Event destinationEvent = scheduler.getDestinationEventFromMiddleMan();
 		if (destinationEvent != null) {
-			System.out.println("Adding destination event from scheduler get destination event " + destinationEvent);
 			scheduler.addToDestinationEventsList(destinationEvent);
 			scheduler.setState(new ActiveState(scheduler));
 		}
