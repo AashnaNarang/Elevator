@@ -6,7 +6,7 @@ public abstract class ElevatorState {
 	
 	public ElevatorState(Elevator e) {
 		this.elevator = e;
-		System.out.println("Moving into "+this.getClass().getSimpleName());
+		System.out.println(Thread.currentThread().getName() + " is moving into " + this.getClass().getSimpleName());
 	}
 	
 	public void handleFloorEvent() {

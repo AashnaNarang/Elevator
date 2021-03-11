@@ -170,7 +170,7 @@ public class MiddleMan {
 		}
 		System.out.println(Thread.currentThread().getName() + " is sending SchedulerEvent. " + 
 				event);
-		schedEvent = event; //need to decide what type of event to send if no source event for arrival event
+		schedEvent = event; 
 		notifyAll();
 	}
 }

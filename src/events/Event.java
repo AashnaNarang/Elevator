@@ -28,4 +28,11 @@ public class Event {
 	public int getDestination() {
 		return destination;
 	}
+	
+	/**
+	 * Print destination event
+	 */
+	public String toString() {
+		return "{Time: "+ time + ", Destination:" + getDestination() + "}";
+	}
 }

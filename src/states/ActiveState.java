@@ -32,7 +32,6 @@ public class ActiveState extends SchedulerState {
 		super.handleFloorEvent();
 		FloorEvent floorEvent = scheduler.getNextFloorEvent();
 		if(floorEvent != null) {
-			System.out.println("Scheduler putting floorevent in middleman " + floorEvent);
 			scheduler.sendFloorEventToElevator(floorEvent);
 			scheduler.addToSentFloorEventsList(floorEvent);
 		}
@@ -48,50 +47,18 @@ public class ActiveState extends SchedulerState {
 		ArrivalEvent arrivalEvent = scheduler.getNextArrivalEvent();
 		
 		if (arrivalEvent == null) {
-			arrivalEvent = scheduler.getArrivalEvent();
+			arrivalEvent = scheduler.getArrivalEventFromMiddleMan();
 			if (arrivalEvent == null) {
 				return;
 			}
 		}
 		
-		System.out.println("Scheduler received arrival event " + arrivalEvent.getCurrentFloor());
-		System.out.println("FloorEvents size " + scheduler.getFloorEventsList().size());
-		for (FloorEvent fEvent : scheduler.getFloorEventsList()) {
-			if (isAtFloor(arrivalEvent, fEvent)) {
-				currentFloorEvent = fEvent;
-				floorEventFlag = true;
-				scheduler.removeFloorEvent(fEvent);
-				scheduler.removeFloorEventFromMiddleMan(fEvent);
-				break;
-			}
-		}
-		if (currentFloorEvent == null) {
-			System.out.println("SentFloorEvents size " + scheduler.getSentFloorEventsList().size());
-			for (FloorEvent fEvent : scheduler.getSentFloorEventsList()) {
-				if (isAtFloor(arrivalEvent, fEvent)) {
-					currentFloorEvent = fEvent;
-					floorEventFlag = true;
-					scheduler.removeSentFloorEvent(fEvent);
-					scheduler.removeFloorEventFromMiddleMan(fEvent);
-					break;
-				}
-			}
-		}
-		System.out.println("Scheduler floorEventFlag " + floorEventFlag);
+		System.out.println("Scheduler is analyzing arrival event for floor " + arrivalEvent.getCurrentFloor());
 
-		ArrayList<Event> toRemove = new ArrayList<>();
-		for (Event destEvent : scheduler.getDestinationEventsList()) {
-			if (destEvent.getDestination() == arrivalEvent.getCurrentFloor()) {
-				destinationEventFlag = true;
-				toRemove.add(destEvent);
-			}
-		}
-		
-		for(Event e: toRemove) { 
-			scheduler.removeDestinationEvent(e);
-		}
-		
-		System.out.println("Scheduler destinatioEventFlag " + destinationEventFlag + " size " + scheduler.getDestinationEventsList());
+		currentFloorEvent = analyzeFloorEvents(arrivalEvent);
+		//System.out.println("Scheduler floorEventFlag " + floorEventFlag);
+		analyzeDestinationEvents(arrivalEvent);
+		//System.out.println("Scheduler destinatioEventFlag " + destinationEventFlag + " size " + scheduler.getDestinationEventsList());
 
 		if (arrivalEvent.didNotMoveYet()) {
 			// No need to send scheduler event if elevator hasn't started moving, elevator already has instructions
@@ -100,21 +67,19 @@ public class ActiveState extends SchedulerState {
 
 		boolean elevatorKeepsGoing = (!scheduler.isDestinationEventsListEmpty() || floorEventFlag);
 		
-		System.out.println("Scheduler elevatorKeepsGoing2 " + elevatorKeepsGoing);
-
 		if (!floorEventFlag && !destinationEventFlag) {
-			System.out.println("Scheduler no stop ");
+//			System.out.println("Scheduler no stop ");
 			schedulerEvent = new SchedulerEvent(arrivalEvent.getDirection(), LocalTime.now());
 		} else if (destinationEventFlag && floorEventFlag) {
-			System.out.println("Destination and src floor ");
+			//System.out.println("Destination and src floor ");
 			schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), elevatorKeepsGoing, true,
 					true, currentFloorEvent, currentFloorEvent.getDirection(), LocalTime.now());
 		} else if (destinationEventFlag) {
-			System.out.println("Only destination floor ");
+			//System.out.println("Only destination floor ");
 			schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), elevatorKeepsGoing, true,
 					false, null, arrivalEvent.getDirection(), LocalTime.now());
 		} else {
-			System.out.println("Only src floor ");
+			//System.out.println("Only src floor ");
 			schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), true, false, true,
 					currentFloorEvent, currentFloorEvent.getDirection(), LocalTime.now());
 		}
@@ -126,9 +91,9 @@ public class ActiveState extends SchedulerState {
 	
 	@Override
 	public void handleDestinationEvent() {
-		Event destinationEvent = scheduler.getDestinationEvent();
+		Event destinationEvent = scheduler.getDestinationEventFromMiddleMan();
 		if (destinationEvent != null) {
-			System.out.println("Adding destination event from scheduler get destination event " + destinationEvent);
+			//System.out.println(" Elevator is adding destination event from scheduler get destination event " + destinationEvent);
 			scheduler.addToDestinationEventsList(destinationEvent);
 		}
 	}
@@ -143,6 +108,48 @@ public class ActiveState extends SchedulerState {
 	private boolean isAtFloor(ArrivalEvent arrivalEvent, FloorEvent fEvent) {
 		return (arrivalEvent.getCurrentFloor() == fEvent.getSource())
 				&& fEvent.getDirection() == arrivalEvent.getDirection();
+	}
+	
+	private void analyzeDestinationEvents(ArrivalEvent arrivalEvent) {
+		ArrayList<Event> toRemove = new ArrayList<>();
+		for (Event destEvent : scheduler.getDestinationEventsList()) {
+			if (destEvent.getDestination() == arrivalEvent.getCurrentFloor()) {
+				destinationEventFlag = true;
+				toRemove.add(destEvent);
+			}
+		}
+		
+		for(Event e: toRemove) { 
+			scheduler.removeDestinationEvent(e);
+		}
+	}
+	
+	private FloorEvent analyzeFloorEvents(ArrivalEvent arrivalEvent) {
+		FloorEvent currentFloorEvent = null;
+		//System.out.println("FloorEvents size " + scheduler.getFloorEventsList().size());
+		for (FloorEvent fEvent : scheduler.getFloorEventsList()) {
+			if (isAtFloor(arrivalEvent, fEvent)) {
+				currentFloorEvent = fEvent;
+				floorEventFlag = true;
+				scheduler.removeFloorEvent(fEvent);
+				scheduler.removeFloorEventFromMiddleMan(fEvent);
+				break;
+			}
+		}
+		if (currentFloorEvent == null) {
+			//System.out.println("SentFloorEvents size " + scheduler.getSentFloorEventsList().size());
+			for (FloorEvent fEvent : scheduler.getSentFloorEventsList()) {
+				if (isAtFloor(arrivalEvent, fEvent)) {
+					currentFloorEvent = fEvent;
+					floorEventFlag = true;
+					scheduler.removeSentFloorEvent(fEvent);
+					scheduler.removeFloorEventFromMiddleMan(fEvent);
+					break;
+				}
+			}
+		}
+		
+		return currentFloorEvent;
 	}
 	
 }

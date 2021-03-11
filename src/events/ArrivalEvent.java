@@ -76,7 +76,7 @@ public class ArrivalEvent {
 	
 
 	/**
-	 * @return the didNotMoveYet
+	 * @return didNotMoveYet - if elevator has started moving yet
 	 */
 	public boolean didNotMoveYet() {
 		return didNotMoveYet;
@@ -86,6 +86,6 @@ public class ArrivalEvent {
 	 * @return String representation of the event.
 	 */
 	public String toString() {
-		return "{Current floor:" + getCurrentFloor() + ", Direction:" + getDirection() + "}";
+		return "{Time: "+ time + ", Current floor:" + getCurrentFloor() + ", Direction:" + getDirection() + "}";
 	}
 }

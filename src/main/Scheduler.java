@@ -1,8 +1,6 @@
 package main;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -10,7 +8,6 @@ import events.ArrivalEvent;
 import events.Event;
 import events.FloorEvent;
 import events.SchedulerEvent;
-import states.ActiveState;
 import states.IdleState;
 import states.SchedulerState;
 
@@ -53,11 +50,11 @@ public class Scheduler implements Runnable {
 		}
 	}
 
-	public ArrivalEvent getArrivalEvent() {
+	public ArrivalEvent getArrivalEventFromMiddleMan() {
 		return middleManElevator.getArrivalEvent();
 	}
 
-	public Event getDestinationEvent() {
+	public Event getDestinationEventFromMiddleMan() {
 		return middleManElevator.getDestinationEvent();
 	}
 	
@@ -73,7 +70,7 @@ public class Scheduler implements Runnable {
 		middleManFloor.putArrivalEvent(e);
 	}
 
-	public FloorEvent getFloorEvent() {
+	public FloorEvent getFloorEventFromMiddleMan() {
 		return middleManFloor.getFloorEvent();
 	}
 
