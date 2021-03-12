@@ -57,21 +57,6 @@ public class Scheduler implements Runnable {
 		while (true) {
 
 			byte[] data = udphelper.receivePacket(this.udphelper.getReceiveSocket());
-			//TODO: Deserialize data
-			if(data != null) {
-				//If the data is not null, deserialize the data here
-				//Three checks -> checking for floor event, destination event, arrival event
-				//TODO: For the if statement, If deserialized object is an instanceOf floor event, destination event or arrival event
-				if(DeserializedObject instanceof FloorEvent) {
-					middleManFloor.putFloorEvent(DeserializedObject);
-				}
-				else if(DeserializedObject instanceof Event) {
-					middleManElevator.putDestinationEvent(DeserializedObject);
-				}
-				else if(DeserializedObject instanceof ArrivalEvent) {
-					middleManElevator.putArrivalEvent(DeserializedObject);
-				}
-			}
 
 			currentState.handleFloorEvent();
 			currentState.handleDestinationEvent();
@@ -79,36 +64,36 @@ public class Scheduler implements Runnable {
 		}
 	}
 
-	public ArrivalEvent getArrivalEvent() {
+	public ArrivalEvent getArrivalEvent() { //udp
 		return middleManElevator.getArrivalEvent();
 	}
 
-	public Event getDestinationEvent() {
+	public Event getDestinationEvent() { //udp
 		return middleManElevator.getDestinationEvent();
 	}
 
-	public void sendFloorEventToElevator(FloorEvent e) {
+	public void sendFloorEventToElevator(FloorEvent e) { //udp
 		//TODO: Serialize floor event (e)
 		byte[] serializedData = new byte[100]; //For now, this is the array to be sent
 		udphelper.sendPacket(serializedData, ELEVATOR_PORT);
 		//middleManElevator.putFloorEvent(e);
 	}
 
-	public void sendSchedulerEventToElevator(SchedulerEvent e) {
+	public void sendSchedulerEventToElevator(SchedulerEvent e) { //udp
 		//TODO: Serialize floor event (e)
 		byte[] serializedData = new byte[100]; //For now, this is the array to be sent
 		udphelper.sendPacket(serializedData, ELEVATOR_PORT);
 		//middleManElevator.putSchedulerEvent(e);
 	}
 
-	public void sendArrivalEventToFloor(ArrivalEvent e) {
+	public void sendArrivalEventToFloor(ArrivalEvent e) { //udp
 		//TODO: Serialize floor event (e)
 		byte[] serializedData = new byte[100]; //For now, this is the array to be sent
 		udphelper.sendPacket(serializedData, FLOOR_PORT);
 		//middleManFloor.putArrivalEvent(e);
 	}
 
-	public FloorEvent getFloorEvent() {
+	public FloorEvent getFloorEvent() { //udp
 		return middleManFloor.getFloorEvent();
 	}
 
@@ -116,78 +101,78 @@ public class Scheduler implements Runnable {
 		this.currentState = state;
 	}
 
-	public Queue<FloorEvent> getFloorEventsList() {
+	public Queue<FloorEvent> getFloorEventsList() { //middleman
 		return floorEvents;
 	}
 
-	public Queue<ArrivalEvent> getArrivalEventsList() {
+	public Queue<ArrivalEvent> getArrivalEventsList() {//middleman
 		return arrivalEvents;
 	}
 
-	public ArrayList<FloorEvent> getSentFloorEventsList() {
+	public ArrayList<FloorEvent> getSentFloorEventsList() { //scheduler
 		return sentFloorEvents;
 	}
 
-	public ArrayList<Event> getDestinationEventsList() {
+	public ArrayList<Event> getDestinationEventsList() { //stay inside scheduler
 		return destinationEvents;
 	}
 
-	public void removeFloorEvent(FloorEvent e) {
+	public void removeFloorEvent(FloorEvent e) {//middleman
 		floorEvents.remove(e);
 	}
 
 
-	public void removeDestinationEvent(Event e) {
+	public void removeDestinationEvent(Event e) {//scheduler
 		destinationEvents.remove(e);
 	}
 
-	public void removeSentFloorEvent(FloorEvent e) {
+	public void removeSentFloorEvent(FloorEvent e) { //stay inside scheduler
 		sentFloorEvents.remove(e);
 	}
 
-	public boolean removeFloorEventFromMiddleMan(FloorEvent e) {
+	public boolean removeFloorEventFromMiddleMan(FloorEvent e) {//do not need this
 		return middleManElevator.removeFloorEvent(e);
 	}
 
-	public boolean isFloorEventsListEmpty() {
+	public boolean isFloorEventsListEmpty() { //middleman
 		return floorEvents.isEmpty();
 	}
 
-	public boolean isArrivalEventsListEmpty() {
+	public boolean isArrivalEventsListEmpty() { //middleman
 		return arrivalEvents.isEmpty();
 	}
 
-	public boolean isDestinationEventsListEmpty() {
+	public boolean isDestinationEventsListEmpty() { //inside scheduler
 		return destinationEvents.isEmpty();
 	}
 
-	public void addToFloorEventsList(FloorEvent event) {
+	public void addToFloorEventsList(FloorEvent event) { //middleman
 		floorEvents.add(event);
 	}
 
-	public void addToSentFloorEventsList(FloorEvent event) {
+	public void addToSentFloorEventsList(FloorEvent event) { //inside scheduler
 		sentFloorEvents.add(event);
 	}
 
-	public FloorEvent getNextFloorEvent() {
+	public FloorEvent getNextFloorEvent() { //middleman
 		if (floorEvents.isEmpty()) {
 			return null;
 		}
 		return floorEvents.remove();
 	}
 
-	public ArrivalEvent getNextArrivalEvent() {
+	public ArrivalEvent getNextArrivalEvent() { //middleman
 		if (arrivalEvents.isEmpty()) {
 			return null;
 		}
 		return arrivalEvents.remove();
 	}
 
-	public void addToArrivalEventsList(ArrivalEvent event) {
+	public void addToArrivalEventsList(ArrivalEvent event) { //middleman
 		arrivalEvents.add(event);
 	}
 
-	public void addToDestinationEventsList(Event event) {
+	public void addToDestinationEventsList(Event event) { //in scheduler
 		destinationEvents.add(event);
 	}
 }
