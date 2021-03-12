@@ -180,5 +180,4 @@ public class Elevator implements Runnable {
 		System.out.println("The state of the Elevator is set to " + state.getClass().getSimpleName());
 		this.currentState = state;
 	}
-
 }

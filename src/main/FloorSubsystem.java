@@ -29,7 +29,7 @@ public class FloorSubsystem implements Runnable {
 
 	private UDPHelper udphelper;
 	private final int RECEIVE_PORT = 23;
-	private final int SCHEDULER_PORT = 25;
+	private final int SCHEDULER_PORT = 26;
 
 	/**
 	 * Constructor for FloorSubsystem
