@@ -12,11 +12,12 @@ import java.util.Queue;
 
 import events.ArrivalEvent;
 import events.FloorEvent;
+import util.UDPHelper;
 
 /**
  * The FloorSubsystem Class parses events and processes the information from the
  * events, sending floorEvents and taking arrival events from scheduler
- * 
+ *
  */
 public class FloorSubsystem implements Runnable {
 
@@ -26,9 +27,13 @@ public class FloorSubsystem implements Runnable {
 	private MiddleMan middleMan;
 	private String filename;
 
+	private UDPHelper udphelper;
+	private final int RECEIVE_PORT = 23;
+	private final int SCHEDULER_PORT = 25;
+
 	/**
 	 * Constructor for FloorSubsystem
-	 * 
+	 *
 	 * @param filename    the file to be parsed
 	 * @param numOfFloors the number of floors
 	 * @param middleMan   where events will be put and received
@@ -42,12 +47,14 @@ public class FloorSubsystem implements Runnable {
 		for (int floorNumber = 1; floorNumber <= numOfFloors; floorNumber++) {
 			floors.add(new Floor(floorNumber));
 		}
+
+		udphelper = new UDPHelper(RECEIVE_PORT);
 	}
 
 	/**
 	 * The run method passes to middleMan the events parsed and then receives from
 	 * the middleMan arrivalEvent, triggers the buttons pressed to be on/off
-	 * 
+	 *
 	 */
 	@Override
 	public void run() {
@@ -55,10 +62,15 @@ public class FloorSubsystem implements Runnable {
 		while (true) {
 			if (!eventList.isEmpty()) {
 				FloorEvent eventSent = eventList.remove();
-				middleMan.putFloorEvent(eventSent);
+				sendFloorToScheduler(eventSent);
+				//middleMan.putFloorEvent(eventSent); Replace putting events in middleman with udp
 				floors.get(eventSent.getSource() - 1).switchButton(eventSent.getDirection(), true);
 			}
-			ArrivalEvent arrivalEvent = middleMan.getArrivalEvent();
+			//ArrivalEvent arrivalEvent = middleMan.getArrivalEvent(); Replaced get arrival events in middleman with udp
+			byte[] receivedData = udphelper.receivePacket(this.udphelper.getReceiveSocket());
+
+			//TODO: If the receivedData is not null, continue to deserialize
+			//TODO: Deserialize the packet -> convert into arrival event, then continue with set logic below
 			if (arrivalEvent != null) {
 				int currentFloor = arrivalEvent.getCurrentFloor();
 				if (floors.get(currentFloor - 1).isUpButtonOn()) {
@@ -71,8 +83,18 @@ public class FloorSubsystem implements Runnable {
 	}
 
 	/**
+	 * Send a floor event to the scheduler via UDP
+	 * @param floorevent The target floor
+	 */
+	private void sendFloorToScheduler(FloorEvent floorevent) {
+		//Serialize floor event
+		byte[] serializedData = new byte[100]; //TODO: Replace with the serialized floor event
+		udphelper.sendPacket(serializedData, SCHEDULER_PORT);
+	}
+
+	/**
 	 * Parsed the file to return a list of events
-	 * 
+	 *
 	 * @param filename the file to be parsed
 	 */
 	private void parseFile(String filename) {

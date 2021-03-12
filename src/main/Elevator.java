@@ -10,6 +10,7 @@ import events.SchedulerEvent;
 import states.ElevatorState;
 import states.MovingState;
 import states.StationaryState;
+import util.UDPHelper;
 
 
 /*
@@ -25,6 +26,11 @@ public class Elevator implements Runnable {
 	private Direction direction;
 	private ArrayList<ElevatorButton> buttons;
 	private ElevatorState currentState;
+
+	private UDPHelper udphelper;
+	private final int RECEIVE_PORT = 24;
+	private final int SCHEDULER_PORT = 25;
+
 
 	/*
 	 * constructor for Elevator Defining the middleclass parameters that are by to
@@ -44,8 +50,10 @@ public class Elevator implements Runnable {
 		for (int i = 0; i < numFloor; i++) {
 			buttons.add(new ElevatorButton(i));
 		}
+
+		udphelper = new UDPHelper(RECEIVE_PORT);
 	}
-	
+
 	public void move(SchedulerEvent e) {
 		this.direction = e.getDirection();
 		this.switchLamps(true);
@@ -54,20 +62,20 @@ public class Elevator implements Runnable {
 			currentState.handleArrivedAtFloor();
 		}
 	}
-	
+
 	public void move(FloorEvent e) {
-		
+
 		int diffFloors = e.getSource() - currentFloor;
-		
+
 		//might have to move logic to scheduler maybe
 		if (diffFloors != 0) {
-			Direction direction = diffFloors < 0 ? Direction.DOWN : Direction.UP; 
-			e = new FloorEvent(e.getTime(), currentFloor, direction, e.getSource()); 
+			Direction direction = diffFloors < 0 ? Direction.DOWN : Direction.UP;
+			e = new FloorEvent(e.getTime(), currentFloor, direction, e.getSource());
 		}
-		
+
 		this.direction = e.getDirection();
 		this.switchLamps(true);
-		
+
 		ArrivalEvent arrEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this.direction, this, true);
 		sendArrivalEvent(arrEvent);
 		while(currentState.getClass() == MovingState.class) {
@@ -75,28 +83,6 @@ public class Elevator implements Runnable {
 			currentFloor += direction == Direction.UP ? 1 : -1;
 			currentState.handleArrivedAtFloor();
 		}
-	}
-	
-	public void moveToSourceFloor(FloorEvent e) {
-		FloorEvent e1;
-		int diffFloors = e.getSource() - currentFloor;
-		
-		//might have to move logic to scheduler maybe
-		if (diffFloors != 0) {
-			Direction direction = diffFloors < 0 ? Direction.DOWN : Direction.UP; 
-			e1 = new FloorEvent(e.getTime(), currentFloor, direction, e.getSource());
-			this.direction = e1.getDirection();
-		} else {
-			this.direction = e.getDirection();
-		}
-		
-		this.switchLamps(true);
-		for(int i = 0; i < Math.abs(diffFloors); i++) {
-			System.out.println("Moving one floor " + direction);
-			currentFloor += direction == Direction.UP ? 1 : -1;
-		}
-		direction = e.getDirection();
-		currentState.handleArrivedAtFloor();
 	}
 
 	/*
@@ -106,10 +92,21 @@ public class Elevator implements Runnable {
 	 */
 	public void run() {
 		while (true) {
+
+			//Checks when the elevator receives an event from scheduler
+			byte[] receivedData = udphelper.receivePacket(this.udphelper.getReceiveSocket());
+
+			//TODO: If the received data is not null, deserialize the received data
+			if(receivedData != null) {
+				//Deserialize the data here, converted into a floor event
+				//TODO: Puts the deserialized event as the argument for the floor event to be stored
+				middleMan.putFloorEvent(DeserializedEvent);
+			}
+
 			currentState.handleFloorEvent();
 		}
 	}
-	
+
 	/**
 	 * Switch the direction lamps depending on direction we are moving in
 	 * @param on True if lamp should be turned on, otherwise false
@@ -122,7 +119,7 @@ public class Elevator implements Runnable {
 		}
 	}
 
-	
+
 	/**
 	 * @return String representation of the elevator.
 	 */
@@ -148,17 +145,23 @@ public class Elevator implements Runnable {
 	}
 
 	public void sendDestinationEvent(Event destinationEvent) {
-		this.middleMan.putDestinationEvent(destinationEvent);
+		//TODO: Serialize destination event (e)
+		byte[] serializedData = new byte[100]; //For now, this is the array to be sent
+		udphelper.sendPacket(serializedData, SCHEDULER_PORT);
+		//this.middleMan.putDestinationEvent(destinationEvent);
 	}
 
 	public void switchOnButton(int i, boolean b) {
 		this.buttons.get(i).switchOn(b);
-		
+
 	}
 
 	public void sendArrivalEvent(ArrivalEvent e) {
-		this.middleMan.putArrivalEvent(e);
-		
+		//TODO: Serialize arrival event (e)
+		byte[] serializedData = new byte[100]; //For now, this is the array to be sent
+		udphelper.sendPacket(serializedData, SCHEDULER_PORT);
+		//this.middleMan.putArrivalEvent(e);
+
 	}
 
 	public SchedulerEvent askShouldIStop() {
@@ -172,10 +175,10 @@ public class Elevator implements Runnable {
 	public FloorEvent getFloorEvent() {
 		return this.middleMan.getFloorEvent();
 	}
-	
+
 	public void setState(ElevatorState state) {
 		System.out.println("The state of the Elevator is set to " + state.getClass().getSimpleName());
 		this.currentState = state;
 	}
-	
+
 }
