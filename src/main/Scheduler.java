@@ -1,19 +1,20 @@
 package main;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import events.ArrivalEvent;
 import events.Event;
 import events.FloorEvent;
 import events.SchedulerEvent;
-import states.ActiveState;
 import states.IdleState;
 import states.SchedulerState;
 
 public class Scheduler implements Runnable {
-	private ArrayList<FloorEvent> floorEvents;
-	private ArrayList<ArrivalEvent> arrivalEvents;
+	private Queue<FloorEvent> floorEvents;
+	private ArrayList<FloorEvent> sentFloorEvents;
+	private Queue<ArrivalEvent> arrivalEvents;
 	private ArrayList<Event> destinationEvents;
 	private MiddleMan middleManFloor;
 	private MiddleMan middleManElevator;
@@ -27,8 +28,9 @@ public class Scheduler implements Runnable {
 	 * @param middleMan2 Object to hold and pass events to/from the elevator
 	 */
 	public Scheduler(MiddleMan middleManFloor, MiddleMan middleManElevator) {
-		this.floorEvents = new ArrayList<FloorEvent>();
-		this.arrivalEvents = new ArrayList<ArrivalEvent>();
+		this.floorEvents = new LinkedList<FloorEvent>();
+		this.sentFloorEvents = new ArrayList<FloorEvent>();
+		this.arrivalEvents = new LinkedList<ArrivalEvent>();
 		this.destinationEvents = new ArrayList<Event>();
 		this.middleManFloor = middleManFloor;
 		this.middleManElevator = middleManElevator;
@@ -41,99 +43,72 @@ public class Scheduler implements Runnable {
 	 */
 	@Override
 	public void run() {
-		// will be used to keep track of the elevator status.
-		boolean elevatorKeepsGoing = false;
-
 		while (true) {
-
-			SchedulerEvent schedulerEvent;
-			FloorEvent floorEvent = getFloorEvent();
-			ArrivalEvent arrivalEvent = getArrivalEvent();
-			Event destinationEvent = getDestinationEvent();
-			FloorEvent currentFloorEvent = null;
-			boolean floorEventFlag = false, destinationEventFlag = false;
-
-			currentState.handleFloorEvent(floorEvent);
-			currentState.handleArrivalEvent(arrivalEvent);
-			currentState.handleDestinationEvent(destinationEvent);
-
-			if (currentState.getClass() == ActiveState.class) {
-				if (!floorEvents.isEmpty() && !elevatorKeepsGoing) {
-					floorEvent = floorEvents.get(0);
-					middleManElevator.putFloorEvent(floorEvent);
-				}
-
-				if (!arrivalEvents.isEmpty()) {
-					arrivalEvent = arrivalEvents.remove(0);
-
-					for (FloorEvent fEvent : floorEvents) {
-						if ((arrivalEvent.getCurrentFloor() == fEvent.getSource())
-								&& fEvent.getDirection() == arrivalEvent.getDirection()) {
-							currentFloorEvent = fEvent;
-							floorEventFlag = true;
-							floorEvents.remove(fEvent);
-							break;
-						}
-
-					}
-
-					for (Event destEvent : destinationEvents) {
-						if (destEvent.getDestination() == arrivalEvent.getCurrentFloor()) {
-							destinationEventFlag = true;
-							destinationEvents.remove(destEvent);
-							break;
-						}
-					}
-
-					elevatorKeepsGoing = (!destinationEvents.isEmpty() || floorEventFlag);
-
-					if (!floorEventFlag || !destinationEventFlag) {
-						// No-stop
-						schedulerEvent = new SchedulerEvent(arrivalEvent.getDirection(), LocalTime.now());
-					} else if (destinationEventFlag && floorEventFlag) {
-						schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), elevatorKeepsGoing, true,
-								true, currentFloorEvent, currentFloorEvent.getDirection(), LocalTime.now());
-					} else if (destinationEventFlag) {
-						schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), elevatorKeepsGoing, true,
-								false, currentFloorEvent, currentFloorEvent.getDirection(), LocalTime.now());
-					} else {
-						schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), true, false, true,
-								currentFloorEvent, currentFloorEvent.getDirection(), LocalTime.now());
-					}
-
-					middleManElevator.putSchedulerEvent(schedulerEvent);
-					middleManFloor.putArrivalEvent(arrivalEvent);
-				}
-			}
+			currentState.handleFloorEvent();
+			currentState.handleDestinationEvent();
+			currentState.handleArrivalEvent();
 		}
 	}
 
-	public ArrivalEvent getArrivalEvent() {
-		ArrivalEvent arrEvent = middleManElevator.getArrivalEvent();
-		if (arrEvent != null) {
-			//arrivalEvents.add(arrEvent);
-		}
-		return arrEvent;
+	public ArrivalEvent getArrivalEventFromMiddleMan() {
+		return middleManElevator.getArrivalEvent();
 	}
 
-	public Event getDestinationEvent() {
-		Event destinationEvent = middleManElevator.getDestinationEvent();
-		if (destinationEvent != null) {
-			destinationEvents.add(destinationEvent);
-		}
-		return destinationEvent;
+	public Event getDestinationEventFromMiddleMan() {
+		return middleManElevator.getDestinationEvent();
+	}
+	
+	public void sendFloorEventToElevator(FloorEvent e) {
+		middleManElevator.putFloorEvent(e);
+	}
+	
+	public void sendSchedulerEventToElevator(SchedulerEvent e) {
+		middleManElevator.putSchedulerEvent(e);
+	}
+	
+	public void sendArrivalEventToFloor(ArrivalEvent e) {
+		middleManFloor.putArrivalEvent(e);
 	}
 
-	public FloorEvent getFloorEvent() {
-		FloorEvent floorEvent = middleManFloor.getFloorEvent();
-		if (floorEvent != null) {
-			//floorEvents.add(floorEvent);
-		}
-		return floorEvent;
+	public FloorEvent getFloorEventFromMiddleMan() {
+		return middleManFloor.getFloorEvent();
 	}
 
 	public void setState(SchedulerState state) {
 		this.currentState = state;
+	}
+	
+	public Queue<FloorEvent> getFloorEventsList() {
+		return floorEvents;
+	}
+	
+	public Queue<ArrivalEvent> getArrivalEventsList() {
+		return arrivalEvents;
+	}
+	
+	public ArrayList<FloorEvent> getSentFloorEventsList() {
+		return sentFloorEvents;
+	}
+	
+	public ArrayList<Event> getDestinationEventsList() {
+		return destinationEvents;
+	}
+	
+	public void removeFloorEvent(FloorEvent e) {
+		floorEvents.remove(e);
+	}
+	
+	
+	public void removeDestinationEvent(Event e) {
+		destinationEvents.remove(e);
+	}
+
+	public void removeSentFloorEvent(FloorEvent e) {
+		sentFloorEvents.remove(e);
+	}
+	
+	public boolean removeFloorEventFromMiddleMan(FloorEvent e) {
+		return middleManElevator.removeFloorEvent(e);
 	}
 
 	public boolean isFloorEventsListEmpty() {
@@ -150,6 +125,24 @@ public class Scheduler implements Runnable {
 
 	public void addToFloorEventsList(FloorEvent event) {
 		floorEvents.add(event);
+	}
+	
+	public void addToSentFloorEventsList(FloorEvent event) {
+		sentFloorEvents.add(event);
+	}
+	
+	public FloorEvent getNextFloorEvent() {
+		if (floorEvents.isEmpty()) {
+			return null;
+		}
+		return floorEvents.remove();
+	}
+	
+	public ArrivalEvent getNextArrivalEvent() {
+		if (arrivalEvents.isEmpty()) {
+			return null;
+		}
+		return arrivalEvents.remove();
 	}
 
 	public void addToArrivalEventsList(ArrivalEvent event) {

@@ -1,4 +1,5 @@
 package main;
+import java.time.LocalTime;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Queue;
@@ -33,6 +34,7 @@ public class MiddleMan {
 			FloorEvent tempEvent = floorEvents.remove();
 			System.out.println(Thread.currentThread().getName() + " is receiving FloorEvent. " +
 					tempEvent);
+			notifyAll();
 			return tempEvent;
 		} catch (NoSuchElementException e) {
 			return null;
@@ -41,17 +43,19 @@ public class MiddleMan {
 	}
 	
 	/**
+	 * Remove event from the queue of events if it was already serviced
+	 * @return The event object
+	 */
+	public synchronized boolean removeFloorEvent(FloorEvent e) {
+		System.out.println(Thread.currentThread().getName() + " is removing FloorEvent. " + e);
+		return floorEvents.remove(e);
+	}
+	
+	/**
 	 * Add an event that signifies a user's request to use the elevator into the queue of events
 	 * @param floorEvent The event object to add
 	 */
 	public synchronized void putFloorEvent(FloorEvent floorEvent) {
-		while (!floorEvents.isEmpty()) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				return;
-			}
-		}
 		floorEvents.add(floorEvent);
 		System.out.println(Thread.currentThread().getName() + " is sending FloorEvent. " + 
 				floorEvent);
@@ -68,6 +72,7 @@ public class MiddleMan {
 			ArrivalEvent tempEvent = arrivalEvents.remove();
 			System.out.println(Thread.currentThread().getName() + " is receiving ArrivalEvent. " + 
 					tempEvent);
+			notifyAll();
 			return tempEvent;
 		} catch (NoSuchElementException e) {
 			return null;
@@ -82,6 +87,7 @@ public class MiddleMan {
 	public synchronized void putArrivalEvent(ArrivalEvent arrivalEvent) {
 		while (!arrivalEvents.isEmpty()) {
 			try {
+				System.out.println("wait() put arrival event" + ".  {Time: " + LocalTime.now() + "}");
 				wait();
 			} catch (InterruptedException e) {
 				return;
@@ -104,6 +110,7 @@ public class MiddleMan {
 			Event tempEvent = destinationEvents.remove();
 			System.out.println(Thread.currentThread().getName() + " is receiving DestinationEvent. " + 
 					tempEvent);
+			notifyAll();
 			return tempEvent;
 		} catch (NoSuchElementException e) {
 			return null;
@@ -117,6 +124,7 @@ public class MiddleMan {
 	public synchronized void putDestinationEvent(Event event) {
 		while (!destinationEvents.isEmpty()) {
 			try {
+				System.out.println("wait() put destination event" + ".  {Time: " + LocalTime.now() + "}");
 				wait();
 			} catch (InterruptedException e) {
 				return;
@@ -163,8 +171,7 @@ public class MiddleMan {
 		}
 		System.out.println(Thread.currentThread().getName() + " is sending SchedulerEvent. " + 
 				event);
-		schedEvent = event; //need to decide what type of event to send if no source event for arrival event
+		schedEvent = event; 
 		notifyAll();
-		
 	}
 }

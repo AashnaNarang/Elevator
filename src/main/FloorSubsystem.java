@@ -56,14 +56,17 @@ public class FloorSubsystem implements Runnable {
 			if (!eventList.isEmpty()) {
 				FloorEvent eventSent = eventList.remove();
 				middleMan.putFloorEvent(eventSent);
+				System.out.println(Thread.currentThread().getName() + " is turning on " + eventSent.getDirection() +  " button for floor " + eventSent.getSource() + ".  {Time: " + LocalTime.now() + "}");
 				floors.get(eventSent.getSource() - 1).switchButton(eventSent.getDirection(), true);
 			}
 			ArrivalEvent arrivalEvent = middleMan.getArrivalEvent();
 			if (arrivalEvent != null) {
 				int currentFloor = arrivalEvent.getCurrentFloor();
 				if (floors.get(currentFloor - 1).isUpButtonOn()) {
+					System.out.println(Thread.currentThread().getName() + " is turning off up button for floor " + currentFloor + ".  {Time: " + LocalTime.now() + "}");
 					floors.get(currentFloor - 1).switchButton(Direction.UP, false);
 				} else if (floors.get(currentFloor - 1).isDownButtonOn()) {
+					System.out.println(Thread.currentThread().getName() + " is turning off down button for floor " + currentFloor + ".  {Time: " + LocalTime.now() + "}");
 					floors.get(currentFloor - 1).switchButton(Direction.DOWN, false);
 				}
 			}

@@ -17,35 +17,26 @@ public class IdleState extends SchedulerState {
 	}
 
 	/**
-	 * This listens to a FloorEvent that will be passed into activeState if one is
-	 * received
+	 * Poll for arrival events from middle man, add to elevator's list if able to retrieve event 
 	 */
 	@Override
-	public void handleFloorEvent(FloorEvent floorEvent) {
-		if (floorEvent != null) {
-			scheduler.setState(new ActiveState(scheduler, floorEvent));
-		}
-	}
-
-	/**
-	 * This listens to a ArrivalEvent that will be passed into activeState if one is
-	 * received
-	 */
-	@Override
-	public void handleArrivalEvent(ArrivalEvent arrivalEvent) {
+	public void handleArrivalEvent() {
+		ArrivalEvent arrivalEvent = scheduler.getArrivalEventFromMiddleMan();
 		if (arrivalEvent != null) {
-			scheduler.setState(new ActiveState(scheduler, arrivalEvent));
+			scheduler.addToArrivalEventsList(arrivalEvent);
+			scheduler.setState(new ActiveState(scheduler));
 		}
 	}
 
 	/**
-	 * This listens to a DestinationEvent that will be passed into activeState if
-	 * one is received
+	 * Poll for destination events from middle man, add to elevator's list if able to retrieve event 
 	 */
 	@Override
-	public void handleDestinationEvent(Event destinationEvent) {
+	public void handleDestinationEvent() {
+		Event destinationEvent = scheduler.getDestinationEventFromMiddleMan();
 		if (destinationEvent != null) {
-			scheduler.setState(new ActiveState(scheduler, destinationEvent));
+			scheduler.addToDestinationEventsList(destinationEvent);
+			scheduler.setState(new ActiveState(scheduler));
 		}
 	}
 

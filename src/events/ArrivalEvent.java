@@ -6,10 +6,11 @@ import main.Direction;
 import main.Elevator;
 
 public class ArrivalEvent {
-	int currentFloor;
-	LocalTime time;
-	Elevator elevator;
-	Direction direction;
+	private int currentFloor;
+	private LocalTime time;
+	private Elevator elevator;
+	private Direction direction;
+	private boolean didNotMoveYet;
 
 	/*
 	 * Constructor for Arrival event.
@@ -27,6 +28,15 @@ public class ArrivalEvent {
 		this.time = time;
 		this.elevator = elevator;
 		this.direction = direction;
+		this.didNotMoveYet = false;
+	}
+	
+	public ArrivalEvent(int currentFloor, LocalTime time, Direction direction, Elevator elevator, boolean didNotMoveYet) {
+		this.currentFloor = currentFloor;
+		this.time = time;
+		this.elevator = elevator;
+		this.direction = direction;
+		this.didNotMoveYet = didNotMoveYet;
 	}
 
 	/*
@@ -62,11 +72,20 @@ public class ArrivalEvent {
 	public Direction getDirection() {
 		return direction;
 	}
+	
+	
+
+	/**
+	 * @return didNotMoveYet - if elevator has started moving yet
+	 */
+	public boolean didNotMoveYet() {
+		return didNotMoveYet;
+	}
 
 	/**
 	 * @return String representation of the event.
 	 */
 	public String toString() {
-		return "{Current floor:" + getCurrentFloor() + ", Direction:" + getDirection() + "}";
+		return "{Time: "+ time + ", Current floor:" + getCurrentFloor() + ", Direction:" + getDirection() + "}";
 	}
 }
