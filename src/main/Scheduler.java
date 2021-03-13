@@ -69,7 +69,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 		}
 	}
 
-	public ArrivalEvent getArrivalEventFromMiddleMan() {
+	public ArrivalEvent getArrivalEventFromElevator() {
 		DatagramPacket receivePacket = receive(sendReceiveArrSocket, true);
 		if (receivePacket == null) {
 			return null;
@@ -77,7 +77,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 		return Serial.deSerialize(receivePacket.getData(), ArrivalEvent.class);
 	}
 
-	public Event getDestinationEventFromMiddleMan() {
+	public Event getDestinationEventFromElevator() {
 		DatagramPacket receivePacket = receive(sendReceiveDestSocket, true);
 		if (receivePacket == null) {
 			return null;
@@ -85,7 +85,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 		return Serial.deSerialize(receivePacket.getData(), Event.class);
 	}
 	
-	public StationaryEvent getStationaryEventFromMiddleMan() {
+	public StationaryEvent getStationaryEventFromElevator() {
 		DatagramPacket receivePacket = receive(sendReceiveStatSocket, true);
 		if (receivePacket == null) {
 			return null;
@@ -108,7 +108,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 		send(sendReceiveFloorSocket, data, data.length, this.floorPort); //doesn't matter what port we use to send
 	}
 
-	public FloorEvent getFloorEventFromMiddleMan() {
+	public FloorEvent getFloorEventFromFloor() {
 		DatagramPacket receivePacket = receive(sendReceiveFloorSocket, true);
 		if (receivePacket == null) {
 			return null;

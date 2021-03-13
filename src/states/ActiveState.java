@@ -31,7 +31,7 @@ public class ActiveState extends SchedulerState {
 	@Override
 	public void handleFloorEvent() {
 		super.handleFloorEvent();
-		StationaryEvent elevStationary = scheduler.getStationaryEventFromMiddleMan();
+		StationaryEvent elevStationary = scheduler.getStationaryEventFromElevator();
 		boolean isElevStationary = elevStationary == null ? false : true;
 		System.out.println("IS elevator stationary? " + isElevStationary + " ");
 		if (!isElevStationary) {
@@ -55,7 +55,7 @@ public class ActiveState extends SchedulerState {
 		ArrivalEvent arrivalEvent = scheduler.getNextArrivalEvent();
 		
 		if (arrivalEvent == null) {
-			arrivalEvent = scheduler.getArrivalEventFromMiddleMan();
+			arrivalEvent = scheduler.getArrivalEventFromElevator();
 			if (arrivalEvent == null) {
 				return;
 			}
@@ -106,7 +106,7 @@ public class ActiveState extends SchedulerState {
 	
 	@Override
 	public void handleDestinationEvent() {
-		Event destinationEvent = scheduler.getDestinationEventFromMiddleMan();
+		Event destinationEvent = scheduler.getDestinationEventFromElevator();
 		if (destinationEvent != null) {
 			System.out.println(" Elevator is adding destination event from scheduler get destination event " + destinationEvent);
 			scheduler.addToDestinationEventsList(destinationEvent);

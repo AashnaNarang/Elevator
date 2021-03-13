@@ -21,7 +21,7 @@ public class IdleState extends SchedulerState {
 	 */
 	@Override
 	public void handleArrivalEvent() {
-		ArrivalEvent arrivalEvent = scheduler.getArrivalEventFromMiddleMan();
+		ArrivalEvent arrivalEvent = scheduler.getArrivalEventFromElevator();
 		if (arrivalEvent != null) {
 			scheduler.addToArrivalEventsList(arrivalEvent);
 			scheduler.setState(new ActiveState(scheduler));
@@ -33,7 +33,7 @@ public class IdleState extends SchedulerState {
 	 */
 	@Override
 	public void handleDestinationEvent() {
-		Event destinationEvent = scheduler.getDestinationEventFromMiddleMan();
+		Event destinationEvent = scheduler.getDestinationEventFromElevator();
 		if (destinationEvent != null) {
 			scheduler.addToDestinationEventsList(destinationEvent);
 			scheduler.setState(new ActiveState(scheduler));
