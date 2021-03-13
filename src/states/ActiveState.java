@@ -132,7 +132,6 @@ public class ActiveState extends SchedulerState {
 				currentFloorEvent = fEvent;
 				floorEventFlag = true;
 				scheduler.removeFloorEvent(fEvent);
-				scheduler.removeFloorEventFromMiddleMan(fEvent);
 				break;
 			}
 		}
@@ -143,7 +142,7 @@ public class ActiveState extends SchedulerState {
 					currentFloorEvent = fEvent;
 					floorEventFlag = true;
 					scheduler.removeSentFloorEvent(fEvent);
-					scheduler.removeFloorEventFromMiddleMan(fEvent);
+					scheduler.removeFloorEvent(fEvent);
 					break;
 				}
 			}

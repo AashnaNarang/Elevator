@@ -132,6 +132,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	}
 	
 	public void removeFloorEvent(FloorEvent e) {
+		System.out.println(Thread.currentThread().getName() + " is removing FloorEvent. " + e);
 		floorEvents.remove(e);
 	}
 	
@@ -142,11 +143,6 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 
 	public void removeSentFloorEvent(FloorEvent e) {
 		sentFloorEvents.remove(e);
-	}
-	
-	public boolean removeFloorEventFromMiddleMan(FloorEvent e) {
-		System.out.println(Thread.currentThread().getName() + " is removing FloorEvent. " + e);
-		return floorEvents.remove(e);
 	}
 
 	public boolean isFloorEventsListEmpty() {
