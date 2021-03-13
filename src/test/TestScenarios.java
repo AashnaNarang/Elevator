@@ -12,7 +12,7 @@ import main.FloorSubsystem;
 import main.MiddleMan;
 import main.Scheduler;
 
-public class IterationThreeTests {
+public class TestScenarios {
 	MiddleMan middleMan1;
 	MiddleMan middleMan2;
 	Elevator elevator, elevator2, elevator3, elevator4;
