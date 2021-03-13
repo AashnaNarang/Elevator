@@ -1,7 +1,6 @@
 package states;
 
 import events.ArrivalEvent;
-import events.FloorEvent;
 import events.Event;
 import main.Scheduler;
 
@@ -16,7 +15,7 @@ public class IdleState extends SchedulerState {
 	}
 
 	/**
-	 * Poll for arrival events from middle man, add to elevator's list if able to retrieve event 
+	 * Get arrival events from elevator, add to elevator's list if able to retrieve event 
 	 */
 	@Override
 	public void handleArrivalEvent() {
@@ -28,7 +27,7 @@ public class IdleState extends SchedulerState {
 	}
 
 	/**
-	 * Poll for destination events from middle man, add to elevator's list if able to retrieve event 
+	 * Get destination events from elevator, add to elevator's list if able to retrieve event 
 	 */
 	@Override
 	public void handleDestinationEvent() {

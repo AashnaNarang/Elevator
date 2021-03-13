@@ -19,7 +19,7 @@ public class ActiveState extends SchedulerState {
 	
 	/**
 	 * Constructors to take in parameters passed in from idleState
-	 * @param scheduler the scheduler
+	 * @param scheduler the scheduler object
 	 */
 	public ActiveState(Scheduler scheduler) {
 		super(scheduler);
@@ -29,6 +29,10 @@ public class ActiveState extends SchedulerState {
 
 
 	@Override
+	/**
+	 * If there is a stationary elevator, then send a floor event. Remove from list and move to sent floor events
+	 * list
+	 */
 	public void handleFloorEvent() {
 		super.handleFloorEvent();
 		StationaryEvent elevStationary = scheduler.getStationaryEventFromElevator();
@@ -44,6 +48,10 @@ public class ActiveState extends SchedulerState {
 	}
 
 	@Override
+	/**
+	 * Analyze the arrival event to see if elevator needs to stop or not. Send scheduler event to elevator 
+	 * to tell it what to do and send arrival event to floor subsystem
+	 */
 	public void handleArrivalEvent() {
 		floorEventFlag = false;
 		destinationEventFlag= false;
@@ -95,14 +103,20 @@ public class ActiveState extends SchedulerState {
 	}
 	
 	@Override
+	/**
+	 * add destination event to scheduler's list
+	 */
 	public void handleDestinationEvent() {
 		Event destinationEvent = scheduler.getDestinationEventFromElevator();
 		if (destinationEvent != null) {
-			System.out.println(" Elevator is adding destination event from scheduler get destination event " + destinationEvent);
+			System.out.println(Thread.currentThread().getName() + " is adding destination event from scheduler. " + destinationEvent);
 			scheduler.addToDestinationEventsList(destinationEvent);
 		}
 	}
 	
+	/**
+	 * Check if need to move scheduler to idle state
+	 */
 	private void checkIfUpdateToIdleState() {
 		if(scheduler.isArrivalEventsListEmpty() && scheduler.isFloorEventsListEmpty() 
 				&& scheduler.isDestinationEventsListEmpty()) {
@@ -110,11 +124,21 @@ public class ActiveState extends SchedulerState {
 		}
 	}
 	
+	/**
+	 * Check if elevator should stop at given floor
+	 * @param arrivalEvent arrival event to check what floor elevator is at
+	 * @param fEvent floor event to check
+	 * @return
+	 */
 	private boolean isAtFloor(ArrivalEvent arrivalEvent, FloorEvent fEvent) {
 		return (arrivalEvent.getCurrentFloor() == fEvent.getSource())
 				&& fEvent.getDirection() == arrivalEvent.getDirection();
 	}
 	
+	/**
+	 * Analyze destination events to see if elevator can service it
+	 * @param arrivalEvent arrival event to get floor elevator is on and elevator id
+	 */
 	private void analyzeDestinationEvents(ArrivalEvent arrivalEvent) {
 		ArrayList<Event> toRemove = new ArrayList<>();
 		for (Event destEvent : scheduler.getDestinationEventsList()) {
@@ -129,6 +153,11 @@ public class ActiveState extends SchedulerState {
 		}
 	}
 	
+	/**
+	 * Analyze floor events to see if elevator can service it
+	 * @param arrivalEvent arrival event to analyze
+	 * @return floor event that can be serviced, otherwise null
+	 */
 	private FloorEvent analyzeFloorEvents(ArrivalEvent arrivalEvent) {
 		FloorEvent currentFloorEvent = null;
 		for (FloorEvent fEvent : scheduler.getSentFloorEventsList()) {

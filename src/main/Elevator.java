@@ -4,7 +4,6 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Timer;
 
 import events.ArrivalEvent;
 import events.Event;

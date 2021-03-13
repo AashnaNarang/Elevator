@@ -12,7 +12,7 @@ protected Scheduler scheduler;
 	}
 	
 	/**
-	 * Poll for floor events from middle man floor, add to elevator's list if able to retrieve event 
+	 * Get floor events from floor, add to elevator's list if able to retrieve event 
 	 */
 	public void handleFloorEvent() {
 		FloorEvent floorEvent = scheduler.getFloorEventFromFloor();
