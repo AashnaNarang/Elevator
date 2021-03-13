@@ -71,4 +71,13 @@ public class FloorEvent extends Event {
 		return "{Time:"+ time + ", Source floor:" + source+ ", Direction:" + direction + ", Destination floor:" + destination+"}";
 	}
 	
+	public boolean equals(Object o) {
+		if (this == o) return true;
+	    if (o == null) return false;
+	    if (getClass() != o.getClass()) return false;
+	    FloorEvent a = (FloorEvent) o;
+	    return super.equals(a) && (source == a.getSource()) && (time == a.getTime()) &&
+	           (direction == a.getDirection()) && (destination == a.getDestination());
+	}
+	
 }

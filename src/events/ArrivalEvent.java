@@ -82,4 +82,14 @@ public class ArrivalEvent implements Serializable{
 	public String toString() {
 		return "{Time: "+ time + ", Current floor:" + getCurrentFloor() + ", Direction:" + getDirection() + "}";
 	}
+	
+	public boolean equals(Object o) {
+		if (this == o) return true;
+	    if (o == null) return false;
+	    if (getClass() != o.getClass()) return false;
+	    ArrivalEvent a = (ArrivalEvent) o;
+	    return (currentFloor == a.getCurrentFloor()) && (time == a.getTime()) &&
+	           (direction == a.getDirection()) && (didNotMoveYet == a.didNotMoveYet());
+	}
+
 }

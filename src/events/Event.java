@@ -40,4 +40,12 @@ public class Event implements Serializable{
 	public String toString() {
 		return "{Time: "+ time + ", Destination:" + getDestination() + "}";
 	}
+	
+	public boolean equals(Object o) {
+		if (this == o) return true;
+	    if (o == null) return false;
+	    if (getClass() != o.getClass()) return false;
+	    Event a = (Event) o;
+	    return (time == a.getTime()) && (destination == a.getDestination());
+	}
 }
