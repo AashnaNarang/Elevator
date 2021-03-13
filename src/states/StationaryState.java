@@ -14,6 +14,7 @@ public class StationaryState extends ElevatorState {
 	
 	@Override
 	public void handleFloorEvent() {
+		elevator.sendStationaryEvent();
 		FloorEvent e = elevator.getFloorEvent();
 		if (e != null) {
 			if (e.getSource() == elevator.getCurrentFloor()) {

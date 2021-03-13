@@ -9,6 +9,10 @@ import main.Direction;
  *
  */
 public class FloorEvent extends Event {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1674329514177840536L;
 	private int source;
 	private Direction direction;
 	private boolean isAtSource;
@@ -65,6 +69,15 @@ public class FloorEvent extends Event {
 	 */
 	public String toString() {
 		return "{Time:"+ time + ", Source floor:" + source+ ", Direction:" + direction + ", Destination floor:" + destination+"}";
+	}
+	
+	public boolean equals(Object o) {
+		if (this == o) return true;
+	    if (o == null) return false;
+	    if (getClass() != o.getClass()) return false;
+	    FloorEvent a = (FloorEvent) o;
+	    return super.equals(a) && (source == a.getSource()) && (time == a.getTime()) &&
+	           (direction == a.getDirection()) && (destination == a.getDestination());
 	}
 	
 }

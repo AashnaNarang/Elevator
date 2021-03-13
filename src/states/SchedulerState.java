@@ -17,6 +17,7 @@ protected Scheduler scheduler;
 	public void handleFloorEvent() {
 		FloorEvent floorEvent = scheduler.getFloorEventFromMiddleMan();
 		if (floorEvent != null) {
+			System.out.println("Adding this to floor events list : " + floorEvent.toString());
 			scheduler.addToFloorEventsList(floorEvent);
 			scheduler.setState(new ActiveState(scheduler));
 		}
