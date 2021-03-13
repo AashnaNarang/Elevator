@@ -7,6 +7,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class Serial {
+	
+	/**
+	 * 
+	 * @param event The event that needs to be serialized
+	 * @return A byte array that can be used to send over UDP.
+	 */
 	public static <T> byte[] serialize(T event) {
 
         try {
@@ -25,6 +31,12 @@ public class Serial {
         return null;
 	}
 	
+	/**
+	 * 
+	 * @param msg The message that was received over UDP and needs to be deserialized.
+	 * @param id The Class of event that the message needs to be casted to.
+	 * @return The actual event object that was sent over UDP. 
+	 */
 	public static <T> T deSerialize(byte[] msg, Class<T> id) {
 		
 		try {
