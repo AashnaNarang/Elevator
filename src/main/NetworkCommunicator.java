@@ -49,11 +49,11 @@ public abstract class NetworkCommunicator {
 		DatagramPacket receivePacket = new DatagramPacket(data, data.length);
 		
 		try {
-			// Block until a datagram is received via sendReceiveSocket.  
+			// Block until a datagram is received via sendReceiveSocket.
+			receiveSocket.setSoTimeout(500);
 			receiveSocket.receive(receivePacket);
 		} catch(IOException e) {
-			e.printStackTrace();
-			System.exit(1);
+			return null;
 		}
 
 		return receivePacket;
