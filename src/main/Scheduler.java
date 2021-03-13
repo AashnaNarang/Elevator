@@ -30,7 +30,6 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	private int floorPort;
 	private int elevFloorPort;
 	private int elevSchedPort;
-	private int elevStatPort;
 
 	/**
 	 * Public constructor to create Scheduler object and instantiate instance
@@ -49,14 +48,12 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 		this.floorPort = floorPort;
 		this.elevFloorPort = elevFloorPort;
 		this.elevSchedPort = elevSchedPort;
-		this.elevStatPort = elevStatPort;
 		
 		try {
 			sendReceiveFloorSocket = new DatagramSocket(floorEventPort);
 			sendReceiveArrSocket = new DatagramSocket(arrPort);
 			sendReceiveDestSocket = new DatagramSocket(destPort);
 			sendReceiveStatSocket = new DatagramSocket(elevStatPort);
-
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
