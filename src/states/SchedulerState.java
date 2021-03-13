@@ -15,9 +15,8 @@ protected Scheduler scheduler;
 	 * Poll for floor events from middle man floor, add to elevator's list if able to retrieve event 
 	 */
 	public void handleFloorEvent() {
-		FloorEvent floorEvent = scheduler.getFloorEventFromMiddleMan();
+		FloorEvent floorEvent = scheduler.getFloorEventFromFloor();
 		if (floorEvent != null) {
-			System.out.println("Adding this to floor events list : " + floorEvent.toString());
 			scheduler.addToFloorEventsList(floorEvent);
 			scheduler.setState(new ActiveState(scheduler));
 		}

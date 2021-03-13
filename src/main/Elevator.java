@@ -187,7 +187,6 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	}
 	
 	public void sendStationaryEvent(StationaryEvent e) {
-		System.out.println("Elevator State: " + currentState + " sending stationary event");
 		byte[] data = Serial.serialize(e);
 		send(sendReceiveFloorSocket, data, data.length, this.statPort);
 	}
