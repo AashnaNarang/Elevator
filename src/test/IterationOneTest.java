@@ -17,20 +17,11 @@ import main.Scheduler;
 
 public class IterationOneTest {
 	
-	MiddleMan middleMan1;
-	MiddleMan middleMan2;
-	
 	Elevator elevator;
 	Thread floorSubsystemThread;
 	Thread schedThread;
 	Thread elevatorThread;
 
-	@Before
-	public void setUp() throws Exception {
-		middleMan1 = new MiddleMan();
-		middleMan2 = new MiddleMan();
-	}
-	
 	@Test
 	public void test() {
 		try {
