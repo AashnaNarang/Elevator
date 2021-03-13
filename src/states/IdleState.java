@@ -3,7 +3,6 @@ package states;
 import events.ArrivalEvent;
 import events.FloorEvent;
 import events.Event;
-import main.MiddleMan;
 import main.Scheduler;
 
 /**
