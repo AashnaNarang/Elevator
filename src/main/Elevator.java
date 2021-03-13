@@ -35,10 +35,14 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	private DatagramSocket sendReceiveScheduleSocket; //declaration of socket
 	private int id;
 
-	/*
-	 * constructor for Elevator Defining the middleclass parameters that are by to
-	 * the scheduler.
-	 *
+	/**
+	 * Elevator constructor to intialize instance variables 
+	 * @param numFloor number of floors
+	 * @param floorPort port to listen to for floor events
+	 * @param schedPort port to listen to for scheduler events
+	 * @param arrPort
+	 * @param destPort
+	 * @param statPort
 	 */
 	public Elevator(int id, int numFloor, int floorPort, int schedPort, int arrPort, int destPort, int statPort) {
 		this.currentFloor = 1;
@@ -64,6 +68,10 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		}
 	}
 	
+	/**
+	 * Move the elevator given an scheduler event until elevator state changes
+	 * @param e Scheduler event to listen to
+	 */
 	public void move(SchedulerEvent e) {
 		this.direction = e.getDirection();
 		this.switchLamps(true);
@@ -77,6 +85,10 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		}
 	}
 	
+	/**
+	 * Move the elevator given a FloorEvent until elevator state changes
+	 * @param e FloorEvent to listen to 
+	 */
 	public void move(FloorEvent e) {
 		
 		int diffFloors = e.getSource() - currentFloor;
@@ -100,6 +112,10 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		}
 	}
 	
+	/**
+	 * Move the elevator given you're already on source floor and given a FloorEvent until elevator state changes
+	 * @param e FloorEvent to listen to 
+	 */
 	public void moveToSourceFloor(FloorEvent e) {
 		FloorEvent e1;
 		int diffFloors = e.getSource() - currentFloor;
@@ -162,6 +178,9 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		return currentFloor;
 	}
 
+	/**
+	 * Start the door timer and call handler when timer expires
+	 */
 	public void startTimer() {
 		try {
 			Thread.sleep(5);
@@ -171,6 +190,10 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		currentState.handleDoorTimerExpiry();
 	}
 
+	/**
+	 * Send destination event to scheduler
+	 * @param destinationEvent event to send
+	 */
 	public void sendDestinationEvent(Event destinationEvent) {
 		byte[] data = Serial.serialize(destinationEvent);
 		send(sendReceiveFloorSocket, data, data.length, this.destPort);
@@ -181,16 +204,28 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		
 	}
 
+	/**
+	 * Send arrival event to scheduler
+	 * @param e event to send
+	 */
 	public void sendArrivalEvent(ArrivalEvent e) {
 		byte[] data = Serial.serialize(e);
 		send(sendReceiveFloorSocket, data, data.length, this.arrPort);
 	}
 	
+	/**
+	 * Send stationary event to scheduler
+	 * @param e event to send
+	 */
 	public void sendStationaryEvent(StationaryEvent e) {
 		byte[] data = Serial.serialize(e);
 		send(sendReceiveFloorSocket, data, data.length, this.statPort);
 	}
 
+	/**
+	 * Ask scheduler for a scheduler event
+	 * @return scheduler event
+	 */
 	public SchedulerEvent askShouldIStop() {
 		DatagramPacket receivePacket = receive(sendReceiveScheduleSocket, false);
 		if (receivePacket == null) {
@@ -199,10 +234,18 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		return Serial.deSerialize(receivePacket.getData(), SchedulerEvent.class);
 	}
 
+	/**
+	 * Get direction elevator is currently moving in
+	 * @return the direction
+	 */
 	public Direction getDirection() {
 		return this.direction;
 	}
 
+	/**
+	 * Receive a floor event from the scheduler
+	 * @return floor event received or null if doesn't exist
+	 */
 	public FloorEvent getFloorEvent() {
 		DatagramPacket receivePacket = receive(sendReceiveFloorSocket, false);
 		if (receivePacket == null) {
@@ -211,23 +254,43 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		return Serial.deSerialize(receivePacket.getData(), FloorEvent.class);
 	}
 	
+	/**
+	 * Change state of elevator
+	 * @param state
+	 */
 	public void setState(ElevatorState state) {
 		this.currentState = state;
 		System.out.println("Set state of " + Thread.currentThread().getName() +  " to " + state.getClass().getSimpleName() + ".  {Time: " + LocalTime.now() + "}");
 	}
 
+	/**
+	 * Get current elevator state
+	 * @return state
+	 */
 	public ElevatorState getState() {
 		return currentState; 
 	}
 	
+	/**
+	 * Get sendReceiveFloorSocket
+	 * @return socket object
+	 */
 	public DatagramSocket getSendReceiveFloorSocket() {
 		return sendReceiveFloorSocket;
 	}
 
+	/**
+	 * Get sendReceiveSchedulerSocket
+	 * @return socket object
+	 */
 	public DatagramSocket getSendReceiveScheduleSocket() {
 		return sendReceiveScheduleSocket;
 	}
 
+	/**
+	 * Get the elevator's id
+	 * @return id of elevator
+	 */
 	public int getId() {
 		return id;
 	}
