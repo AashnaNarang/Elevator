@@ -17,6 +17,7 @@ import states.IdleState;
 import states.SchedulerState;
 
 public class Scheduler extends NetworkCommunicator implements Runnable {
+	//declaration of variables
 	private Queue<FloorEvent> floorEvents;
 	private ArrayList<FloorEvent> sentFloorEvents;
 	private Queue<ArrivalEvent> arrivalEvents;
@@ -69,6 +70,11 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 		}
 	}
 
+	
+	/**
+	 * 
+	 * @return An Arrival Event detailing arrival information from an elevator.
+	 */
 	public ArrivalEvent getArrivalEventFromElevator() {
 		DatagramPacket receivePacket = receive(sendReceiveArrSocket, true);
 		if (receivePacket == null) {
@@ -77,6 +83,10 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 		return Serial.deSerialize(receivePacket.getData(), ArrivalEvent.class);
 	}
 
+	/**
+	 * 
+	 * @return A Destination Event detailing the destination information from an elevator.
+	 */
 	public Event getDestinationEventFromElevator() {
 		DatagramPacket receivePacket = receive(sendReceiveDestSocket, true);
 		if (receivePacket == null) {
@@ -85,6 +95,10 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 		return Serial.deSerialize(receivePacket.getData(), Event.class);
 	}
 	
+	/**
+	 * 
+	 * @return A Stationary Event detailing what elevator is stationary.
+	 */
 	public StationaryEvent getStationaryEventFromElevator() {
 		DatagramPacket receivePacket = receive(sendReceiveStatSocket, true);
 		if (receivePacket == null) {
@@ -93,21 +107,40 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 		return Serial.deSerialize(receivePacket.getData(), StationaryEvent.class);
 	}
 	
+	/**
+	 * 
+	 * @param e The Floor Event to be sent to the elevator.
+	 * @param port The port that the Floor Event will be sent to.
+	 */
 	public void sendFloorEventToElevator(FloorEvent e, int port) {
 		byte[] data = Serial.serialize(e);
 		send(sendReceiveFloorSocket, data, data.length, port); //doesn't matter what port we use to send
 	}
 	
+	
+	/**
+	 * 
+	 * @param e The Scheduler Event to be sent to the elevator.
+	 * @param port The port that the Scheduler Event will be sent to.
+	 */
 	public void sendSchedulerEventToElevator(SchedulerEvent e, int port) {
 		byte[] data = Serial.serialize(e);
 		send(sendReceiveFloorSocket, data, data.length, port); //doesn't matter what port we use to send
 	}
 	
+	/**
+	 * 
+	 * @param e The Arrival Event to be sent to the floor subsystem.
+	 */
 	public void sendArrivalEventToFloor(ArrivalEvent e) {
 		byte[] data = Serial.serialize(e);
 		send(sendReceiveFloorSocket, data, data.length, this.floorPort); //doesn't matter what port we use to send
 	}
 
+	/**
+	 * 
+	 * @return A Floor Event detailing the request of a person trying to use the elevator.
+	 */
 	public FloorEvent getFloorEventFromFloor() {
 		DatagramPacket receivePacket = receive(sendReceiveFloorSocket, true);
 		if (receivePacket == null) {
@@ -116,6 +149,10 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 		return Serial.deSerialize(receivePacket.getData(), FloorEvent.class);
 	}
 
+	/**
+	 * 
+	 * @param state The state the Scheduler should enter next.
+	 */
 	public void setState(SchedulerState state) {
 		this.currentState = state;
 	}
