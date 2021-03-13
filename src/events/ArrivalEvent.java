@@ -13,7 +13,6 @@ public class ArrivalEvent implements Serializable{
 	private static final long serialVersionUID = 520508342067884869L;
 	private int currentFloor;
 	private LocalTime time;
-	private Elevator elevator;
 	private Direction direction;
 	private boolean didNotMoveYet;
 
@@ -28,18 +27,16 @@ public class ArrivalEvent implements Serializable{
 	 * 
 	 * @param elevator - The elevator itself
 	 */
-	public ArrivalEvent(int currentFloor, LocalTime time, Direction direction, Elevator elevator) {
+	public ArrivalEvent(int currentFloor, LocalTime time, Direction direction) {
 		this.currentFloor = currentFloor;
 		this.time = time;
-		this.elevator = elevator;
 		this.direction = direction;
 		this.didNotMoveYet = false;
 	}
 	
-	public ArrivalEvent(int currentFloor, LocalTime time, Direction direction, Elevator elevator, boolean didNotMoveYet) {
+	public ArrivalEvent(int currentFloor, LocalTime time, Direction direction, boolean didNotMoveYet) {
 		this.currentFloor = currentFloor;
 		this.time = time;
-		this.elevator = elevator;
 		this.direction = direction;
 		this.didNotMoveYet = didNotMoveYet;
 	}
@@ -52,15 +49,7 @@ public class ArrivalEvent implements Serializable{
 	public LocalTime getTime() {
 		return time;
 	}
-
-	/*
-	 * getter method for Elevator
-	 *
-	 * @return the elevator that needs the arrivalevent info
-	 */
-	public Elevator getElevator() {
-		return elevator;
-	}
+	
 
 	/*
 	 * getter method for currentFloor

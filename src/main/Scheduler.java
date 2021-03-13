@@ -86,7 +86,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	
 	public void sendFloorEventToElevator(FloorEvent e) {
 		byte[] data = Serial.serialize(e);
-		send(sendReceiveFloorSocket, data, data.length, this.floorPort); //doesn't matter what port we use to send
+		send(sendReceiveFloorSocket, data, data.length, this.elevatorPort); //doesn't matter what port we use to send
 	}
 	
 	public void sendSchedulerEventToElevator(SchedulerEvent e) {
@@ -96,7 +96,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	
 	public void sendArrivalEventToFloor(ArrivalEvent e) {
 		byte[] data = Serial.serialize(e);
-		send(sendReceiveFloorSocket, data, data.length, this.elevatorPort); //doesn't matter what port we use to send
+		send(sendReceiveFloorSocket, data, data.length, this.floorPort); //doesn't matter what port we use to send
 	}
 
 	public FloorEvent getFloorEventFromMiddleMan() {
