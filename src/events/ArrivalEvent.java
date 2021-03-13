@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalTime;
 
 import main.Direction;
-import main.Elevator;
 
 public class ArrivalEvent implements Serializable{
 	/**
