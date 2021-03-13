@@ -1,14 +1,14 @@
 package states;
 import events.FloorEvent;
 import main.Scheduler;
-
+import java.time.LocalTime;
 public abstract class SchedulerState {
 	
 protected Scheduler scheduler;
 	
 	public SchedulerState(Scheduler e) {
 		this.scheduler = e;
-		System.out.println(Thread.currentThread().getName() + " is moving into " + this.getClass().getSimpleName());
+		System.out.println(Thread.currentThread().getName() + " is moving into " + this.getClass().getSimpleName() + ".  {Time: " + LocalTime.now() + " }");
 	}
 	
 	/**
@@ -17,6 +17,7 @@ protected Scheduler scheduler;
 	public void handleFloorEvent() {
 		FloorEvent floorEvent = scheduler.getFloorEventFromMiddleMan();
 		if (floorEvent != null) {
+			System.out.println("Adding this to floor events list : " + floorEvent.toString());
 			scheduler.addToFloorEventsList(floorEvent);
 			scheduler.setState(new ActiveState(scheduler));
 		}

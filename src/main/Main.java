@@ -5,22 +5,14 @@ import java.util.concurrent.TimeUnit;
 public class Main {
 
 	public static void main(String[] args) {
-		MiddleMan middleMan1 = new MiddleMan();
-		MiddleMan middleMan2 = new MiddleMan();
-		Thread floorSubsystem = new Thread(new FloorSubsystem("input2.txt", 6, middleMan1), "floorSubsystem");
-		Thread sched = new Thread(new Scheduler(middleMan1, middleMan2), "scheduler");
-		Thread elevator = new Thread(new Elevator(middleMan2, 6), "elevator");
+		Thread floorSubsystem = new Thread(new FloorSubsystem("input4.txt", 6, 23, 33), "floorSubsystem");
+		Thread sched = new Thread(new Scheduler(33, 43, 120, 23, 101), "scheduler");
+		Thread elevator = new Thread(new Elevator(1, 6, 63, 73, 43, 120, 101), "elevator");
+		Thread elevator2 = new Thread(new Elevator(2, 6, 64, 74, 43, 120, 101), "elevator2");
 		floorSubsystem.start();
 		sched.start();
 		elevator.start();
-		try {
-			TimeUnit.SECONDS.sleep(5);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.exit(0);
-		
+		elevator2.start();
 	}
 
 }

@@ -1,24 +1,34 @@
 package main;
 
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 
 import events.ArrivalEvent;
 import events.Event;
 import events.FloorEvent;
 import events.SchedulerEvent;
+import events.StationaryEvent;
 import states.IdleState;
 import states.SchedulerState;
 
-public class Scheduler implements Runnable {
+public class Scheduler extends NetworkCommunicator implements Runnable {
 	private Queue<FloorEvent> floorEvents;
 	private ArrayList<FloorEvent> sentFloorEvents;
 	private Queue<ArrivalEvent> arrivalEvents;
-	private ArrayList<Event> destinationEvents;
-	private MiddleMan middleManFloor;
-	private MiddleMan middleManElevator;
+	private Queue<Event> destinationEvents;
 	private SchedulerState currentState;
+	
+	private DatagramSocket sendReceiveFloorSocket; 
+	private DatagramSocket sendReceiveArrSocket;
+	private DatagramSocket sendReceiveDestSocket; 
+	private DatagramSocket sendReceiveStatSocket; 
+	
+	private int floorPort;
 
 	/**
 	 * Public constructor to create Scheduler object and instantiate instance
@@ -27,14 +37,23 @@ public class Scheduler implements Runnable {
 	 * @param middleMan  Object to hold and pass events to/from the floor
 	 * @param middleMan2 Object to hold and pass events to/from the elevator
 	 */
-	public Scheduler(MiddleMan middleManFloor, MiddleMan middleManElevator) {
+	public Scheduler(int floorEventPort, int arrPort, int destPort, int floorPort, int statPort) {
 		this.floorEvents = new LinkedList<FloorEvent>();
 		this.sentFloorEvents = new ArrayList<FloorEvent>();
 		this.arrivalEvents = new LinkedList<ArrivalEvent>();
-		this.destinationEvents = new ArrayList<Event>();
-		this.middleManFloor = middleManFloor;
-		this.middleManElevator = middleManElevator;
+		this.destinationEvents = new LinkedList<Event>();
 		this.currentState = new IdleState(this);
+		this.floorPort = floorPort;
+		
+		try {
+			sendReceiveFloorSocket = new DatagramSocket(floorEventPort);
+			sendReceiveArrSocket = new DatagramSocket(arrPort);
+			sendReceiveDestSocket = new DatagramSocket(destPort);
+			sendReceiveStatSocket = new DatagramSocket(statPort);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -51,27 +70,50 @@ public class Scheduler implements Runnable {
 	}
 
 	public ArrivalEvent getArrivalEventFromMiddleMan() {
-		return middleManElevator.getArrivalEvent();
+		DatagramPacket receivePacket = receive(sendReceiveArrSocket, true);
+		if (receivePacket == null) {
+			return null;
+		}
+		return Serial.deSerialize(receivePacket.getData(), ArrivalEvent.class);
 	}
 
 	public Event getDestinationEventFromMiddleMan() {
-		return middleManElevator.getDestinationEvent();
+		DatagramPacket receivePacket = receive(sendReceiveDestSocket, true);
+		if (receivePacket == null) {
+			return null;
+		}
+		return Serial.deSerialize(receivePacket.getData(), Event.class);
 	}
 	
-	public void sendFloorEventToElevator(FloorEvent e) {
-		middleManElevator.putFloorEvent(e);
+	public StationaryEvent getStationaryEventFromMiddleMan() {
+		DatagramPacket receivePacket = receive(sendReceiveStatSocket, true);
+		if (receivePacket == null) {
+			return null;
+		}
+		return Serial.deSerialize(receivePacket.getData(), StationaryEvent.class);
 	}
 	
-	public void sendSchedulerEventToElevator(SchedulerEvent e) {
-		middleManElevator.putSchedulerEvent(e);
+	public void sendFloorEventToElevator(FloorEvent e, int port) {
+		byte[] data = Serial.serialize(e);
+		send(sendReceiveFloorSocket, data, data.length, port); //doesn't matter what port we use to send
+	}
+	
+	public void sendSchedulerEventToElevator(SchedulerEvent e, int port) {
+		byte[] data = Serial.serialize(e);
+		send(sendReceiveFloorSocket, data, data.length, port); //doesn't matter what port we use to send
 	}
 	
 	public void sendArrivalEventToFloor(ArrivalEvent e) {
-		middleManFloor.putArrivalEvent(e);
+		byte[] data = Serial.serialize(e);
+		send(sendReceiveFloorSocket, data, data.length, this.floorPort); //doesn't matter what port we use to send
 	}
 
 	public FloorEvent getFloorEventFromMiddleMan() {
-		return middleManFloor.getFloorEvent();
+		DatagramPacket receivePacket = receive(sendReceiveFloorSocket, true);
+		if (receivePacket == null) {
+			return null;
+		}
+		return Serial.deSerialize(receivePacket.getData(), FloorEvent.class);
 	}
 
 	public void setState(SchedulerState state) {
@@ -90,11 +132,12 @@ public class Scheduler implements Runnable {
 		return sentFloorEvents;
 	}
 	
-	public ArrayList<Event> getDestinationEventsList() {
+	public Queue<Event> getDestinationEventsList() {
 		return destinationEvents;
 	}
 	
 	public void removeFloorEvent(FloorEvent e) {
+		System.out.println(Thread.currentThread().getName() + " is removing FloorEvent. " + e);
 		floorEvents.remove(e);
 	}
 	
@@ -105,10 +148,6 @@ public class Scheduler implements Runnable {
 
 	public void removeSentFloorEvent(FloorEvent e) {
 		sentFloorEvents.remove(e);
-	}
-	
-	public boolean removeFloorEventFromMiddleMan(FloorEvent e) {
-		return middleManElevator.removeFloorEvent(e);
 	}
 
 	public boolean isFloorEventsListEmpty() {

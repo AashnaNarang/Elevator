@@ -1,4 +1,5 @@
 package main;
+import java.time.LocalTime;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Queue;
@@ -86,7 +87,7 @@ public class MiddleMan {
 	public synchronized void putArrivalEvent(ArrivalEvent arrivalEvent) {
 		while (!arrivalEvents.isEmpty()) {
 			try {
-				System.out.println("wait() put arrival event");
+				System.out.println("wait() put arrival event" + ".  {Time: " + LocalTime.now() + "}");
 				wait();
 			} catch (InterruptedException e) {
 				return;
@@ -123,7 +124,7 @@ public class MiddleMan {
 	public synchronized void putDestinationEvent(Event event) {
 		while (!destinationEvents.isEmpty()) {
 			try {
-				System.out.println("wait() put destination event");
+				System.out.println("wait() put destination event" + ".  {Time: " + LocalTime.now() + "}");
 				wait();
 			} catch (InterruptedException e) {
 				return;

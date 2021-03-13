@@ -1,4 +1,7 @@
 package main;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -7,6 +10,7 @@ import events.ArrivalEvent;
 import events.Event;
 import events.FloorEvent;
 import events.SchedulerEvent;
+import events.StationaryEvent;
 import states.ElevatorState;
 import states.MovingState;
 import states.StationaryState;
@@ -17,29 +21,43 @@ import states.StationaryState;
  * and moves the elevator up/down based on the given task it will receive.
  */
 
-public class Elevator implements Runnable {
+public class Elevator extends NetworkCommunicator implements Runnable {
 	private int currentFloor;
-	private MiddleMan middleMan;
 	private DirectionLamp upLamp;
 	private DirectionLamp downLamp;
 	private Direction direction;
 	private ArrayList<ElevatorButton> buttons;
 	private ElevatorState currentState;
+	private int arrPort;
+	private int destPort;
+	private int statPort;
+	private DatagramSocket sendReceiveFloorSocket; //declaration of socket
+	private DatagramSocket sendReceiveScheduleSocket; //declaration of socket
+	private int id;
 
 	/*
 	 * constructor for Elevator Defining the middleclass parameters that are by to
 	 * the scheduler.
 	 *
-	 * @param middleman - sending information to Middleman
 	 */
-	public Elevator(MiddleMan middleMan, int numFloor) {
-		this.middleMan = middleMan;
+	public Elevator(int id, int numFloor, int floorPort, int schedPort, int arrPort, int destPort, int statPort) {
 		this.currentFloor = 1;
 		this.upLamp = new DirectionLamp(Direction.UP);
 		this.downLamp = new DirectionLamp(Direction.DOWN);
 		this.direction = Direction.UP;
 		this.buttons = new ArrayList<ElevatorButton>();
 		this.currentState = new StationaryState(this);
+		this.arrPort = arrPort;
+		this.destPort = destPort;
+		this.statPort = statPort;
+		this.id = id;
+		try {
+			sendReceiveFloorSocket = new DatagramSocket(floorPort);
+			sendReceiveScheduleSocket = new DatagramSocket(schedPort);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		for (int i = 0; i < numFloor; i++) {
 			buttons.add(new ElevatorButton(i));
@@ -50,10 +68,10 @@ public class Elevator implements Runnable {
 		this.direction = e.getDirection();
 		this.switchLamps(true);
 		
-		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", about to move " + this.direction);
+		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", about to move " + this.direction + ".  {Time: " + LocalTime.now() + "}");
 
 		while(currentState.getClass() == MovingState.class) {
-			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction);
+			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
 			currentFloor += direction == Direction.UP ? 1 : -1;
 			currentState.handleArrivedAtFloor();
 		}
@@ -72,11 +90,11 @@ public class Elevator implements Runnable {
 		this.direction = e.getDirection();
 		this.switchLamps(true);
 		
-		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", about to move " + this.direction);
-		ArrivalEvent arrEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this.direction, this, true);
+		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", about to move " + this.direction + ".  {Time: " + LocalTime.now() + "}");
+		ArrivalEvent arrEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this.direction, this.sendReceiveScheduleSocket.getLocalPort(), this.id, true);
 		sendArrivalEvent(arrEvent);
 		while(currentState.getClass() == MovingState.class) {
-			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction);
+			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
 			currentFloor += direction == Direction.UP ? 1 : -1;
 			currentState.handleArrivedAtFloor();
 		}
@@ -96,9 +114,9 @@ public class Elevator implements Runnable {
 		}
 		
 		this.switchLamps(true);
-		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", moving towards source floor " + e.getSource());
+		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", moving towards source floor " + e.getSource() + ".  {Time: " + LocalTime.now() + "}");
 		for (int i = 0; i < Math.abs(diffFloors); i++) {
-			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction);
+			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
 			currentFloor += direction == Direction.UP ? 1 : -1;
 		}
 		direction = e.getDirection();
@@ -154,7 +172,8 @@ public class Elevator implements Runnable {
 	}
 
 	public void sendDestinationEvent(Event destinationEvent) {
-		this.middleMan.putDestinationEvent(destinationEvent);
+		byte[] data = Serial.serialize(destinationEvent);
+		send(sendReceiveFloorSocket, data, data.length, this.destPort);
 	}
 
 	public void switchOnButton(int i, boolean b) {
@@ -163,12 +182,22 @@ public class Elevator implements Runnable {
 	}
 
 	public void sendArrivalEvent(ArrivalEvent e) {
-		this.middleMan.putArrivalEvent(e);
-		
+		byte[] data = Serial.serialize(e);
+		send(sendReceiveFloorSocket, data, data.length, this.arrPort);
+	}
+	
+	public void sendStationaryEvent(StationaryEvent e) {
+		System.out.println("Elevator State: " + currentState + " sending stationary event");
+		byte[] data = Serial.serialize(e);
+		send(sendReceiveFloorSocket, data, data.length, this.statPort);
 	}
 
 	public SchedulerEvent askShouldIStop() {
-		return this.middleMan.getSchedulerEvent();
+		DatagramPacket receivePacket = receive(sendReceiveScheduleSocket, false);
+		if (receivePacket == null) {
+			return null;
+		}
+		return Serial.deSerialize(receivePacket.getData(), SchedulerEvent.class);
 	}
 
 	public Direction getDirection() {
@@ -176,15 +205,31 @@ public class Elevator implements Runnable {
 	}
 
 	public FloorEvent getFloorEvent() {
-		return this.middleMan.getFloorEvent();
+		DatagramPacket receivePacket = receive(sendReceiveFloorSocket, false);
+		if (receivePacket == null) {
+			return null;
+		}
+		return Serial.deSerialize(receivePacket.getData(), FloorEvent.class);
 	}
 	
 	public void setState(ElevatorState state) {
 		this.currentState = state;
-		System.out.println("Set state of " + Thread.currentThread().getName() +  " to " + state.getClass().getSimpleName());
+		System.out.println("Set state of " + Thread.currentThread().getName() +  " to " + state.getClass().getSimpleName() + ".  {Time: " + LocalTime.now() + "}");
 	}
 
 	public ElevatorState getState() {
 		return currentState; 
+	}
+	
+	public DatagramSocket getSendReceiveFloorSocket() {
+		return sendReceiveFloorSocket;
+	}
+
+	public DatagramSocket getSendReceiveScheduleSocket() {
+		return sendReceiveScheduleSocket;
+	}
+
+	public int getId() {
+		return id;
 	}
 }

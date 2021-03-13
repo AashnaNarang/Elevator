@@ -1,10 +1,15 @@
 package events;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 
 import main.Direction;
 
-public class SchedulerEvent {
+public class SchedulerEvent implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8065427451544535531L;
 	private boolean stop;
 	private int floor;
 	private boolean keepGoingAfterStop;
@@ -119,7 +124,14 @@ public class SchedulerEvent {
 		}
 	}
 	
-	
-	
+	public boolean equals(Object o) {
+		if (this == o) return true;
+	    if (o == null) return false;
+	    if (getClass() != o.getClass()) return false;
+	    SchedulerEvent a = (SchedulerEvent) o;
+	    return (stop == a.shouldStop()) && (floor == a.getFloor()) && (keepGoingAfterStop == a.shouldIKeepGoing()) &&
+	    		(time == a.getTime()) && (direction == a.getDirection()) && (isAtDestination == a.isAtDestination()) &&
+	    		(isAtSource == a.isAtSource()) && (floorEvent.equals(a.getFloorEvent()));
+	}
 	
 }

@@ -3,6 +3,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.text.ParseException;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -18,30 +21,38 @@ import events.FloorEvent;
  * events, sending floorEvents and taking arrival events from scheduler
  * 
  */
-public class FloorSubsystem implements Runnable {
+public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 
 	private Queue<FloorEvent> eventList;
 	private List<Floor> floors;
 	private int numOfFloors;
-	private MiddleMan middleMan;
 	private String filename;
+	private int schedPort;
+	private DatagramSocket sendReceiveSocket; //declaration of socket
+
 
 	/**
 	 * Constructor for FloorSubsystem
 	 * 
 	 * @param filename    the file to be parsed
 	 * @param numOfFloors the number of floors
-	 * @param middleMan   where events will be put and received
 	 */
-	public FloorSubsystem(String filename, int numOfFloors, MiddleMan middleMan) {
+	public FloorSubsystem(String filename, int numOfFloors, int hostPort, int schedPort) {
 		this.filename = filename;
-		this.middleMan = middleMan;
 		this.numOfFloors = numOfFloors;
 		this.eventList = new LinkedList<>();
 		this.floors = new ArrayList<>();
+		this.schedPort = schedPort;
 		for (int floorNumber = 1; floorNumber <= numOfFloors; floorNumber++) {
 			floors.add(new Floor(floorNumber));
 		}
+		try {
+			sendReceiveSocket = new DatagramSocket(hostPort);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
@@ -55,18 +66,20 @@ public class FloorSubsystem implements Runnable {
 		while (true) {
 			if (!eventList.isEmpty()) {
 				FloorEvent eventSent = eventList.remove();
-				middleMan.putFloorEvent(eventSent);
-				System.out.println(Thread.currentThread().getName() + " is turning on " + eventSent.getDirection() +  " button for floor " + eventSent.getSource());
+				byte[] data = Serial.serialize(eventSent);
+				send(sendReceiveSocket, data, data.length, this.schedPort);
+				System.out.println(Thread.currentThread().getName() + " is turning on " + eventSent.getDirection() +  " button for floor " + eventSent.getSource() + ".  {Time: " + LocalTime.now() + "}");
 				floors.get(eventSent.getSource() - 1).switchButton(eventSent.getDirection(), true);
 			}
-			ArrivalEvent arrivalEvent = middleMan.getArrivalEvent();
-			if (arrivalEvent != null) {
+			DatagramPacket receivePacket = receive(sendReceiveSocket, true);
+			if (receivePacket != null) {
+				ArrivalEvent arrivalEvent = Serial.deSerialize(receivePacket.getData(), ArrivalEvent.class);
 				int currentFloor = arrivalEvent.getCurrentFloor();
 				if (floors.get(currentFloor - 1).isUpButtonOn()) {
-					System.out.println(Thread.currentThread().getName() + " is turning off up button for floor " + currentFloor);
+					System.out.println(Thread.currentThread().getName() + " is turning off up button for floor " + currentFloor + ".  {Time: " + LocalTime.now() + "}");
 					floors.get(currentFloor - 1).switchButton(Direction.UP, false);
 				} else if (floors.get(currentFloor - 1).isDownButtonOn()) {
-					System.out.println(Thread.currentThread().getName() + " is turning off down button for floor " + currentFloor);
+					System.out.println(Thread.currentThread().getName() + " is turning off down button for floor " + currentFloor + ".  {Time: " + LocalTime.now() + "}");
 					floors.get(currentFloor - 1).switchButton(Direction.DOWN, false);
 				}
 			}
