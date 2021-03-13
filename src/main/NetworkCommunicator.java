@@ -42,7 +42,7 @@ public abstract class NetworkCommunicator {
 	 * @param receiveSocket Socket that will be used to receive Datagrams. 
 	 * @return The DatagramPacket that is being received by the host.
 	 */
-	protected DatagramPacket receive(DatagramSocket receiveSocket) {
+	protected DatagramPacket receive(DatagramSocket receiveSocket, boolean enableTimeout) {
 
 		//initialize and receive DatagramPacket
 		byte data[] = new byte[100000];
@@ -50,7 +50,11 @@ public abstract class NetworkCommunicator {
 		
 		try {
 			// Block until a datagram is received via sendReceiveSocket.
-			receiveSocket.setSoTimeout(500);
+			if (enableTimeout) {
+				receiveSocket.setSoTimeout(500);
+			} else {
+				receiveSocket.setSoTimeout(0);
+			}
 			receiveSocket.receive(receivePacket);
 		} catch(IOException e) {
 			return null;

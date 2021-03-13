@@ -27,7 +27,8 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	private DatagramSocket sendReceiveDestSocket; 
 	
 	private int floorPort;
-	private int elevatorPort;
+	private int elevFloorPort;
+	private int elevSchedPort;
 
 	/**
 	 * Public constructor to create Scheduler object and instantiate instance
@@ -36,14 +37,17 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	 * @param middleMan  Object to hold and pass events to/from the floor
 	 * @param middleMan2 Object to hold and pass events to/from the elevator
 	 */
-	public Scheduler(int floorEventPort, int arrPort, int destPort, int floorPort, int elevatorPort) {
+	public Scheduler(int floorEventPort, int arrPort, int destPort, int floorPort, int elevFloorPort, 
+			int elevSchedPort) {
 		this.floorEvents = new LinkedList<FloorEvent>();
 		this.sentFloorEvents = new ArrayList<FloorEvent>();
 		this.arrivalEvents = new LinkedList<ArrivalEvent>();
 		this.destinationEvents = new LinkedList<Event>();
 		this.currentState = new IdleState(this);
 		this.floorPort = floorPort;
-		this.elevatorPort = elevatorPort;
+		this.elevFloorPort = elevFloorPort;
+		this.elevSchedPort = elevSchedPort;
+		
 		try {
 			sendReceiveFloorSocket = new DatagramSocket(floorEventPort);
 			sendReceiveArrSocket = new DatagramSocket(arrPort);
@@ -69,7 +73,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	}
 
 	public ArrivalEvent getArrivalEventFromMiddleMan() {
-		DatagramPacket receivePacket = receive(sendReceiveArrSocket);
+		DatagramPacket receivePacket = receive(sendReceiveArrSocket, true);
 		if (receivePacket == null) {
 			return null;
 		}
@@ -77,7 +81,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	}
 
 	public Event getDestinationEventFromMiddleMan() {
-		DatagramPacket receivePacket = receive(sendReceiveDestSocket);
+		DatagramPacket receivePacket = receive(sendReceiveDestSocket, true);
 		if (receivePacket == null) {
 			return null;
 		}
@@ -86,12 +90,12 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	
 	public void sendFloorEventToElevator(FloorEvent e) {
 		byte[] data = Serial.serialize(e);
-		send(sendReceiveFloorSocket, data, data.length, this.elevatorPort); //doesn't matter what port we use to send
+		send(sendReceiveFloorSocket, data, data.length, this.elevFloorPort); //doesn't matter what port we use to send
 	}
 	
 	public void sendSchedulerEventToElevator(SchedulerEvent e) {
 		byte[] data = Serial.serialize(e);
-		send(sendReceiveFloorSocket, data, data.length, this.elevatorPort); //doesn't matter what port we use to send
+		send(sendReceiveFloorSocket, data, data.length, this.elevSchedPort); //doesn't matter what port we use to send
 	}
 	
 	public void sendArrivalEventToFloor(ArrivalEvent e) {
@@ -100,7 +104,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	}
 
 	public FloorEvent getFloorEventFromMiddleMan() {
-		DatagramPacket receivePacket = receive(sendReceiveFloorSocket);
+		DatagramPacket receivePacket = receive(sendReceiveFloorSocket, true);
 		if (receivePacket == null) {
 			return null;
 		}

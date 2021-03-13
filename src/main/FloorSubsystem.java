@@ -71,7 +71,7 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 				System.out.println(Thread.currentThread().getName() + " is turning on " + eventSent.getDirection() +  " button for floor " + eventSent.getSource() + ".  {Time: " + LocalTime.now() + "}");
 				floors.get(eventSent.getSource() - 1).switchButton(eventSent.getDirection(), true);
 			}
-			DatagramPacket receivePacket = receive(sendReceiveSocket);
+			DatagramPacket receivePacket = receive(sendReceiveSocket, true);
 			if (receivePacket != null) {
 				ArrivalEvent arrivalEvent = Serial.deSerialize(receivePacket.getData(), ArrivalEvent.class);
 				int currentFloor = arrivalEvent.getCurrentFloor();

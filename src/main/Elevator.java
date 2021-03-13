@@ -29,7 +29,9 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	private ElevatorState currentState;
 	private int arrPort;
 	private int destPort;
-	private DatagramSocket sendReceiveSocket; //declaration of socket
+	private DatagramSocket sendReceiveFloorSocket; //declaration of socket
+	private DatagramSocket sendReceiveScheduleSocket; //declaration of socket
+
 
 
 	/*
@@ -37,7 +39,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 * the scheduler.
 	 *
 	 */
-	public Elevator(int numFloor, int hostPort, int arrPort, int destPort) {
+	public Elevator(int numFloor, int floorPort, int schedPort, int arrPort, int destPort) {
 		this.currentFloor = 1;
 		this.upLamp = new DirectionLamp(Direction.UP);
 		this.downLamp = new DirectionLamp(Direction.DOWN);
@@ -47,7 +49,8 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		this.arrPort = arrPort;
 		this.destPort = destPort;
 		try {
-			sendReceiveSocket = new DatagramSocket(hostPort);
+			sendReceiveFloorSocket = new DatagramSocket(floorPort);
+			sendReceiveScheduleSocket = new DatagramSocket(schedPort);
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -167,7 +170,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 
 	public void sendDestinationEvent(Event destinationEvent) {
 		byte[] data = Serial.serialize(destinationEvent);
-		send(sendReceiveSocket, data, data.length, this.destPort);
+		send(sendReceiveFloorSocket, data, data.length, this.destPort);
 	}
 
 	public void switchOnButton(int i, boolean b) {
@@ -177,11 +180,11 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 
 	public void sendArrivalEvent(ArrivalEvent e) {
 		byte[] data = Serial.serialize(e);
-		send(sendReceiveSocket, data, data.length, this.arrPort);
+		send(sendReceiveFloorSocket, data, data.length, this.arrPort);
 	}
 
 	public SchedulerEvent askShouldIStop() {
-		DatagramPacket receivePacket = receive(sendReceiveSocket);
+		DatagramPacket receivePacket = receive(sendReceiveScheduleSocket, false);
 		if (receivePacket == null) {
 			return null;
 		}
@@ -193,7 +196,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	}
 
 	public FloorEvent getFloorEvent() {
-		DatagramPacket receivePacket = receive(sendReceiveSocket);
+		DatagramPacket receivePacket = receive(sendReceiveFloorSocket, true);
 		if (receivePacket == null) {
 			return null;
 		}
