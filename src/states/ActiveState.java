@@ -72,8 +72,15 @@ public class ActiveState extends SchedulerState {
 			// No need to send scheduler event if elevator hasn't started moving, elevator already has instructions
 			return;
 		}
+		
+		boolean destEventsForCurrElev = false;
+		for(Event d: scheduler.getDestinationEventsList()) {
+			if(d.getId() == arrivalEvent.getId()) {
+				destEventsForCurrElev = true;
+			}
+		}
 
-		boolean elevatorKeepsGoing = (!scheduler.isDestinationEventsListEmpty() || floorEventFlag);
+		boolean elevatorKeepsGoing = ( destEventsForCurrElev || floorEventFlag);
 		
 		if (!floorEventFlag && !destinationEventFlag) {
 //			System.out.println("Scheduler no stop ");
