@@ -22,6 +22,8 @@ import states.StationaryState;
  */
 
 public class Elevator extends NetworkCommunicator implements Runnable {
+	private static int ELEVATOR_ID=1;
+	
 	private int currentFloor;
 	private DirectionLamp upLamp;
 	private DirectionLamp downLamp;
@@ -44,7 +46,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 * @param destPort
 	 * @param statPort
 	 */
-	public Elevator(int id, int numFloor, int floorPort, int schedPort, int arrPort, int destPort, int statPort) {
+	public Elevator(int numFloor, int floorPort, int schedPort, int arrPort, int destPort, int statPort) {
 		this.currentFloor = 1;
 		this.upLamp = new DirectionLamp(Direction.UP);
 		this.downLamp = new DirectionLamp(Direction.DOWN);
@@ -54,7 +56,8 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		this.arrPort = arrPort;
 		this.destPort = destPort;
 		this.statPort = statPort;
-		this.id = id;
+		this.id = ELEVATOR_ID;
+		ELEVATOR_ID++;
 		try {
 			sendReceiveFloorSocket = new DatagramSocket(floorPort);
 			sendReceiveScheduleSocket = new DatagramSocket(schedPort);
