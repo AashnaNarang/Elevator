@@ -33,13 +33,14 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	private int statPort;
 	private DatagramSocket sendReceiveFloorSocket; //declaration of socket
 	private DatagramSocket sendReceiveScheduleSocket; //declaration of socket
+	private int id;
 
 	/*
 	 * constructor for Elevator Defining the middleclass parameters that are by to
 	 * the scheduler.
 	 *
 	 */
-	public Elevator(int numFloor, int floorPort, int schedPort, int arrPort, int destPort, int statPort) {
+	public Elevator(int id, int numFloor, int floorPort, int schedPort, int arrPort, int destPort, int statPort) {
 		this.currentFloor = 1;
 		this.upLamp = new DirectionLamp(Direction.UP);
 		this.downLamp = new DirectionLamp(Direction.DOWN);
@@ -49,6 +50,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		this.arrPort = arrPort;
 		this.destPort = destPort;
 		this.statPort = statPort;
+		this.id = id;
 		try {
 			sendReceiveFloorSocket = new DatagramSocket(floorPort);
 			sendReceiveScheduleSocket = new DatagramSocket(schedPort);
@@ -89,7 +91,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		this.switchLamps(true);
 		
 		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", about to move " + this.direction + ".  {Time: " + LocalTime.now() + "}");
-		ArrivalEvent arrEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this.direction, true);
+		ArrivalEvent arrEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this.direction, this.sendReceiveScheduleSocket.getLocalPort(), this.id, true);
 		sendArrivalEvent(arrEvent);
 		while(currentState.getClass() == MovingState.class) {
 			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
@@ -225,5 +227,9 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 
 	public DatagramSocket getSendReceiveScheduleSocket() {
 		return sendReceiveScheduleSocket;
+	}
+
+	public int getId() {
+		return id;
 	}
 }

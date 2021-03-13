@@ -26,7 +26,7 @@ public class FloorEvent extends Event {
 	 * @param destination the floor the passenger wants to go to
 	 */
 	public FloorEvent(LocalTime time, int source, Direction direction, int destination) {
-		super(time, destination);
+		super(time, destination, -1);
 		this.source = source;
 		this.direction = direction;
 	}

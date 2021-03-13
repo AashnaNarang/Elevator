@@ -10,7 +10,7 @@ public class MovingState extends ElevatorState {
 	private MovingState(Elevator e, SchedulerEvent event) {
 		super(e);
 		if (event.isAtSource()) {
-			Event destinationEvent = new Event(LocalTime.now(), event.getDestination());
+			Event destinationEvent = new Event(LocalTime.now(), event.getDestination(), e.getId());
 			elevator.sendDestinationEvent(destinationEvent);
 			elevator.switchOnButton(event.getDestination()-1, true);
 		}
@@ -19,7 +19,7 @@ public class MovingState extends ElevatorState {
 	private MovingState(Elevator e, FloorEvent event, boolean isAtSource) {
 		super(e);
 		if (isAtSource) {
-			Event destinationEvent = new Event(LocalTime.now(), event.getDestination());
+			Event destinationEvent = new Event(LocalTime.now(), event.getDestination(), e.getId());
 			elevator.sendDestinationEvent(destinationEvent);
 			elevator.switchOnButton(event.getDestination()-1, true);
 		}
@@ -48,7 +48,7 @@ public class MovingState extends ElevatorState {
 	public void handleArrivedAtFloor() {
 		System.out.println(Thread.currentThread().getName() + " arrived at floor " + elevator.getCurrentFloor() + " and sending arrival event" + ".  {Time: " + LocalTime.now() + "}");
 		ArrivalEvent e = new ArrivalEvent(elevator.getCurrentFloor(), LocalTime.now(), elevator.getDirection(),
-				elevator.getSendReceiveScheduleSocket().getLocalPort());
+				elevator.getSendReceiveScheduleSocket().getLocalPort(), elevator.getId());
 		elevator.sendArrivalEvent(e);
 		SchedulerEvent e2 = elevator.askShouldIStop();
 		System.out.println(Thread.currentThread().getName() + " received scheduler event" + ".  {Time: " + LocalTime.now() + "}");

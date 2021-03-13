@@ -121,7 +121,7 @@ public class ActiveState extends SchedulerState {
 	private void analyzeDestinationEvents(ArrivalEvent arrivalEvent) {
 		ArrayList<Event> toRemove = new ArrayList<>();
 		for (Event destEvent : scheduler.getDestinationEventsList()) {
-			if (destEvent.getDestination() == arrivalEvent.getCurrentFloor()) {
+			if (destEvent.getDestination() == arrivalEvent.getCurrentFloor() && destEvent.getId() == arrivalEvent.getId()) {
 				destinationEventFlag = true;
 				toRemove.add(destEvent);
 			}

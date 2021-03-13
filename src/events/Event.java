@@ -10,10 +10,12 @@ public class Event implements Serializable{
 	private static final long serialVersionUID = 7795450260063476223L;
 	protected LocalTime time;
 	protected int destination;
+	private int id;
 	
-	public Event(LocalTime time, int destination) {
+	public Event(LocalTime time, int destination, int id) {
 		this.destination = destination;
 		this.time = time;
+		this.id = id;
 	}
 	
 	/**
@@ -48,4 +50,9 @@ public class Event implements Serializable{
 	    Event a = (Event) o;
 	    return (time == a.getTime()) && (destination == a.getDestination());
 	}
+
+	public int getId() {
+		return id;
+	}
+
 }
