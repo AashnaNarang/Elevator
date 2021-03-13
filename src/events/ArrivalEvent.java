@@ -7,7 +7,7 @@ import main.Direction;
 
 public class ArrivalEvent implements Serializable{
 	/**
-	 * 
+	 * declaration of instance variables
 	 */
 	private static final long serialVersionUID = 520508342067884869L;
 	private int currentFloor;
@@ -27,6 +27,10 @@ public class ArrivalEvent implements Serializable{
 	 * @param direction - Direction the elevator is going in
 	 * 
 	 * @param elevator - The elevator itself
+	 * 
+	 * @param schedPort - The port where Scheduler events should be sent to.
+	 * 
+	 * @param id = The id representing the elevator.
 	 */
 	public ArrivalEvent(int currentFloor, LocalTime time, Direction direction, int schedPort, int id) {
 		this.currentFloor = currentFloor;
@@ -37,6 +41,24 @@ public class ArrivalEvent implements Serializable{
 		this.id = id;
 	}
 	
+	
+	/*
+	 * Constructor for Arrival event.
+	 *
+	 * @param currentFloor - The current floor the elevator is on.
+	 * 
+	 * @param time - The time stamp of the elevator event
+	 * 
+	 * @param direction - Direction the elevator is going in
+	 * 
+	 * @param elevator - The elevator itself
+	 * 
+	 * @param schedPort - The port where Scheduler events should be sent to.
+	 * 
+	 * @param id - The id representing the elevator.
+	 * 
+	 * @param didNotMoveYet - Has the elevator moved yet.
+	 */
 	public ArrivalEvent(int currentFloor, LocalTime time, Direction direction, int schedPort, int id, boolean didNotMoveYet) {
 		this.currentFloor = currentFloor;
 		this.time = time;
@@ -86,6 +108,9 @@ public class ArrivalEvent implements Serializable{
 		return "{Time: "+ time + ", Current floor:" + getCurrentFloor() + ", Direction:" + getDirection() + "}";
 	}
 	
+	/**
+	 * @return Boolean representing whether the objects are equal
+	 */
 	public boolean equals(Object o) {
 		if (this == o) return true;
 	    if (o == null) return false;
@@ -95,10 +120,18 @@ public class ArrivalEvent implements Serializable{
 	           (direction == a.getDirection()) && (didNotMoveYet == a.didNotMoveYet());
 	}
 
+	/**
+	 * 
+	 * @return Integer representing the port where Scheduler Events will be sent to.
+	 */
 	public int getSchedPort() {
 		return schedPort;
 	}
 
+	/**
+	 * 
+	 * @return Integer representing the id of the Elevator sending the event.
+	 */
 	public int getId() {
 		return id;
 	}

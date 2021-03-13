@@ -7,7 +7,7 @@ import main.Direction;
 
 public class SchedulerEvent implements Serializable{
 	/**
-	 * 
+	 * declaration of instance variables
 	 */
 	private static final long serialVersionUID = 8065427451544535531L;
 	private boolean stop;
@@ -21,9 +21,9 @@ public class SchedulerEvent implements Serializable{
 	
 
 	/**
-	 * DONT STOP
-	 * @param direction
-	 * @param time
+	 * 
+	 * @param direction The direction the elevator should move in.
+	 * @param time The time the event occurred at.
 	 */
 	public SchedulerEvent(Direction direction, LocalTime time) {
 		this.stop = false;
@@ -37,14 +37,14 @@ public class SchedulerEvent implements Serializable{
 	}
 	
 	/**
-	 * YES STOP
-	 * @param floor
-	 * @param keepGoing
-	 * @param isAtDestination
-	 * @param isAtSource
-	 * @param floorEvent
-	 * @param direction
-	 * @param time
+	 *
+	 * @param floor The floor the elevator is on.
+	 * @param keepGoing Whether the elevator should keep going.
+	 * @param isAtDestination Whether the elevator is at a destination.
+	 * @param isAtSource Whether the elevator at the source floor of a request.
+	 * @param floorEvent The Floor Event to be given to the elevator next.
+	 * @param direction The direction the elevator should move in.
+	 * @param time The time the event occured at.
 	 */
 	public SchedulerEvent(int floor, boolean keepGoing, boolean isAtDestination, boolean isAtSource, FloorEvent floorEvent, Direction direction, LocalTime time) {
 		this.stop = true;
@@ -124,6 +124,10 @@ public class SchedulerEvent implements Serializable{
 		}
 	}
 	
+	/**
+	 * @param o The object the event object will be compared to.
+	 * @return A boolean representing whether or not the objects are equal.
+	 */
 	public boolean equals(Object o) {
 		if (this == o) return true;
 	    if (o == null) return false;
