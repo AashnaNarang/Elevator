@@ -3,6 +3,7 @@ package states;
 import java.time.LocalTime;
 
 import events.FloorEvent;
+import events.StationaryEvent;
 import main.Elevator;
 
 public class StationaryState extends ElevatorState {
@@ -14,7 +15,7 @@ public class StationaryState extends ElevatorState {
 	
 	@Override
 	public void handleFloorEvent() {
-		elevator.sendStationaryEvent();
+		elevator.sendStationaryEvent(new StationaryEvent(elevator.getSendReceiveFloorSocket().getLocalPort()));
 		FloorEvent e = elevator.getFloorEvent();
 		if (e != null) {
 			if (e.getSource() == elevator.getCurrentFloor()) {

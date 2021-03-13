@@ -10,6 +10,7 @@ import events.ArrivalEvent;
 import events.Event;
 import events.FloorEvent;
 import events.SchedulerEvent;
+import events.StationaryEvent;
 import states.ElevatorState;
 import states.MovingState;
 import states.StationaryState;
@@ -32,8 +33,6 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	private int statPort;
 	private DatagramSocket sendReceiveFloorSocket; //declaration of socket
 	private DatagramSocket sendReceiveScheduleSocket; //declaration of socket
-
-
 
 	/*
 	 * constructor for Elevator Defining the middleclass parameters that are by to
@@ -185,9 +184,9 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		send(sendReceiveFloorSocket, data, data.length, this.arrPort);
 	}
 	
-	public void sendStationaryEvent() {
+	public void sendStationaryEvent(StationaryEvent e) {
 		System.out.println("Elevator State: " + currentState + " sending stationary event");
-		byte[] data = "I am stationary".getBytes();
+		byte[] data = Serial.serialize(e);
 		send(sendReceiveFloorSocket, data, data.length, this.statPort);
 	}
 
@@ -218,5 +217,13 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 
 	public ElevatorState getState() {
 		return currentState; 
+	}
+	
+	public DatagramSocket getSendReceiveFloorSocket() {
+		return sendReceiveFloorSocket;
+	}
+
+	public DatagramSocket getSendReceiveScheduleSocket() {
+		return sendReceiveScheduleSocket;
 	}
 }

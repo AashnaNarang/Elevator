@@ -15,6 +15,7 @@ public class ArrivalEvent implements Serializable{
 	private LocalTime time;
 	private Direction direction;
 	private boolean didNotMoveYet;
+	private int schedPort;
 
 	/*
 	 * Constructor for Arrival event.
@@ -27,11 +28,12 @@ public class ArrivalEvent implements Serializable{
 	 * 
 	 * @param elevator - The elevator itself
 	 */
-	public ArrivalEvent(int currentFloor, LocalTime time, Direction direction) {
+	public ArrivalEvent(int currentFloor, LocalTime time, Direction direction, int schedPort) {
 		this.currentFloor = currentFloor;
 		this.time = time;
 		this.direction = direction;
 		this.didNotMoveYet = false;
+		this.schedPort = schedPort;
 	}
 	
 	public ArrivalEvent(int currentFloor, LocalTime time, Direction direction, boolean didNotMoveYet) {
@@ -91,5 +93,10 @@ public class ArrivalEvent implements Serializable{
 	    return (currentFloor == a.getCurrentFloor()) && (time == a.getTime()) &&
 	           (direction == a.getDirection()) && (didNotMoveYet == a.didNotMoveYet());
 	}
+
+	public int getSchedPort() {
+		return schedPort;
+	}
+
 
 }

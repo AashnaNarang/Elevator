@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import events.ArrivalEvent;
 import events.FloorEvent;
 import events.SchedulerEvent;
+import events.StationaryEvent;
 import events.Event;
 import main.Scheduler;
 
@@ -30,14 +31,15 @@ public class ActiveState extends SchedulerState {
 	@Override
 	public void handleFloorEvent() {
 		super.handleFloorEvent();
-		boolean isElevStationary = scheduler.getStationaryEventFromMiddleMan();
+		StationaryEvent elevStationary = scheduler.getStationaryEventFromMiddleMan();
+		boolean isElevStationary = elevStationary == null ? false : true;
 		System.out.println("IS elevator stationary? " + isElevStationary + " ");
 		if (!isElevStationary) {
 			return;
 		}
 		FloorEvent floorEvent = scheduler.getNextFloorEvent();
 		if(floorEvent != null) {
-			scheduler.sendFloorEventToElevator(floorEvent);
+			scheduler.sendFloorEventToElevator(floorEvent, elevStationary.getFloorPort());
 			scheduler.addToSentFloorEventsList(floorEvent);
 			System.out.println("Adding this to send floor events list : " + floorEvent.toString());
 		}
@@ -90,7 +92,7 @@ public class ActiveState extends SchedulerState {
 					currentFloorEvent, currentFloorEvent.getDirection(), LocalTime.now());
 		}
 
-		scheduler.sendSchedulerEventToElevator(schedulerEvent);
+		scheduler.sendSchedulerEventToElevator(schedulerEvent, arrivalEvent.getSchedPort());
 		scheduler.sendArrivalEventToFloor(arrivalEvent);
 		checkIfUpdateToIdleState();
 	}

@@ -12,6 +12,7 @@ import events.ArrivalEvent;
 import events.Event;
 import events.FloorEvent;
 import events.SchedulerEvent;
+import events.StationaryEvent;
 import states.IdleState;
 import states.SchedulerState;
 
@@ -28,8 +29,6 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	private DatagramSocket sendReceiveStatSocket; 
 	
 	private int floorPort;
-	private int elevFloorPort;
-	private int elevSchedPort;
 
 	/**
 	 * Public constructor to create Scheduler object and instantiate instance
@@ -38,22 +37,19 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	 * @param middleMan  Object to hold and pass events to/from the floor
 	 * @param middleMan2 Object to hold and pass events to/from the elevator
 	 */
-	public Scheduler(int floorEventPort, int arrPort, int destPort, int floorPort, int elevFloorPort, 
-			int elevSchedPort, int elevStatPort) {
+	public Scheduler(int floorEventPort, int arrPort, int destPort, int floorPort, int statPort) {
 		this.floorEvents = new LinkedList<FloorEvent>();
 		this.sentFloorEvents = new ArrayList<FloorEvent>();
 		this.arrivalEvents = new LinkedList<ArrivalEvent>();
 		this.destinationEvents = new LinkedList<Event>();
 		this.currentState = new IdleState(this);
 		this.floorPort = floorPort;
-		this.elevFloorPort = elevFloorPort;
-		this.elevSchedPort = elevSchedPort;
 		
 		try {
 			sendReceiveFloorSocket = new DatagramSocket(floorEventPort);
 			sendReceiveArrSocket = new DatagramSocket(arrPort);
 			sendReceiveDestSocket = new DatagramSocket(destPort);
-			sendReceiveStatSocket = new DatagramSocket(elevStatPort);
+			sendReceiveStatSocket = new DatagramSocket(statPort);
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -89,24 +85,22 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 		return Serial.deSerialize(receivePacket.getData(), Event.class);
 	}
 	
-	public boolean getStationaryEventFromMiddleMan() {
+	public StationaryEvent getStationaryEventFromMiddleMan() {
 		DatagramPacket receivePacket = receive(sendReceiveStatSocket, true);
 		if (receivePacket == null) {
-			return false;
+			return null;
 		}
-		String s = new String(receivePacket.getData(), 0, receivePacket.getLength());
-		System.out.println(" Received string with " + s);
-		return s.equals("I am stationary");
+		return Serial.deSerialize(receivePacket.getData(), StationaryEvent.class);
 	}
 	
-	public void sendFloorEventToElevator(FloorEvent e) {
+	public void sendFloorEventToElevator(FloorEvent e, int port) {
 		byte[] data = Serial.serialize(e);
-		send(sendReceiveFloorSocket, data, data.length, this.elevFloorPort); //doesn't matter what port we use to send
+		send(sendReceiveFloorSocket, data, data.length, port); //doesn't matter what port we use to send
 	}
 	
-	public void sendSchedulerEventToElevator(SchedulerEvent e) {
+	public void sendSchedulerEventToElevator(SchedulerEvent e, int port) {
 		byte[] data = Serial.serialize(e);
-		send(sendReceiveFloorSocket, data, data.length, this.elevSchedPort); //doesn't matter what port we use to send
+		send(sendReceiveFloorSocket, data, data.length, port); //doesn't matter what port we use to send
 	}
 	
 	public void sendArrivalEventToFloor(ArrivalEvent e) {
