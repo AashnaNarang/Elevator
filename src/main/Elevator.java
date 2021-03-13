@@ -29,6 +29,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	private ElevatorState currentState;
 	private int arrPort;
 	private int destPort;
+	private int statPort;
 	private DatagramSocket sendReceiveFloorSocket; //declaration of socket
 	private DatagramSocket sendReceiveScheduleSocket; //declaration of socket
 
@@ -39,7 +40,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 * the scheduler.
 	 *
 	 */
-	public Elevator(int numFloor, int floorPort, int schedPort, int arrPort, int destPort) {
+	public Elevator(int numFloor, int floorPort, int schedPort, int arrPort, int destPort, int statPort) {
 		this.currentFloor = 1;
 		this.upLamp = new DirectionLamp(Direction.UP);
 		this.downLamp = new DirectionLamp(Direction.DOWN);
@@ -48,6 +49,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		this.currentState = new StationaryState(this);
 		this.arrPort = arrPort;
 		this.destPort = destPort;
+		this.statPort = statPort;
 		try {
 			sendReceiveFloorSocket = new DatagramSocket(floorPort);
 			sendReceiveScheduleSocket = new DatagramSocket(schedPort);
@@ -182,6 +184,12 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		byte[] data = Serial.serialize(e);
 		send(sendReceiveFloorSocket, data, data.length, this.arrPort);
 	}
+	
+	public void sendStationaryEvent() {
+		System.out.println("Elevator State: " + currentState + " sending stationary event");
+		byte[] data = "I am stationary".getBytes();
+		send(sendReceiveFloorSocket, data, data.length, this.statPort);
+	}
 
 	public SchedulerEvent askShouldIStop() {
 		DatagramPacket receivePacket = receive(sendReceiveScheduleSocket, false);
@@ -196,7 +204,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	}
 
 	public FloorEvent getFloorEvent() {
-		DatagramPacket receivePacket = receive(sendReceiveFloorSocket, true);
+		DatagramPacket receivePacket = receive(sendReceiveFloorSocket, false);
 		if (receivePacket == null) {
 			return null;
 		}

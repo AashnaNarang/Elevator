@@ -30,10 +30,16 @@ public class ActiveState extends SchedulerState {
 	@Override
 	public void handleFloorEvent() {
 		super.handleFloorEvent();
+		boolean isElevStationary = scheduler.getStationaryEventFromMiddleMan();
+		System.out.println("IS elevator stationary? " + isElevStationary + " ");
+		if (!isElevStationary) {
+			return;
+		}
 		FloorEvent floorEvent = scheduler.getNextFloorEvent();
 		if(floorEvent != null) {
 			scheduler.sendFloorEventToElevator(floorEvent);
 			scheduler.addToSentFloorEventsList(floorEvent);
+			System.out.println("Adding this to send floor events list : " + floorEvent.toString());
 		}
 	}
 
@@ -56,9 +62,9 @@ public class ActiveState extends SchedulerState {
 		System.out.println("Scheduler is analyzing arrival event for floor " + arrivalEvent.getCurrentFloor() + ".  {Time: " + LocalTime.now() + "}");
 
 		currentFloorEvent = analyzeFloorEvents(arrivalEvent);
-		//System.out.println("Scheduler floorEventFlag " + floorEventFlag);
+		System.out.println("Scheduler floorEventFlag " + floorEventFlag);
 		analyzeDestinationEvents(arrivalEvent);
-		//System.out.println("Scheduler destinatioEventFlag " + destinationEventFlag + " size " + scheduler.getDestinationEventsList());
+		System.out.println("Scheduler destinatioEventFlag " + destinationEventFlag + " size " + scheduler.getDestinationEventsList());
 
 		if (arrivalEvent.didNotMoveYet()) {
 			// No need to send scheduler event if elevator hasn't started moving, elevator already has instructions
@@ -93,7 +99,7 @@ public class ActiveState extends SchedulerState {
 	public void handleDestinationEvent() {
 		Event destinationEvent = scheduler.getDestinationEventFromMiddleMan();
 		if (destinationEvent != null) {
-			//System.out.println(" Elevator is adding destination event from scheduler get destination event " + destinationEvent);
+			System.out.println(" Elevator is adding destination event from scheduler get destination event " + destinationEvent);
 			scheduler.addToDestinationEventsList(destinationEvent);
 		}
 	}
@@ -126,22 +132,23 @@ public class ActiveState extends SchedulerState {
 	
 	private FloorEvent analyzeFloorEvents(ArrivalEvent arrivalEvent) {
 		FloorEvent currentFloorEvent = null;
-		//System.out.println("FloorEvents size " + scheduler.getFloorEventsList().size());
-		for (FloorEvent fEvent : scheduler.getFloorEventsList()) {
+		System.out.println("SentFloorEvents size " + scheduler.getSentFloorEventsList().size());
+		for (FloorEvent fEvent : scheduler.getSentFloorEventsList()) {
 			if (isAtFloor(arrivalEvent, fEvent)) {
 				currentFloorEvent = fEvent;
 				floorEventFlag = true;
+				scheduler.removeSentFloorEvent(fEvent);
 				scheduler.removeFloorEvent(fEvent);
 				break;
 			}
 		}
+
 		if (currentFloorEvent == null) {
-			//System.out.println("SentFloorEvents size " + scheduler.getSentFloorEventsList().size());
-			for (FloorEvent fEvent : scheduler.getSentFloorEventsList()) {
+			System.out.println("FloorEvents size " + scheduler.getFloorEventsList().size());
+			for (FloorEvent fEvent : scheduler.getFloorEventsList()) {
 				if (isAtFloor(arrivalEvent, fEvent)) {
 					currentFloorEvent = fEvent;
 					floorEventFlag = true;
-					scheduler.removeSentFloorEvent(fEvent);
 					scheduler.removeFloorEvent(fEvent);
 					break;
 				}

@@ -23,12 +23,14 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	private SchedulerState currentState;
 	
 	private DatagramSocket sendReceiveFloorSocket; 
-	private DatagramSocket sendReceiveArrSocket; //declaration of socket
+	private DatagramSocket sendReceiveArrSocket;
 	private DatagramSocket sendReceiveDestSocket; 
+	private DatagramSocket sendReceiveStatSocket; 
 	
 	private int floorPort;
 	private int elevFloorPort;
 	private int elevSchedPort;
+	private int elevStatPort;
 
 	/**
 	 * Public constructor to create Scheduler object and instantiate instance
@@ -38,7 +40,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	 * @param middleMan2 Object to hold and pass events to/from the elevator
 	 */
 	public Scheduler(int floorEventPort, int arrPort, int destPort, int floorPort, int elevFloorPort, 
-			int elevSchedPort) {
+			int elevSchedPort, int elevStatPort) {
 		this.floorEvents = new LinkedList<FloorEvent>();
 		this.sentFloorEvents = new ArrayList<FloorEvent>();
 		this.arrivalEvents = new LinkedList<ArrivalEvent>();
@@ -47,11 +49,13 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 		this.floorPort = floorPort;
 		this.elevFloorPort = elevFloorPort;
 		this.elevSchedPort = elevSchedPort;
+		this.elevStatPort = elevStatPort;
 		
 		try {
 			sendReceiveFloorSocket = new DatagramSocket(floorEventPort);
 			sendReceiveArrSocket = new DatagramSocket(arrPort);
 			sendReceiveDestSocket = new DatagramSocket(destPort);
+			sendReceiveStatSocket = new DatagramSocket(elevStatPort);
 
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
@@ -86,6 +90,16 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 			return null;
 		}
 		return Serial.deSerialize(receivePacket.getData(), Event.class);
+	}
+	
+	public boolean getStationaryEventFromMiddleMan() {
+		DatagramPacket receivePacket = receive(sendReceiveStatSocket, true);
+		if (receivePacket == null) {
+			return false;
+		}
+		String s = new String(receivePacket.getData(), 0, receivePacket.getLength());
+		System.out.println(" Received string with " + s);
+		return s.equals("I am stationary");
 	}
 	
 	public void sendFloorEventToElevator(FloorEvent e) {
