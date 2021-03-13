@@ -34,9 +34,9 @@ public class IterationOneTest {
 	@Test
 	public void test() {
 		try {
-			elevator = new Elevator(middleMan2, 4);
-			floorSubsystemThread = new Thread(new FloorSubsystem("input.txt", 4, middleMan1), "floorSubsystem");
-			schedThread = new Thread(new Scheduler(middleMan1, middleMan2), "scheduler");
+			elevator = new Elevator(1, 6, 63, 73, 43, 120, 101);
+			floorSubsystemThread = new Thread(new FloorSubsystem("input.txt", 4, 23 ,33), "floorSubsystem");
+			schedThread = new Thread(new Scheduler(33, 43, 120, 23, 101), "scheduler");
 			elevatorThread = new Thread(elevator, "elevator");
 			floorSubsystemThread.start();
 			schedThread.start();
@@ -51,7 +51,7 @@ public class IterationOneTest {
 	public void parseEvents() {
 			//08:10:23.100 1 up 3
 		try {
-			floorSubsystemThread = new Thread(new FloorSubsystem("input.txt", 4, middleMan1), "floorSubsystem");
+			floorSubsystemThread = new Thread(new FloorSubsystem("input.txt", 4, 23 ,33), "floorSubsystem");
 			floorSubsystemThread.start();
 			TimeUnit.SECONDS.sleep(1);
 			FloorEvent floorEvent = middleMan1.getFloorEvent();

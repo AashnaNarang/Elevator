@@ -30,13 +30,13 @@ public class IterationTwoTest {
 		middleMan1 = new MiddleMan();
 		middleMan2 = new MiddleMan();
 		floorEvent = new FloorEvent(LocalTime.now(), 1, Direction.UP, 4);
-		scheduler = new Scheduler(middleMan1, middleMan2); 
+		scheduler = new Scheduler(33, 43, 120, 23, 101); 
 		middleMan2.putFloorEvent(floorEvent);
 	}
 
 	@Test
 	public void test() {
-		elevator = new Elevator(middleMan2, 6);
+		elevator = new Elevator(6, 63, 73, 43, 120, 101);
 		stationaryState = new StationaryState(elevator);
 		assertEquals(StationaryState.class, elevator.getState().getClass());
 		stationaryState.handleFloorEvent();		
