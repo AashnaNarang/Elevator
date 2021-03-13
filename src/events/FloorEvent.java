@@ -9,6 +9,10 @@ import main.Direction;
  *
  */
 public class FloorEvent extends Event {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1674329514177840536L;
 	private int source;
 	private Direction direction;
 	private boolean isAtSource;

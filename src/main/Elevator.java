@@ -1,4 +1,7 @@
 package main;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -17,29 +20,38 @@ import states.StationaryState;
  * and moves the elevator up/down based on the given task it will receive.
  */
 
-public class Elevator implements Runnable {
+public class Elevator extends NetworkCommunicator implements Runnable {
 	private int currentFloor;
-	private MiddleMan middleMan;
 	private DirectionLamp upLamp;
 	private DirectionLamp downLamp;
 	private Direction direction;
 	private ArrayList<ElevatorButton> buttons;
 	private ElevatorState currentState;
+	private int arrPort;
+	private int destPort;
+	private DatagramSocket sendReceiveSocket; //declaration of socket
+
 
 	/*
 	 * constructor for Elevator Defining the middleclass parameters that are by to
 	 * the scheduler.
 	 *
-	 * @param middleman - sending information to Middleman
 	 */
-	public Elevator(MiddleMan middleMan, int numFloor) {
-		this.middleMan = middleMan;
+	public Elevator(int numFloor, int hostPort, int arrPort, int destPort) {
 		this.currentFloor = 1;
 		this.upLamp = new DirectionLamp(Direction.UP);
 		this.downLamp = new DirectionLamp(Direction.DOWN);
 		this.direction = Direction.UP;
 		this.buttons = new ArrayList<ElevatorButton>();
 		this.currentState = new StationaryState(this);
+		this.arrPort = arrPort;
+		this.destPort = destPort;
+		try {
+			sendReceiveSocket = new DatagramSocket(hostPort);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		for (int i = 0; i < numFloor; i++) {
 			buttons.add(new ElevatorButton(i));
@@ -154,7 +166,8 @@ public class Elevator implements Runnable {
 	}
 
 	public void sendDestinationEvent(Event destinationEvent) {
-		this.middleMan.putDestinationEvent(destinationEvent);
+		byte[] data = Serial.serialize(destinationEvent);
+		send(sendReceiveSocket, data, data.length, this.destPort);
 	}
 
 	public void switchOnButton(int i, boolean b) {
@@ -163,12 +176,16 @@ public class Elevator implements Runnable {
 	}
 
 	public void sendArrivalEvent(ArrivalEvent e) {
-		this.middleMan.putArrivalEvent(e);
-		
+		byte[] data = Serial.serialize(e);
+		send(sendReceiveSocket, data, data.length, this.arrPort);
 	}
 
 	public SchedulerEvent askShouldIStop() {
-		return this.middleMan.getSchedulerEvent();
+		DatagramPacket receivePacket = receive(sendReceiveSocket);
+		if (receivePacket == null) {
+			return null;
+		}
+		return Serial.deSerialize(receivePacket.getData(), SchedulerEvent.class);
 	}
 
 	public Direction getDirection() {
@@ -176,7 +193,11 @@ public class Elevator implements Runnable {
 	}
 
 	public FloorEvent getFloorEvent() {
-		return this.middleMan.getFloorEvent();
+		DatagramPacket receivePacket = receive(sendReceiveSocket);
+		if (receivePacket == null) {
+			return null;
+		}
+		return Serial.deSerialize(receivePacket.getData(), FloorEvent.class);
 	}
 	
 	public void setState(ElevatorState state) {

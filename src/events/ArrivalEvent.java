@@ -1,11 +1,16 @@
 package events;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 
 import main.Direction;
 import main.Elevator;
 
-public class ArrivalEvent {
+public class ArrivalEvent implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 520508342067884869L;
 	private int currentFloor;
 	private LocalTime time;
 	private Elevator elevator;

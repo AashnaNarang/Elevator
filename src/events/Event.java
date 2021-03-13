@@ -1,8 +1,13 @@
 package events;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 
-public class Event {
+public class Event implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7795450260063476223L;
 	protected LocalTime time;
 	protected int destination;
 	
