@@ -11,9 +11,8 @@ import main.FloorSubsystem;
 import main.Scheduler;
 
 public class TestScenarios {
-	Elevator elevator, elevator2, elevator3;
-	Thread floorSubsystemThread, schedThread, elevatorThread, elevatorThread2
-	, elevatorThread3; 
+	private Elevator elevator, elevator2, elevator3;
+	private Thread floorSubsystemThread, schedThread, elevatorThread; 
 	
 	@Test
 	public void ScenarioTwo() {
@@ -58,8 +57,8 @@ public class TestScenarios {
 			floorSubsystemThread = new Thread(new FloorSubsystem("input4.txt", 8, 25, 35), "floorSubsystem");
 			schedThread = new Thread(new Scheduler(35, 45, 122, 25, 103), "scheduler");
 			elevatorThread = new Thread(elevator, "elevator1");
-			elevatorThread2 = new Thread(elevator2, "elevator2");
-			elevatorThread3 = new Thread(elevator3, "elevator3");
+			new Thread(elevator2, "elevator2");
+			new Thread(elevator3, "elevator3");
 			floorSubsystemThread.start();
 			schedThread.start();
 			elevatorThread.start();
