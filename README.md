@@ -1,4 +1,5 @@
 # Elevator
+***Note*** This is the same file as the README.txt, but in markdown format
 
 ## ArrivalEvent.java 
 Is an event that holds information when an elevator arrives at a floor. 
