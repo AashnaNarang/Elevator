@@ -104,5 +104,11 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 		} catch (IOException e) {
 		}
 	}
+	/**
+	 * Method for testing
+	 */
+	public List<Floor> getFloorList() {
+		return floors;
+	}
 
 }

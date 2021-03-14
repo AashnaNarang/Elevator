@@ -3,10 +3,15 @@ package main;
 public class Main {
 
 	public static void main(String[] args) {
-		Thread floorSubsystem = new Thread(new FloorSubsystem("input3.txt", 6, 23, 33), "floorSubsystem");
-		Thread sched = new Thread(new Scheduler(33, 43, 120, 23, 101), "scheduler");
-		Thread elevator = new Thread(new Elevator(6, 63, 73, 43, 120, 101), "elevator");
-		Thread elevator2 = new Thread(new Elevator(6, 64, 74, 43, 120, 101), "elevator2");
+		Thread floorSubsystem = new Thread(new FloorSubsystem("input2.txt", Configurations.NUMBER_OF_FLOORS
+				, Configurations.FLOOR_PORT, Configurations.FLOOR_EVENT_PORT), "floorSubsystem");
+		Thread sched = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT
+				, Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT), "scheduler");
+		Thread elevator = new Thread(new Elevator(Configurations.NUMBER_OF_FLOORS, Configurations.ELEVATOR_FLOOR_PORT, Configurations.ELEVATOR_SCHEDULAR_PORT, 
+				Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT), "elevator");
+		Thread elevator2 = new Thread(new Elevator(Configurations.NUMBER_OF_FLOORS, Configurations.ELEVATOR_FLOOR_PORT + 1, 
+				Configurations.ELEVATOR_SCHEDULAR_PORT + 1,
+				Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT), "elevator2");
 		floorSubsystem.start();
 		sched.start();
 		elevator.start();
