@@ -30,8 +30,8 @@ Parses events and processes the information from the events, sending floorEvents
 ## Lamp.java
 The Lamp class is responsible for keeping track of the lamp's (on/off) status.
 
-## MiddleMan.java 
-This class is responsible for connecting the floor to scheduler, scheduler to elevator, and vice-versa. 
+## Main.java
+This main class is to basically start all our diffrent threads. 
 
 ## Scheduler.java 
 Represents the scheduler which checks for new updates and sends to the elevator once there is something new. Also sends data to the floor when the elevator completes a job. The scheduler is also responsible for checking if the floor event and destination event should stop the Elevator.
@@ -67,7 +67,7 @@ This class will test the behavior of our elevator and display in the console the
 This class is a method for the information to be serialize and deserialize.
 
 ## NetworkCommunicator.java
-This class will send the datagram packets in a byte array format to a destination port.
+This class will send the datagram packets in a byte array format to a destination port. This is all done using UDP.
 
 ## Work Breakdown for iteration 3
 ## Aashna
