@@ -3,6 +3,7 @@ package states;
 import java.time.LocalTime;
 
 import events.FloorEvent;
+import events.StationaryEvent;
 import main.Elevator;
 
 public class StationaryState extends ElevatorState {
@@ -13,8 +14,11 @@ public class StationaryState extends ElevatorState {
 
 	
 	@Override
+	/**
+	 * Get floor event from scheduler. Open door if already at source floor, otherwise switch to moving state
+	 */
 	public void handleFloorEvent() {
-		elevator.sendStationaryEvent();
+		elevator.sendStationaryEvent(new StationaryEvent(elevator.getSendReceiveFloorSocket().getLocalPort()));
 		FloorEvent e = elevator.getFloorEvent();
 		if (e != null) {
 			if (e.getSource() == elevator.getCurrentFloor()) {

@@ -1,9 +1,7 @@
 package states;
 
 import events.ArrivalEvent;
-import events.FloorEvent;
 import events.Event;
-import main.MiddleMan;
 import main.Scheduler;
 
 /**
@@ -17,11 +15,11 @@ public class IdleState extends SchedulerState {
 	}
 
 	/**
-	 * Poll for arrival events from middle man, add to elevator's list if able to retrieve event 
+	 * Get arrival events from elevator, add to elevator's list if able to retrieve event 
 	 */
 	@Override
 	public void handleArrivalEvent() {
-		ArrivalEvent arrivalEvent = scheduler.getArrivalEventFromMiddleMan();
+		ArrivalEvent arrivalEvent = scheduler.getArrivalEventFromElevator();
 		if (arrivalEvent != null) {
 			scheduler.addToArrivalEventsList(arrivalEvent);
 			scheduler.setState(new ActiveState(scheduler));
@@ -29,11 +27,11 @@ public class IdleState extends SchedulerState {
 	}
 
 	/**
-	 * Poll for destination events from middle man, add to elevator's list if able to retrieve event 
+	 * Get destination events from elevator, add to elevator's list if able to retrieve event 
 	 */
 	@Override
 	public void handleDestinationEvent() {
-		Event destinationEvent = scheduler.getDestinationEventFromMiddleMan();
+		Event destinationEvent = scheduler.getDestinationEventFromElevator();
 		if (destinationEvent != null) {
 			scheduler.addToDestinationEventsList(destinationEvent);
 			scheduler.setState(new ActiveState(scheduler));
