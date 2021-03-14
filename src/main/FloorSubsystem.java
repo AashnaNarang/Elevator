@@ -25,7 +25,6 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 
 	private Queue<FloorEvent> eventList;
 	private List<Floor> floors;
-	private int numOfFloors;
 	private String filename;
 	private int schedPort;
 	private DatagramSocket sendReceiveSocket; //declaration of socket
@@ -39,7 +38,6 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 	 */
 	public FloorSubsystem(String filename, int numOfFloors, int hostPort, int schedPort) {
 		this.filename = filename;
-		this.numOfFloors = numOfFloors;
 		this.eventList = new LinkedList<>();
 		this.floors = new ArrayList<>();
 		this.schedPort = schedPort;
