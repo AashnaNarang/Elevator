@@ -43,9 +43,7 @@ public class Serial {
 			ByteArrayInputStream bis = new ByteArrayInputStream(msg);
 	    	ObjectInput in = new ObjectInputStream(bis);
 			return id.cast(in.readObject());
-		} catch (IOException | ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (IOException | ClassNotFoundException | ClassCastException e1) {
 		}
         return null;
 	}
