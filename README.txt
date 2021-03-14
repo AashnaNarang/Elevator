@@ -49,22 +49,19 @@ This class represents that the elevator is moving towards its destination locati
 This class represents the information on which state the elevator is in. This class will also update the Middleman with what floor the elevator is currently moving through. 
 
 ## StationaryState.java
-This class is the representation of the state in which the elevator will have to decide what to do when the elevator has reached the destination or when it's at a stand still.
+This class is used by elevators to tell the scheduler that they're stationary
 
 ## IdleState.java
 This class represents when the Scheduler is at a standstill and wait for floor event and arrival event to pass in events/information.
 
 ## ActiveState.java
-It puts FloorEvents, DestinationEvents and ArrivalEvents into lists and moves to IdleState when they are empty. 
+It sends floor events to the elevator, receives and saves destination events, and analyze arrival events to tell the elevator what to do next 
 
 ##SchedulerState.java
-This class will get the infomation which state the scheduler is moving into.
-
-## TestElevatorSystem.java
-This class will test the behavior of our elevator and display in the console the messages of what the elevator is currently doing. 
+This class will get the information which state the scheduler is moving into.
 
 ## Serial.java
-This class is a method for the information to be serialize and deserialize.
+This class is a method for the information to be serialized and deserialized.
 
 ## NetworkCommunicator.java
 This class will send the datagram packets in a byte array format to a destination port. This is all done using UDP.
@@ -174,7 +171,7 @@ Make sure you extract the zip folder first.
 2. Right click anywhere in the package explorer on the left
 3. Click import
 4. General
-5. Existing projects into workplace
+5. Existing projects into workspace
 6. Select the folder. 
 7. Run the java application using Main.java. 
 
@@ -185,6 +182,6 @@ Make sure you extract the zip folder first.
 4. Use steps 1-7 in the instructions shown above.
 
 ## Instructions for testing
-1. Go to TestElevatorSystem.java inside src 
-2. Click on the Run as Junit test
+1. Go to any of the test files in the src\test package
+2. Click on the Run as JUnit test
 
