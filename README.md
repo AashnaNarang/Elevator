@@ -21,9 +21,6 @@ This class represents the buttons in the elevator.
 ## Floor.java 
 The floor class is responsible for tracking the floor number and also toggling the lights for the up/down buttons.
 
-## FloorButton.java 
-This class represents the button pressed on the floor for the elevator. 
-
 ## FloorEvent.java
 The FloorEvent Class handles the request being sent to scheduler it takes in the parsed information from the input and creates an event.
 
@@ -33,8 +30,8 @@ Parses events and processes the information from the events, sending floorEvents
 ## Lamp.java
 The Lamp class is responsible for keeping track of the lamp's (on/off) status.
 
-## MiddleMan.java 
-This class is responsible for connecting the floor to scheduler, scheduler to elevator, and vice-versa. 
+## Main.java
+This main class is to basically start all our diffrent threads. 
 
 ## Scheduler.java 
 Represents the scheduler which checks for new updates and sends to the elevator once there is something new. Also sends data to the floor when the elevator completes a job. The scheduler is also responsible for checking if the floor event and destination event should stop the Elevator.
@@ -49,7 +46,7 @@ This class will handle the opening and closing of the door with a given expiry t
 This class represents that the elevator is moving towards its destination location and update the elevator and the scheduler. It will also receive from the floor event if it should continue moving through the floors. 
 
 ## ElevatorState.java
-This class represents the information on which state the elevator is in. 
+This class represents the information on which state the elevator is in. This class will also update the Middleman with what floor the elevator is currently moving through. 
 
 ## StationaryState.java
 This class is the representation of the state in which the elevator will have to decide what to do when the elevator has reached the destination or when it's at a stand still.
@@ -60,8 +57,116 @@ This class represents when the Scheduler is at a standstill and wait for floor e
 ## ActiveState.java
 It puts FloorEvents, DestinationEvents and ArrivalEvents into lists and moves to IdleState when they are empty. 
 
-## TestElevatorSystem
+##SchedulerState.java
+This class will get the infomation which state the scheduler is moving into.
+
+## TestElevatorSystem.java
 This class will test the behavior of our elevator and display in the console the messages of what the elevator is currently doing. 
+
+## Serial.java
+This class is a method for the information to be serialize and deserialize.
+
+## NetworkCommunicator.java
+This class will send the datagram packets in a byte array format to a destination port. This is all done using UDP.
+
+## Work Breakdown for iteration 3
+## Aashna
+Fix bugs from iteration 2, 
+Re-design scheduler state machine, 
+Small update to the scheduler state diagram, 
+Work with Krishan to design how UDP communication will work, 
+Fix bug after switching to UDP,  
+Work with Krishan on design for multiple elevators, 
+Implement design for multiple cars (Elevator sends stationary events, fix elevator keeps going), 
+Clean up print statements, 
+Clean up javadocs
+ 
+## Krishan
+Work with Aashna to design how UDP communication will work, 
+Implement UDP communication, 
+Work with Aashna on design for multiple elevators, 
+Implement design for multiple cars (Rest of implementation), 
+Clean up javadocs
+
+## Dani
+IterationOneTest.java, 
+IterationTwoTest.java, 
+TestScenarios.java, 
+Class Diagram,  
+Sequence Diagram, 
+Fix broken test cases after changes
+
+## Abdalla
+IterationOneTest.java, 
+IterationTwoTest.java, 
+IterationThreeTest.java, 
+Configurations.java, 
+Fix broken test cases after changes
+
+## Yuvraj
+Add meaningful print statements, 
+Readme
+
+## Issac 
+Work with Krishan on UDP implementation 
+
+
+## Work Breakdown for iteration 2
+## Team
+Design state diagram together + design basic idea of classes, 
+Add new classes to UML that each person creates,  
+Debug code
+
+## Aashna
+Implement State pattern,
+Design Elevator+State pattern in more detail,
+Merge + Test code together, 
+Come up with test cases
+
+## Krishan
+Adjust the elevator class + middleMan to use the state pattern, 
+Design Elevator+State pattern in more detail,
+Sequence diagram,
+Clean up elevator state diagram 
+
+## Yuvraj
+Write JUnit test cases,
+README.MD
+
+## Dani
+Clean up UML Diagram (Combine new Elevator + Scheduler UMLs) + add a description,
+Clean up Scheduler State Diagram,
+Scheduler class,
+Pair Programming Scheduler
+
+## Abdalla
+Clean up Scheduler State Diagram,
+State pattern for Scheduler,
+Pair Programming Scheduler 
+
+## Issac
+Come up with test cases, 
+Add to UML
+
+
+## Work Breakdown for iteration 1
+## Aashna & Krishan
+Scheduler class,  
+Middleman class,
+UML
+
+## Yuvraj & Issac 
+elevator class, 
+event classes,  
+elevator lamp, 
+Sequence diagram
+
+## Dani & Abdalla 
+Floor class, 
+Event classes, 
+Floor lamp, 
+ReadMe
+
 
 ## Instructions for running the file using the ZIP folder: 
 Make sure you extract the zip folder first. 
@@ -77,8 +182,9 @@ Make sure you extract the zip folder first.
 1. Open the git project
 2. Click on the green button "Code"
 3. Download the ZIP folder.  
-4. Use steps 1-7 in the instructions shown [Here](#Instructions-for-running-the-file-using-the-ZIP-folder:). 
+4. Use steps 1-7 in the instructions shown above.
 
 ## Instructions for testing
 1. Go to TestElevatorSystem.java inside src 
 2. Click on the Run as Junit test
+
