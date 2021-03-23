@@ -10,8 +10,9 @@ public class Event implements Serializable{
 	private static final long serialVersionUID = 7795450260063476223L;
 	protected LocalTime time;
 	protected int destination;
-	private int id;
+	protected int id;
 	
+
 	/**
 	 * 
 	 * @param time Represents the time the event occurred.
@@ -67,6 +68,14 @@ public class Event implements Serializable{
 	 */
 	public int getId() {
 		return id;
+	}
+	
+	/**
+	 * 
+	 * @param id The id of the elevator the floor event should be handled by.
+	 */
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }
