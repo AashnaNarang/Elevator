@@ -16,6 +16,7 @@ public class FloorEvent extends Event {
 	private int source;
 	private Direction direction;
 	private boolean isAtSource;
+	private int errorCode;
 
 	/**
 	 * Constructor for FloorEvent
@@ -24,11 +25,13 @@ public class FloorEvent extends Event {
 	 * @param source      the current floor the passenger is making the request on
 	 * @param direction   the direction the passenger wants to go, up or down
 	 * @param destination the floor the passenger wants to go to
+	 * @param errorCode   the Event parsed will simulate an error depending what is passed
 	 */
-	public FloorEvent(LocalTime time, int source, Direction direction, int destination) {
+	public FloorEvent(LocalTime time, int source, Direction direction, int destination, int errorCode) {
 		super(time, destination, -1);
 		this.source = source;
 		this.direction = direction;
+		this.errorCode = errorCode;
 	}
 
 	/**
@@ -48,6 +51,16 @@ public class FloorEvent extends Event {
 	public Direction getDirection() {
 		return direction;
 	}
+	
+	/**
+	 * Getter method for error
+	 * 
+	 * @return the errorCode 0,1,2 
+	 */
+	public int getErrorCode() {
+		return errorCode;
+	}
+
 
 
 	/**

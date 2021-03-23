@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.text.ParseException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -95,7 +94,7 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 			while (currentLine != null) {
 				String[] inputEvent = currentLine.split(" ");
 				FloorEvent event = new FloorEvent(LocalTime.parse(inputEvent[0]), Integer.parseInt(inputEvent[1]),
-						Direction.valueOf(inputEvent[2].toUpperCase()), Integer.parseInt(inputEvent[3]));
+						Direction.valueOf(inputEvent[2].toUpperCase()), Integer.parseInt(inputEvent[3]), Integer.parseInt(inputEvent[4]));
 				eventList.add(event);
 				currentLine = br.readLine();
 			}
