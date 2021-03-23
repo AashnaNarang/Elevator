@@ -43,6 +43,7 @@ public class ActiveState extends SchedulerState {
 		FloorEvent floorEvent = scheduler.getNextFloorEvent();
 		if(floorEvent != null) {
 			scheduler.sendFloorEventToElevator(floorEvent, elevStationary.getFloorPort());
+			floorEvent.setId(elevStationary.getId());
 			scheduler.addToSentFloorEventsList(floorEvent);
 		}
 	}
@@ -132,7 +133,8 @@ public class ActiveState extends SchedulerState {
 	 */
 	private boolean isAtFloor(ArrivalEvent arrivalEvent, FloorEvent fEvent) {
 		return (arrivalEvent.getCurrentFloor() == fEvent.getSource())
-				&& fEvent.getDirection() == arrivalEvent.getDirection();
+				&& fEvent.getDirection() == arrivalEvent.getDirection()
+				&& fEvent.getId() == arrivalEvent.getId();
 	}
 	
 	/**

@@ -13,13 +13,17 @@ public class StationaryEvent implements Serializable {
 	
 	private int floorPort;
 	
+	private int id;
+
 	/**
 	 * 
 	 * @param floorPort The port floor events should be sent to.
+	 * @param id The id of the elevator
 	 */
 	
-	public StationaryEvent(int floorPort) {
+	public StationaryEvent(int floorPort, int id) {
 		this.floorPort = floorPort;
+		this.id = id;
 	}
 
 	/**
@@ -38,4 +42,12 @@ public class StationaryEvent implements Serializable {
 		return floorPort;
 	}
 	
+	/**
+	 * 
+	 * @return The id of the elevator who sent the event.
+	 */
+	public int getId() {
+		return id;
+	}
+
 }

@@ -18,7 +18,7 @@ public class StationaryState extends ElevatorState {
 	 * Get floor event from scheduler. Open door if already at source floor, otherwise switch to moving state
 	 */
 	public void handleFloorEvent() {
-		elevator.sendStationaryEvent(new StationaryEvent(elevator.getSendReceiveFloorSocket().getLocalPort()));
+		elevator.sendStationaryEvent(new StationaryEvent(elevator.getSendReceiveFloorSocket().getLocalPort(), elevator.getId()));
 		FloorEvent e = elevator.getFloorEvent();
 		if (e != null) {
 			if (e.getSource() == elevator.getCurrentFloor()) {
