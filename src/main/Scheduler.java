@@ -48,7 +48,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 		this.floorPort = floorPort;
 		this.timers = new SchedulerTimer[Configurations.NUM_ELEVATORS];
 		for(int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
-			timers[i] = new SchedulerTimer(Integer.toString(i));
+			timers[i] = new SchedulerTimer(this, Integer.toString(i), true, i);
 		}
 		
 		try {
@@ -80,6 +80,40 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	 */
 	public SchedulerTimer getElevatorTimer(int elevatorId) {
 		return timers[elevatorId];
+	}
+	
+	/**
+	 * Start a timer for elevator
+	 */
+	public void startElevatorTimer(int elevatorId, boolean beforeArrivedAtSrcFlr, int numFloors) {
+		timers[elevatorId] = new SchedulerTimer(this, Integer.toString(elevatorId), beforeArrivedAtSrcFlr, elevatorId);
+		timers[elevatorId].start(numFloors);
+	}
+	
+	/**
+	 * @return the timers
+	 */
+	public void cancelElevatorTimer(int elevatorId) {
+		timers[elevatorId].interrupt();
+	}
+	
+	public void permanentFault(boolean beforeArrivedAtSrcFloor, int elevatorId) {
+		// ArrayList toRemove (might need this if below loops make issues)
+		for(FloorEvent e: sentFloorEvents) {
+			if(e.getElevatorId() == elevatorId) {
+				sentFloorEvents.remove(e);
+				floorEvents.add(e);
+			}
+		}
+		
+		if(!beforeArrivedAtSrcFloor) {
+			for(Event e: destinationEvents) {
+				if(e.getElevatorId() == elevatorId) {
+					destinationEvents.remove(e);
+				}
+			}
+		}
+		System.out.println("Operations has been called for elevator " + elevatorId);
 	}
 
 	/**

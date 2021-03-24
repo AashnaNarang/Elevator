@@ -8,7 +8,6 @@ import events.SchedulerEvent;
 import events.StationaryEvent;
 import events.Event;
 import main.Scheduler;
-import timers.SchedulerTimer;
 
 /**
  * This is the active state of the scheduler 
@@ -46,7 +45,8 @@ public class ActiveState extends SchedulerState {
 			scheduler.sendFloorEventToElevator(floorEvent, elevStationary.getFloorPort());
 			floorEvent.setElevatorId(elevStationary.getElevatorId());
 			scheduler.addToSentFloorEventsList(floorEvent);
-			scheduler.getElevatorTimer(elevStationary.getElevatorId()).start();
+			int numFloors = Math.abs(floorEvent.getSource() - elevStationary.getCurrentFloor());
+			scheduler.startElevatorTimer(elevStationary.getElevatorId(), true, numFloors);
 		}
 	}
 
@@ -69,7 +69,7 @@ public class ActiveState extends SchedulerState {
 				return;
 			}
 		}
-		
+		scheduler.cancelElevatorTimer(arrivalEvent.getElevatorId());
 		currentFloorEvent = analyzeFloorEvents(arrivalEvent);
 		analyzeDestinationEvents(arrivalEvent);
 
@@ -101,6 +101,7 @@ public class ActiveState extends SchedulerState {
 		}
 
 		scheduler.sendSchedulerEventToElevator(schedulerEvent, arrivalEvent.getSchedPort());
+		if (elevatorKeepsGoing) scheduler.startElevatorTimer(arrivalEvent.getElevatorId(), false, 1);
 		scheduler.sendArrivalEventToFloor(arrivalEvent);
 		checkIfUpdateToIdleState();
 	}
@@ -170,7 +171,6 @@ public class ActiveState extends SchedulerState {
 				floorEventFlag = true;
 				scheduler.removeSentFloorEvent(fEvent);
 				scheduler.removeFloorEvent(fEvent);
-				scheduler.getElevatorTimer(arrivalEvent.getElevatorId()).interrupt();
 				break;
 			}
 		}

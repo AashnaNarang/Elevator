@@ -35,6 +35,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	private DatagramSocket sendReceiveFloorSocket; //declaration of socket
 	private DatagramSocket sendReceiveScheduleSocket; //declaration of socket
 	private int id;
+	private boolean running;
 
 	/**
 	 * Elevator constructor to intialize instance variables 
@@ -56,6 +57,8 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		this.destPort = destPort;
 		this.statPort = statPort;
 		this.id = ELEVATOR_ID;
+		running = true;
+		
 		ELEVATOR_ID++;
 		try {
 			sendReceiveFloorSocket = new DatagramSocket(floorPort);
@@ -147,7 +150,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 * floor elevator is moving through.
 	 */
 	public void run() {
-		while (true) {
+		while (running) {
 			currentState.handleFloorEvent();
 		}
 	}
@@ -295,5 +298,10 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 */
 	public int getId() {
 		return id;
+	}
+	
+	public void stop() {
+		System.out.println(Thread.currentThread().getName() + " broke down. Stopping now.");
+		running = false;
 	}
 }
