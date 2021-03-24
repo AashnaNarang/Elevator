@@ -98,7 +98,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		//might have to move logic to scheduler maybe
 		if (diffFloors != 0) {
 			Direction direction = diffFloors < 0 ? Direction.DOWN : Direction.UP; 
-			e = new FloorEvent(e.getTime(), currentFloor, direction, e.getSource()); 
+			e = new FloorEvent(e.getTime(), currentFloor, direction, e.getSource(), e.getErrorCode()); 
 		}
 		
 		this.direction = e.getDirection();
@@ -125,7 +125,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		//might have to move logic to scheduler maybe
 		if (diffFloors != 0) {
 			Direction direction = diffFloors < 0 ? Direction.DOWN : Direction.UP; 
-			e1 = new FloorEvent(e.getTime(), currentFloor, direction, e.getSource());
+			e1 = new FloorEvent(e.getTime(), currentFloor, direction, e.getSource(), e.getErrorCode());
 			this.direction = e1.getDirection();
 		} else {
 			this.direction = e.getDirection();

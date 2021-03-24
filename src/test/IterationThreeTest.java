@@ -26,7 +26,7 @@ public class IterationThreeTest {
 
 	@Before
 	public void setUp() {
-		floorEvent = new FloorEvent(LocalTime.now(), 1, Direction.UP, 4);
+		floorEvent = new FloorEvent(LocalTime.now(), 1, Direction.UP, 4, 0);
 	}
 	
 	@Test
