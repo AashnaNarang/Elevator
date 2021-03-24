@@ -35,12 +35,12 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 	 * @param filename    the file to be parsed
 	 * @param numOfFloors the number of floors
 	 */
-	public FloorSubsystem(String filename, int numOfFloors, int hostPort, int schedPort) {
+	public FloorSubsystem(String filename, int hostPort, int schedPort) {
 		this.filename = filename;
 		this.eventList = new LinkedList<>();
 		this.floors = new ArrayList<>();
 		this.schedPort = schedPort;
-		for (int floorNumber = 1; floorNumber <= numOfFloors; floorNumber++) {
+		for (int floorNumber = 1; floorNumber <= Configurations.NUMBER_OF_FLOORS; floorNumber++) {
 			floors.add(new Floor(floorNumber));
 		}
 		try {

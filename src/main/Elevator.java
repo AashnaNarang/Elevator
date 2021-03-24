@@ -45,7 +45,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 * @param destPort
 	 * @param statPort
 	 */
-	public Elevator(int numFloor, int floorPort, int schedPort, int arrPort, int destPort, int statPort) {
+	public Elevator(int floorPort, int schedPort, int arrPort, int destPort, int statPort) {
 		this.currentFloor = 1;
 		this.upLamp = new DirectionLamp(Direction.UP);
 		this.downLamp = new DirectionLamp(Direction.DOWN);
@@ -65,7 +65,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 			e.printStackTrace();
 		}
 
-		for (int i = 0; i < numFloor; i++) {
+		for (int i = 0; i < Configurations.NUMBER_OF_FLOORS; i++) {
 			buttons.add(new ElevatorButton(i));
 		}
 	}

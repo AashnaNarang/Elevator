@@ -17,8 +17,8 @@ public class TestScenarios {
 	public void ScenarioTwo() {
 		try {
 			int numFloors = 6;
-			Elevator elevator = new Elevator(numFloors, 63, 73, 43, 120, 101);
-			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input2.txt", numFloors, 23, 33), "floorSubsystem");
+			Elevator elevator = new Elevator(63, 73, 43, 120, 101);
+			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input2.txt", 23, 33), "floorSubsystem");
 			Thread schedThread = new Thread(new Scheduler(33, 43, 120, 23, 101), "scheduler");
 			Thread elevatorThread = new Thread(elevator, "elevato2");
 			floorSubsystemThread.start();
@@ -34,8 +34,8 @@ public class TestScenarios {
 	public void ScenarioThree() {
 		try {
 			int numFloors = 6;
-			Elevator elevator = new Elevator(numFloors, 64, 74, 44, 121, 102);
-			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input3.txt", numFloors, 24, 34), "floorSubsystem");
+			Elevator elevator = new Elevator(64, 74, 44, 121, 102);
+			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input3.txt", 24, 34), "floorSubsystem");
 			Thread schedThread = new Thread(new Scheduler(34, 44, 121, 24, 102), "scheduler");
 			Thread elevatorThread = new Thread(elevator, "elevator3");
 			floorSubsystemThread.start();
@@ -52,8 +52,8 @@ public class TestScenarios {
 	public void ScenarioFour() {
 		try {
 			int numFloors = 6;
-			Elevator elevator = new Elevator(numFloors, 65, 75, 45, 122, 103);
-			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input4.txt", numFloors, 25, 35), "floorSubsystem");
+			Elevator elevator = new Elevator(65, 75, 45, 122, 103);
+			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input4.txt", 25, 35), "floorSubsystem");
 			Thread schedThread = new Thread(new Scheduler(35, 45, 122, 25, 103), "scheduler");
 			Thread elevatorThread = new Thread(elevator, "elevator4");
 			floorSubsystemThread.start();
