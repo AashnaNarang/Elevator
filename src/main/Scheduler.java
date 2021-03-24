@@ -5,7 +5,6 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
 import java.util.Queue;
 
 import events.ArrivalEvent;
@@ -15,6 +14,7 @@ import events.SchedulerEvent;
 import events.StationaryEvent;
 import states.IdleState;
 import states.SchedulerState;
+import timers.SchedulerTimer;
 
 public class Scheduler extends NetworkCommunicator implements Runnable {
 	//declaration of variables
@@ -30,6 +30,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	private DatagramSocket sendReceiveStatSocket; 
 	
 	private int floorPort;
+	private SchedulerTimer[] timers;
 
 	/**
 	 * Public constructor to create Scheduler object and instantiate instance
@@ -45,6 +46,10 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 		this.destinationEvents = new LinkedList<Event>();
 		this.currentState = new IdleState(this);
 		this.floorPort = floorPort;
+		this.timers = new SchedulerTimer[Configurations.NUM_ELEVATORS];
+		for(int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
+			timers[i] = new SchedulerTimer(Integer.toString(i));
+		}
 		
 		try {
 			sendReceiveFloorSocket = new DatagramSocket(floorEventPort);
@@ -69,8 +74,14 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 			currentState.handleArrivalEvent();
 		}
 	}
-
 	
+	/**
+	 * @return the timers
+	 */
+	public SchedulerTimer getElevatorTimer(int elevatorId) {
+		return timers[elevatorId];
+	}
+
 	/**
 	 * 
 	 * @return An Arrival Event detailing arrival information from an elevator.

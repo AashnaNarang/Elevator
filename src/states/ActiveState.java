@@ -8,6 +8,7 @@ import events.SchedulerEvent;
 import events.StationaryEvent;
 import events.Event;
 import main.Scheduler;
+import timers.SchedulerTimer;
 
 /**
  * This is the active state of the scheduler 
@@ -43,8 +44,9 @@ public class ActiveState extends SchedulerState {
 		FloorEvent floorEvent = scheduler.getNextFloorEvent();
 		if(floorEvent != null) {
 			scheduler.sendFloorEventToElevator(floorEvent, elevStationary.getFloorPort());
-			floorEvent.setId(elevStationary.getId());
+			floorEvent.setElevatorId(elevStationary.getElevatorId());
 			scheduler.addToSentFloorEventsList(floorEvent);
+			scheduler.getElevatorTimer(elevStationary.getElevatorId()).start();
 		}
 	}
 
@@ -78,7 +80,7 @@ public class ActiveState extends SchedulerState {
 		
 		boolean destEventsForCurrElev = false;
 		for(Event d: scheduler.getDestinationEventsList()) {
-			if(d.getId() == arrivalEvent.getId()) {
+			if(d.getElevatorId() == arrivalEvent.getElevatorId()) {
 				destEventsForCurrElev = true;
 			}
 		}
@@ -134,7 +136,7 @@ public class ActiveState extends SchedulerState {
 	private boolean isAtFloor(ArrivalEvent arrivalEvent, FloorEvent fEvent) {
 		return (arrivalEvent.getCurrentFloor() == fEvent.getSource())
 				&& fEvent.getDirection() == arrivalEvent.getDirection()
-				&& fEvent.getId() == arrivalEvent.getId();
+				&& fEvent.getElevatorId() == arrivalEvent.getElevatorId();
 	}
 	
 	/**
@@ -144,7 +146,7 @@ public class ActiveState extends SchedulerState {
 	private void analyzeDestinationEvents(ArrivalEvent arrivalEvent) {
 		ArrayList<Event> toRemove = new ArrayList<>();
 		for (Event destEvent : scheduler.getDestinationEventsList()) {
-			if (destEvent.getDestination() == arrivalEvent.getCurrentFloor() && destEvent.getId() == arrivalEvent.getId()) {
+			if (destEvent.getDestination() == arrivalEvent.getCurrentFloor() && destEvent.getElevatorId() == arrivalEvent.getElevatorId()) {
 				destinationEventFlag = true;
 				toRemove.add(destEvent);
 			}
@@ -168,6 +170,7 @@ public class ActiveState extends SchedulerState {
 				floorEventFlag = true;
 				scheduler.removeSentFloorEvent(fEvent);
 				scheduler.removeFloorEvent(fEvent);
+				scheduler.getElevatorTimer(arrivalEvent.getElevatorId()).interrupt();
 				break;
 			}
 		}

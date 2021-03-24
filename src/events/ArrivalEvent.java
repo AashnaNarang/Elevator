@@ -132,7 +132,7 @@ public class ArrivalEvent implements Serializable{
 	 * 
 	 * @return Integer representing the id of the Elevator sending the event.
 	 */
-	public int getId() {
+	public int getElevatorId() {
 		return id;
 	}
 

@@ -46,7 +46,7 @@ public class StationaryEvent implements Serializable {
 	 * 
 	 * @return The id of the elevator who sent the event.
 	 */
-	public int getId() {
+	public int getElevatorId() {
 		return id;
 	}
 
