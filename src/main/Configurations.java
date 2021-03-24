@@ -26,6 +26,8 @@ public final class Configurations {
 	public static final int ELEVATOR_FLOOR_PORT = 63;
 
 	public static final int ELEVATOR_SCHEDULAR_PORT = 73;
+	
+	public static final int TIMER_PORT = 130;
 
 	public static final int ELEVATOR_STAT_PORT = 101;
 	

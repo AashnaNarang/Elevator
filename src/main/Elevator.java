@@ -301,6 +301,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	}
 	
 	public void stop() {
+		// Okay to use running boolean because this will only be called when elevator thread is running
 		System.out.println(Thread.currentThread().getName() + " broke down. Stopping now.");
 		running = false;
 	}

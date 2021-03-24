@@ -12,6 +12,7 @@ import events.Event;
 import events.FloorEvent;
 import events.SchedulerEvent;
 import events.StationaryEvent;
+import events.TimeoutEvent;
 import states.IdleState;
 import states.SchedulerState;
 import timers.SchedulerTimer;
@@ -28,8 +29,10 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	private DatagramSocket sendReceiveArrSocket;
 	private DatagramSocket sendReceiveDestSocket; 
 	private DatagramSocket sendReceiveStatSocket; 
+	private DatagramSocket receiveTimerSocket;
 	
 	private int floorPort;
+	private int timerPort;
 	private SchedulerTimer[] timers;
 
 	/**
@@ -39,16 +42,17 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	 * @param middleMan  Object to hold and pass events to/from the floor
 	 * @param middleMan2 Object to hold and pass events to/from the elevator
 	 */
-	public Scheduler(int floorEventPort, int arrPort, int destPort, int floorPort, int statPort) {
+	public Scheduler(int floorEventPort, int arrPort, int destPort, int floorPort, int statPort, int timerPort) {
 		this.floorEvents = new LinkedList<FloorEvent>();
 		this.sentFloorEvents = new ArrayList<FloorEvent>();
 		this.arrivalEvents = new LinkedList<ArrivalEvent>();
 		this.destinationEvents = new LinkedList<Event>();
 		this.currentState = new IdleState(this);
 		this.floorPort = floorPort;
+		this.timerPort = timerPort;
 		this.timers = new SchedulerTimer[Configurations.NUM_ELEVATORS];
 		for(int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
-			timers[i] = new SchedulerTimer(this, Integer.toString(i), true, i);
+			timers[i] = new SchedulerTimer(this, Integer.toString(i), true, i, timerPort);
 		}
 		
 		try {
@@ -56,6 +60,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 			sendReceiveArrSocket = new DatagramSocket(arrPort);
 			sendReceiveDestSocket = new DatagramSocket(destPort);
 			sendReceiveStatSocket = new DatagramSocket(statPort);
+			receiveTimerSocket = new DatagramSocket(timerPort);
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -69,6 +74,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
+			getTimeoutEvent();
 			currentState.handleFloorEvent();
 			currentState.handleDestinationEvent();
 			currentState.handleArrivalEvent();
@@ -76,17 +82,10 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	}
 	
 	/**
-	 * @return the timers
-	 */
-	public SchedulerTimer getElevatorTimer(int elevatorId) {
-		return timers[elevatorId];
-	}
-	
-	/**
 	 * Start a timer for elevator
 	 */
 	public void startElevatorTimer(int elevatorId, boolean beforeArrivedAtSrcFlr, int numFloors) {
-		timers[elevatorId] = new SchedulerTimer(this, Integer.toString(elevatorId), beforeArrivedAtSrcFlr, elevatorId);
+		timers[elevatorId] = new SchedulerTimer(this, Integer.toString(elevatorId), beforeArrivedAtSrcFlr, elevatorId, timerPort);
 		timers[elevatorId].start(numFloors);
 	}
 	
@@ -94,26 +93,31 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	 * @return the timers
 	 */
 	public void cancelElevatorTimer(int elevatorId) {
-		timers[elevatorId].interrupt();
+		timers[elevatorId].cancel();
 	}
 	
-	public void permanentFault(boolean beforeArrivedAtSrcFloor, int elevatorId) {
-		// ArrayList toRemove (might need this if below loops make issues)
+	public void permanentFault(TimeoutEvent t) {
+		ArrayList<FloorEvent> floorEventRemove = new ArrayList<FloorEvent>();
+		ArrayList<Event> destEventRemove = new ArrayList<Event>();
+
 		for(FloorEvent e: sentFloorEvents) {
-			if(e.getElevatorId() == elevatorId) {
-				sentFloorEvents.remove(e);
-				floorEvents.add(e);
+			if(e.getElevatorId() == t.getElevatorId()) {
+				e.setErrorCode(0);
+				floorEventRemove.add(e);
 			}
 		}
+		floorEvents.addAll(floorEventRemove);
+		sentFloorEvents.removeAll(floorEventRemove);
 		
-		if(!beforeArrivedAtSrcFloor) {
+		if(!t.isBeforeArrivedAtSrcFloor()) {
 			for(Event e: destinationEvents) {
-				if(e.getElevatorId() == elevatorId) {
-					destinationEvents.remove(e);
+				if(e.getElevatorId() == t.getElevatorId()) {
+					destEventRemove.add(e);
 				}
 			}
 		}
-		System.out.println("Operations has been called for elevator " + elevatorId);
+		destinationEvents.removeAll(destEventRemove);
+		System.out.println("Operations has been called for elevator " + t.getElevatorId());
 	}
 
 	/**
@@ -126,6 +130,19 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 			return null;
 		}
 		return Serial.deSerialize(receivePacket.getData(), ArrivalEvent.class);
+	}
+	
+	/**
+	 * 
+	 * @return An Arrival Event detailing arrival information from an elevator.
+	 */
+	public void getTimeoutEvent() {
+		DatagramPacket receivePacket = receive(receiveTimerSocket, true);
+		if (receivePacket == null) {
+			return;
+		}
+		System.out.println("received timer packet " + receivePacket.getPort());
+		permanentFault(Serial.deSerialize(receivePacket.getData(), TimeoutEvent.class));
 	}
 
 	/**
