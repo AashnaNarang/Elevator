@@ -13,6 +13,7 @@ public class StationaryEvent implements Serializable {
 	 * 
 	 * @param floorPort The port floor events should be sent to.
 	 * @param id The id of the elevator
+	 * @param currentFloor The floor the elevator is currently on
 	 */
 	
 	public StationaryEvent(int floorPort, int id, int currentFloor) {
