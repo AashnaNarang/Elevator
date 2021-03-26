@@ -46,6 +46,7 @@ public class ActiveState extends SchedulerState {
 			floorEvent.setElevatorId(elevStationary.getElevatorId());
 			scheduler.addToSentFloorEventsList(floorEvent);
 			int numFloors = Math.abs(floorEvent.getSource() - elevStationary.getCurrentFloor());
+			if(numFloors == 0) numFloors = 1;
 			scheduler.startElevatorTimer(elevStationary.getElevatorId(), true, numFloors);
 		}
 	}

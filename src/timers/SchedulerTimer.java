@@ -23,6 +23,7 @@ public class SchedulerTimer extends NetworkCommunicator implements Runnable {
 		this.beforeArrivedAtSrcFloor = beforeArrivedAtSrcFloor;
 		this.elevatorId = elevatorId;
 		this.timerPort = timerPort;
+		t = new Thread(this, "SchedulerTimer " + elevatorId);
 		try {
 			this.sendTimerSocket = new DatagramSocket();
 		} catch (SocketException e) {
@@ -46,7 +47,6 @@ public class SchedulerTimer extends NetworkCommunicator implements Runnable {
 	
 	public void start(int numFloors) {
 		this.numFloors = numFloors;
-		t = new Thread(this, "SchedulerTimer " + elevatorId);
 		t.start();
 	}
 	

@@ -46,7 +46,7 @@ public class IterationThreeTest {
 		TimeUnit.SECONDS.sleep(1);
 		assertEquals(1, scheduler.getFloorEventsList().size());
 		elevatorThread.start();
-		TimeUnit.SECONDS.sleep(1);
+		TimeUnit.SECONDS.sleep(3);
 		assertEquals(0, scheduler.getFloorEventsList().size());
 		assertNotNull(scheduler.getArrivalEventFromElevator());
 	}
@@ -64,7 +64,7 @@ public class IterationThreeTest {
 		scheduler.setState(new ActiveState(scheduler));
 		sched.start();
 		elevatorThread.start();
-		TimeUnit.SECONDS.sleep(1);
+		TimeUnit.SECONDS.sleep(3);
 		assertEquals(0, scheduler.getFloorEventsList().size());
 	}
 
@@ -85,7 +85,7 @@ public class IterationThreeTest {
 		ArrivalEvent ae = new ArrivalEvent(2, LocalTime.now(), Direction.UP, 45, 1);
 		scheduler.addToArrivalEventsList(ae);
 		scheduler.sendArrivalEventToFloor(ae);
-		TimeUnit.SECONDS.sleep(1);
+		TimeUnit.SECONDS.sleep(3);
 		assertFalse(floorSubsystems.getFloorList().get(1).isUpButtonOn());
 	}
 
