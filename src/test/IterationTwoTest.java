@@ -10,7 +10,6 @@ import org.junit.Test;
 import events.FloorEvent;
 import main.Direction;
 import main.Elevator;
-import main.MiddleMan;
 import main.Scheduler;
 import states.DoorOpenState;
 import states.ElevatorState;

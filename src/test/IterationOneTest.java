@@ -29,7 +29,7 @@ public class IterationOneTest {
 	public void parseEvents() {
 			//08:10:23.100 1 up 3
 		try {
-			floorSubsystemThread = new Thread(new FloorSubsystem("input.txt", 6, 23, 33), "floorSubsystem");
+			floorSubsystemThread = new Thread(new FloorSubsystem("input.txt", 23, 33), "floorSubsystem");
 			Scheduler scheduler = new Scheduler(33, 43, 120, 23, 101);
 			floorSubsystemThread.start();
 			schedThread = new Thread(scheduler, "scheduler");

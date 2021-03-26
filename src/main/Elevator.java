@@ -21,7 +21,7 @@ import states.StationaryState;
  */
 
 public class Elevator extends NetworkCommunicator implements Runnable {
-	private static int ELEVATOR_ID=1;
+	private static int ELEVATOR_ID=0;
 	
 	private int currentFloor;
 	private DirectionLamp upLamp;
@@ -35,6 +35,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	private DatagramSocket sendReceiveFloorSocket; //declaration of socket
 	private DatagramSocket sendReceiveScheduleSocket; //declaration of socket
 	private int id;
+	private boolean running;
 
 	/**
 	 * Elevator constructor to intialize instance variables 
@@ -45,7 +46,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 * @param destPort
 	 * @param statPort
 	 */
-	public Elevator(int numFloor, int floorPort, int schedPort, int arrPort, int destPort, int statPort) {
+	public Elevator(int floorPort, int schedPort, int arrPort, int destPort, int statPort) {
 		this.currentFloor = 1;
 		this.upLamp = new DirectionLamp(Direction.UP);
 		this.downLamp = new DirectionLamp(Direction.DOWN);
@@ -56,6 +57,8 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		this.destPort = destPort;
 		this.statPort = statPort;
 		this.id = ELEVATOR_ID;
+		running = true;
+		
 		ELEVATOR_ID++;
 		try {
 			sendReceiveFloorSocket = new DatagramSocket(floorPort);
@@ -65,7 +68,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 			e.printStackTrace();
 		}
 
-		for (int i = 0; i < numFloor; i++) {
+		for (int i = 0; i < Configurations.NUMBER_OF_FLOORS; i++) {
 			buttons.add(new ElevatorButton(i));
 		}
 	}
@@ -98,7 +101,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		//might have to move logic to scheduler maybe
 		if (diffFloors != 0) {
 			Direction direction = diffFloors < 0 ? Direction.DOWN : Direction.UP; 
-			e = new FloorEvent(e.getTime(), currentFloor, direction, e.getSource(), e.getErrorCode()); 
+			e = new FloorEvent(e.getTime(), currentFloor, direction, e.getSource(), e.getElevatorId()); 
 		}
 		
 		this.direction = e.getDirection();
@@ -125,7 +128,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		//might have to move logic to scheduler maybe
 		if (diffFloors != 0) {
 			Direction direction = diffFloors < 0 ? Direction.DOWN : Direction.UP; 
-			e1 = new FloorEvent(e.getTime(), currentFloor, direction, e.getSource(), e.getErrorCode());
+			e1 = new FloorEvent(e.getTime(), currentFloor, direction, e.getSource(), e.getElevatorId());
 			this.direction = e1.getDirection();
 		} else {
 			this.direction = e.getDirection();
@@ -147,7 +150,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 * floor elevator is moving through.
 	 */
 	public void run() {
-		while (true) {
+		while (running) {
 			currentState.handleFloorEvent();
 		}
 	}
@@ -295,5 +298,11 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 */
 	public int getId() {
 		return id;
+	}
+	
+	public void stop() {
+		// Okay to use running boolean because this will only be called when elevator thread is running
+		System.out.println(Thread.currentThread().getName() + " broke down. Stopping now.");
+		running = false;
 	}
 }

@@ -26,14 +26,14 @@ public class IterationThreeTest {
 
 	@Before
 	public void setUp() {
-		floorEvent = new FloorEvent(LocalTime.now(), 1, Direction.UP, 4, 0);
+		floorEvent = new FloorEvent(LocalTime.now(), 1, Direction.UP, 4);
 	}
 	
 	@Test
 	public void testFloorSubsystemToSchedulerToElevator() throws InterruptedException {
-		elevator = new Elevator(6, 63, 73, 43, 120, 101);
+		elevator = new Elevator(63, 73, 43, 120, 101);
 		scheduler = new Scheduler(33, 43, 120, 23, 101);
-		floorSubsystems = new FloorSubsystem("input.txt", 6, 23, 33);
+		floorSubsystems = new FloorSubsystem("input.txt", 23, 33);
 		Thread floorSubsystem = new Thread(floorSubsystems, "floorSubsystem");
 		Thread sched = new Thread(scheduler, "scheduler");
 		Thread elevatorThread = new Thread(elevator, "elevator");
@@ -49,7 +49,7 @@ public class IterationThreeTest {
 	
 	@Test
 	public void testElevatorToScheduler() throws InterruptedException {
-		elevator = new Elevator(6, 64, 74, 44, 121, 102);
+		elevator = new Elevator(64, 74, 44, 121, 102);
 		scheduler = new Scheduler(34, 44, 121, 24, 102);
 		Thread sched = new Thread(scheduler, "scheduler");
 		Thread elevatorThread = new Thread(elevator, "elevator");
@@ -64,7 +64,7 @@ public class IterationThreeTest {
 	@Test
 	public void testSchedulerToFloor() throws InterruptedException {
 		scheduler = new Scheduler(35, 45, 122, 25, 103);
-		floorSubsystems = new FloorSubsystem("input6.txt", 3, 25, 35);
+		floorSubsystems = new FloorSubsystem("input6.txt", 25, 35);
 		//The input file is going up
 		//08:10:23.100 2 up 3
 		Thread floorSubsystemThread = new Thread(floorSubsystems, "floorSubsystem");
@@ -82,9 +82,9 @@ public class IterationThreeTest {
 	
 	@Test
 	public void loadBalancingTest() throws InterruptedException {
-		Elevator elevator = new Elevator(9, 66, 76, 46, 123, 104);
-		Elevator elevator2 = new Elevator(9, 67, 77, 46, 123, 104);
-		Thread floorSubsystem = new Thread(new FloorSubsystem("input5.txt", 6, 26, 36), "floorSubsystem");
+		Elevator elevator = new Elevator(66, 76, 46, 123, 104);
+		Elevator elevator2 = new Elevator(67, 77, 46, 123, 104);
+		Thread floorSubsystem = new Thread(new FloorSubsystem("input5.txt", 26, 36), "floorSubsystem");
 		Thread sched = new Thread(new Scheduler(36, 46, 123, 26, 104), "scheduler");
 		Thread elevatorThread = new Thread(elevator, "elevator");
 		Thread elevatorThread2 = new Thread(elevator2, "elevator2");

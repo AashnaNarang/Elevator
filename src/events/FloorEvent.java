@@ -78,6 +78,13 @@ public class FloorEvent extends Event {
 	}
 
 	/**
+	 * @param isAtSource the isAtSource to set
+	 */
+	public void setErrorCode(int errorCode) {
+		this.errorCode = errorCode;
+	}
+	
+	/**
 	 * @return String representation of the event.
 	 */
 	public String toString() {
