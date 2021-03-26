@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
+import main.Configurations;
 import main.Elevator;
 import main.FloorSubsystem;
 import main.Scheduler;
@@ -19,7 +20,7 @@ public class TestScenarios {
 			int numFloors = 6;
 			Elevator elevator = new Elevator(63, 73, 43, 120, 101);
 			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input2.txt", 23, 33), "floorSubsystem");
-			Thread schedThread = new Thread(new Scheduler(33, 43, 120, 23, 101), "scheduler");
+			Thread schedThread = new Thread(new Scheduler(33, 43, 120, 23, 101, Configurations.TIMER_PORT), "scheduler");
 			Thread elevatorThread = new Thread(elevator, "elevato2");
 			floorSubsystemThread.start();
 			schedThread.start();
@@ -36,7 +37,7 @@ public class TestScenarios {
 			int numFloors = 6;
 			Elevator elevator = new Elevator(64, 74, 44, 121, 102);
 			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input3.txt", 24, 34), "floorSubsystem");
-			Thread schedThread = new Thread(new Scheduler(34, 44, 121, 24, 102), "scheduler");
+			Thread schedThread = new Thread(new Scheduler(34, 44, 121, 24, 102, Configurations.TIMER_PORT + 1), "scheduler");
 			Thread elevatorThread = new Thread(elevator, "elevator3");
 			floorSubsystemThread.start();
 			schedThread.start();
@@ -54,7 +55,7 @@ public class TestScenarios {
 			int numFloors = 6;
 			Elevator elevator = new Elevator(65, 75, 45, 122, 103);
 			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input4.txt", 25, 35), "floorSubsystem");
-			Thread schedThread = new Thread(new Scheduler(35, 45, 122, 25, 103), "scheduler");
+			Thread schedThread = new Thread(new Scheduler(35, 45, 122, 25, 103, Configurations.TIMER_PORT + 2), "scheduler");
 			Thread elevatorThread = new Thread(elevator, "elevator4");
 			floorSubsystemThread.start();
 			schedThread.start();

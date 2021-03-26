@@ -22,7 +22,6 @@ import states.StationaryState;
 
 public class Elevator extends NetworkCommunicator implements Runnable {
 	private static int ELEVATOR_ID=0;
-	
 	private int currentFloor;
 	private DirectionLamp upLamp;
 	private DirectionLamp downLamp;

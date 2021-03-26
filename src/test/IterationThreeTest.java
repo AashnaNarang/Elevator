@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import events.ArrivalEvent;
 import events.FloorEvent;
+import main.Configurations;
 import main.Direction;
 import main.Elevator;
 import main.Floor;
@@ -18,22 +19,25 @@ import main.Scheduler;
 import states.ActiveState;
 
 public class IterationThreeTest {
-	
-	private FloorEvent floorEvent; 
+
+	private FloorEvent floorEvent;
 	private FloorSubsystem floorSubsystems;
-	private Elevator elevator; 
-	private Scheduler scheduler; 
+	private Elevator elevator;
+	private Scheduler scheduler;
 
 	@Before
 	public void setUp() {
-		floorEvent = new FloorEvent(LocalTime.now(), 1, Direction.UP, 4);
+		floorEvent = new FloorEvent(LocalTime.now(), 1, Direction.UP, 4, 0);
 	}
-	
+
 	@Test
 	public void testFloorSubsystemToSchedulerToElevator() throws InterruptedException {
-		elevator = new Elevator(63, 73, 43, 120, 101);
-		scheduler = new Scheduler(33, 43, 120, 23, 101);
-		floorSubsystems = new FloorSubsystem("input.txt", 23, 33);
+		elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT, Configurations.ELEVATOR_SCHEDULAR_PORT,
+				Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
+		scheduler = new Scheduler(Configurations.FLOOR_EVENT_PORT, Configurations.ARRIVAL_PORT,
+				Configurations.DEST_PORT, Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT,
+				Configurations.TIMER_PORT);
+		floorSubsystems = new FloorSubsystem("input.txt", Configurations.FLOOR_PORT, Configurations.FLOOR_EVENT_PORT);
 		Thread floorSubsystem = new Thread(floorSubsystems, "floorSubsystem");
 		Thread sched = new Thread(scheduler, "scheduler");
 		Thread elevatorThread = new Thread(elevator, "elevator");
@@ -46,11 +50,14 @@ public class IterationThreeTest {
 		assertEquals(0, scheduler.getFloorEventsList().size());
 		assertNotNull(scheduler.getArrivalEventFromElevator());
 	}
-	
+
 	@Test
 	public void testElevatorToScheduler() throws InterruptedException {
-		elevator = new Elevator(64, 74, 44, 121, 102);
-		scheduler = new Scheduler(34, 44, 121, 24, 102);
+		elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 1, 74, Configurations.ARRIVAL_PORT + 1,
+				Configurations.DEST_PORT + 1, Configurations.ELEVATOR_STAT_PORT + 1);
+		scheduler = new Scheduler(Configurations.FLOOR_EVENT_PORT + 1, Configurations.ARRIVAL_PORT + 1,
+				Configurations.DEST_PORT + 1, Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT + 1,
+				Configurations.TIMER_PORT + 1);
 		Thread sched = new Thread(scheduler, "scheduler");
 		Thread elevatorThread = new Thread(elevator, "elevator");
 		scheduler.addToFloorEventsList(floorEvent);
@@ -60,32 +67,40 @@ public class IterationThreeTest {
 		TimeUnit.SECONDS.sleep(1);
 		assertEquals(0, scheduler.getFloorEventsList().size());
 	}
-	
+
 	@Test
 	public void testSchedulerToFloor() throws InterruptedException {
-		scheduler = new Scheduler(35, 45, 122, 25, 103);
-		floorSubsystems = new FloorSubsystem("input6.txt", 25, 35);
-		//The input file is going up
-		//08:10:23.100 2 up 3
+		scheduler = new Scheduler(Configurations.FLOOR_EVENT_PORT + 2, Configurations.ARRIVAL_PORT + 2,
+				Configurations.DEST_PORT + 2, 25, Configurations.ELEVATOR_STAT_PORT + 2, Configurations.TIMER_PORT + 2);
+		floorSubsystems = new FloorSubsystem("input6.txt", Configurations.FLOOR_PORT + 2,
+				Configurations.FLOOR_EVENT_PORT + 2);
+		// The input file is going up
+		// 08:10:23.100 2 up 3
 		Thread floorSubsystemThread = new Thread(floorSubsystems, "floorSubsystem");
 		Thread sched = new Thread(scheduler, "scheduler");
 		floorSubsystemThread.start();
 		sched.start();
 		TimeUnit.SECONDS.sleep(1);
 		assertTrue(floorSubsystems.getFloorList().get(1).isUpButtonOn());
-		ArrivalEvent ae = new ArrivalEvent(2,LocalTime.now(),Direction.UP,45,1);
+		ArrivalEvent ae = new ArrivalEvent(2, LocalTime.now(), Direction.UP, 45, 1);
 		scheduler.addToArrivalEventsList(ae);
 		scheduler.sendArrivalEventToFloor(ae);
-		TimeUnit.SECONDS.sleep(1);	
+		TimeUnit.SECONDS.sleep(1);
 		assertFalse(floorSubsystems.getFloorList().get(1).isUpButtonOn());
-		}
-	
+	}
+
 	@Test
 	public void loadBalancingTest() throws InterruptedException {
-		Elevator elevator = new Elevator(66, 76, 46, 123, 104);
-		Elevator elevator2 = new Elevator(67, 77, 46, 123, 104);
-		Thread floorSubsystem = new Thread(new FloorSubsystem("input5.txt", 26, 36), "floorSubsystem");
-		Thread sched = new Thread(new Scheduler(36, 46, 123, 26, 104), "scheduler");
+		Elevator elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 3, 76, Configurations.ARRIVAL_PORT + 3,
+				Configurations.DEST_PORT + 3, Configurations.ELEVATOR_STAT_PORT + 3);
+		Elevator elevator2 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 4, 77, Configurations.ARRIVAL_PORT + 3,
+				Configurations.DEST_PORT + 3, Configurations.ELEVATOR_STAT_PORT + 3);
+		Thread floorSubsystem = new Thread(
+				new FloorSubsystem("input5.txt", Configurations.FLOOR_PORT + 3, Configurations.FLOOR_EVENT_PORT + 3),
+				"floorSubsystem");
+		Thread sched = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT + 3, Configurations.ARRIVAL_PORT + 3,
+				Configurations.DEST_PORT + 3, Configurations.FLOOR_PORT + 3, Configurations.ELEVATOR_STAT_PORT + 3,
+				Configurations.TIMER_PORT + 3), "scheduler");
 		Thread elevatorThread = new Thread(elevator, "elevator");
 		Thread elevatorThread2 = new Thread(elevator2, "elevator2");
 		floorSubsystem.start();
@@ -98,4 +113,3 @@ public class IterationThreeTest {
 		assertNotEquals("The elevator is currently on floor: 1", elevator2.toString());
 	}
 }
-
