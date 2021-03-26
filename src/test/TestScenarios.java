@@ -26,7 +26,7 @@ public class TestScenarios {
 			schedThread.start();
 			elevatorThread.start();
 			TimeUnit.SECONDS.sleep(5);
-			assertEquals("The elevator is currently on floor: 6", elevator.toString());
+			assertEquals("The elevator is currently on floor: 5", elevator.toString());
 		} catch (InterruptedException e) {
 		}
 	}
@@ -42,7 +42,7 @@ public class TestScenarios {
 			floorSubsystemThread.start();
 			schedThread.start();
 			elevatorThread.start();
-			TimeUnit.SECONDS.sleep(5);
+			TimeUnit.SECONDS.sleep(15);
 			assertEquals("The elevator is currently on floor: 4", elevator.toString());
 		} catch (InterruptedException e) {
 			
