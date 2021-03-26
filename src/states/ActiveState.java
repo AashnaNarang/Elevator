@@ -43,8 +43,11 @@ public class ActiveState extends SchedulerState {
 		FloorEvent floorEvent = scheduler.getNextFloorEvent();
 		if(floorEvent != null) {
 			scheduler.sendFloorEventToElevator(floorEvent, elevStationary.getFloorPort());
-			floorEvent.setId(elevStationary.getId());
+			floorEvent.setElevatorId(elevStationary.getElevatorId());
 			scheduler.addToSentFloorEventsList(floorEvent);
+			int numFloors = Math.abs(floorEvent.getSource() - elevStationary.getCurrentFloor());
+			if(numFloors == 0) numFloors = 1;
+			scheduler.startElevatorTimer(elevStationary.getElevatorId(), true, numFloors);
 		}
 	}
 
@@ -67,7 +70,7 @@ public class ActiveState extends SchedulerState {
 				return;
 			}
 		}
-		
+		scheduler.cancelElevatorTimer(arrivalEvent.getElevatorId());
 		currentFloorEvent = analyzeFloorEvents(arrivalEvent);
 		analyzeDestinationEvents(arrivalEvent);
 
@@ -78,7 +81,7 @@ public class ActiveState extends SchedulerState {
 		
 		boolean destEventsForCurrElev = false;
 		for(Event d: scheduler.getDestinationEventsList()) {
-			if(d.getId() == arrivalEvent.getId()) {
+			if(d.getElevatorId() == arrivalEvent.getElevatorId()) {
 				destEventsForCurrElev = true;
 			}
 		}
@@ -99,6 +102,7 @@ public class ActiveState extends SchedulerState {
 		}
 
 		scheduler.sendSchedulerEventToElevator(schedulerEvent, arrivalEvent.getSchedPort());
+		if (elevatorKeepsGoing) scheduler.startElevatorTimer(arrivalEvent.getElevatorId(), false, 1);
 		scheduler.sendArrivalEventToFloor(arrivalEvent);
 		checkIfUpdateToIdleState();
 	}
@@ -134,7 +138,7 @@ public class ActiveState extends SchedulerState {
 	private boolean isAtFloor(ArrivalEvent arrivalEvent, FloorEvent fEvent) {
 		return (arrivalEvent.getCurrentFloor() == fEvent.getSource())
 				&& fEvent.getDirection() == arrivalEvent.getDirection()
-				&& fEvent.getId() == arrivalEvent.getId();
+				&& fEvent.getElevatorId() == arrivalEvent.getElevatorId();
 	}
 	
 	/**
@@ -144,7 +148,7 @@ public class ActiveState extends SchedulerState {
 	private void analyzeDestinationEvents(ArrivalEvent arrivalEvent) {
 		ArrayList<Event> toRemove = new ArrayList<>();
 		for (Event destEvent : scheduler.getDestinationEventsList()) {
-			if (destEvent.getDestination() == arrivalEvent.getCurrentFloor() && destEvent.getId() == arrivalEvent.getId()) {
+			if (destEvent.getDestination() == arrivalEvent.getCurrentFloor() && destEvent.getElevatorId() == arrivalEvent.getElevatorId()) {
 				destinationEventFlag = true;
 				toRemove.add(destEvent);
 			}

@@ -66,7 +66,7 @@ public class Event implements Serializable{
 	 * 
 	 * @return The id of the elevator who sent the event.
 	 */
-	public int getId() {
+	public int getElevatorId() {
 		return id;
 	}
 	
@@ -74,7 +74,7 @@ public class Event implements Serializable{
 	 * 
 	 * @param id The id of the elevator the floor event should be handled by.
 	 */
-	public void setId(int id) {
+	public void setElevatorId(int id) {
 		this.id = id;
 	}
 

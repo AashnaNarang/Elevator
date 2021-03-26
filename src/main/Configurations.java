@@ -26,10 +26,14 @@ public final class Configurations {
 	public static final int ELEVATOR_FLOOR_PORT = 63;
 
 	public static final int ELEVATOR_SCHEDULAR_PORT = 73;
+	
+	public static final int TIMER_PORT = 130;
 
 	public static final int ELEVATOR_STAT_PORT = 101;
 	
-	public static final int NUMBER_OF_FLOORS = 6;
+	public static final int NUMBER_OF_FLOORS = 10;
+	
+	public static final int NUM_ELEVATORS = 4;
 
 	// Amount of time that should occur between receiving a packet and sending
 	// another

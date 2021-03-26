@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import events.FloorEvent;
+import main.Configurations;
 import main.Direction;
 import main.Elevator;
 import main.FloorSubsystem;
@@ -29,8 +30,9 @@ public class IterationOneTest {
 	public void parseEvents() {
 			//08:10:23.100 1 up 3
 		try {
-			floorSubsystemThread = new Thread(new FloorSubsystem("input.txt", 6, 23, 33), "floorSubsystem");
-			Scheduler scheduler = new Scheduler(33, 43, 120, 23, 101);
+			floorSubsystemThread = new Thread(new FloorSubsystem("input.txt", Configurations.FLOOR_PORT, Configurations.FLOOR_EVENT_PORT), "floorSubsystem");
+			Scheduler scheduler = new Scheduler(Configurations.FLOOR_EVENT_PORT, Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, 
+					Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT, Configurations.TIMER_PORT);
 			floorSubsystemThread.start();
 			schedThread = new Thread(scheduler, "scheduler");
 			schedThread.start();
