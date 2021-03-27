@@ -8,16 +8,25 @@ import main.Elevator;
 import main.NetworkCommunicator;
 import main.Scheduler;
 import main.Serial;
-
+/**
+ * declaration of instance variables
+ */
 public class ElevatorTimer implements Runnable {
 	private Elevator elevator;
 	private Thread t;
 	
+	/**
+	 * Elevator constructor to intialize instance variables
+	 * @param elevator
+	 */
 	public ElevatorTimer(Elevator elevator) {
 		this.elevator = elevator;
 		t = new Thread(this, "ElevatorTimer " + elevator.getId());
 	}
 	
+	/**
+	 * Run the method so we can print he statements for timer which has either started, timed out, or cancelled 
+	 */
 	@Override
 	public void run() {
 		try {
@@ -31,10 +40,16 @@ public class ElevatorTimer implements Runnable {
 		}
 	}
 	
+	/**
+	 * start 
+	 */
 	public void start() {
 		t.start();
 	}
 	
+	/**
+	 * stop/cancel 
+	 */
 	public void cancel() {
 		t.interrupt();
 	}
