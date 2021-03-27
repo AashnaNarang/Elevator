@@ -21,7 +21,7 @@ public class StationaryState extends ElevatorState {
 		elevator.sendStationaryEvent(new StationaryEvent(elevator.getSendReceiveFloorSocket().getLocalPort(), elevator.getId(), elevator.getCurrentFloor()));
 		FloorEvent e = elevator.getFloorEvent();
 		if (e != null) {
-			System.out.println(Thread.currentThread().getName() + " received floor event with error code " + e.getErrorCode() + ".  {Time: " + LocalTime.now() + "}");
+			System.out.println(Thread.currentThread().getName() + " received floor event " + e + ".  {Time: " + LocalTime.now() + "}");
 
 			if (e.getSource() == elevator.getCurrentFloor()) {
 				System.out.println(Thread.currentThread().getName() + " is on same floor as floorEvent source floor, floor " + e.getSource() + ".  {Time: " + LocalTime.now() + "}");
