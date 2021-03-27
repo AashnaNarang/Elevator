@@ -102,7 +102,9 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 * @param e FloorEvent to listen to 
 	 */
 	public void move(FloorEvent e) {
-		
+		if (e.getErrorCode() == 3) {
+			this.stop();
+		}
 		int diffFloors = e.getSource() - currentFloor;
 		
 		//might have to move logic to scheduler maybe
