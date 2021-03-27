@@ -115,7 +115,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", about to move " + this.direction + ".  {Time: " + LocalTime.now() + "}");
 		ArrivalEvent arrEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this.direction, this.sendReceiveScheduleSocket.getLocalPort(), this.id, true);
 		sendArrivalEvent(arrEvent);
-		if (e.getErrorCode() == 3) {
+		if (e.getErrorCode() == 2) {
 			this.stop();
 			return;
 		}
@@ -215,18 +215,12 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 				timer.cancel();
 				this.setDidTimeout(false);
 				fe.setErrorCode(0);
-				System.out.println("WOOOOOHOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 			} else {
 				elevatorTimer.cancel();
 				break;
 			}
 		}
 		
-//		try {
-//			Thread.sleep(5);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
 		currentState.handleDoorTimerExpiry();
 	}
 
