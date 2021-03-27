@@ -82,6 +82,9 @@ This class will provide us with the timer for the Elevator where it will provide
 ##SchedulerTimer.java
 This class will provide us with the timer for the scheduler where it will provide us with time scheduler started with, if the timer timed out or if the timer got cancelled.
 
+##Configurations.java
+The configuration needed across many other classes.
+
 ## Work Breakdown for iteration 4
 ## Everyone 
 Design how to handle permanent and transient faults 
