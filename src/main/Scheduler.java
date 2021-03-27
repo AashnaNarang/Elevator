@@ -13,6 +13,7 @@ import events.FloorEvent;
 import events.SchedulerEvent;
 import events.StationaryEvent;
 import events.TimeoutEvent;
+import states.ActiveState;
 import states.IdleState;
 import states.SchedulerState;
 import timers.SchedulerTimer;
@@ -122,6 +123,10 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 			}
 		}
 		destinationEvents.removeAll(destEventRemove);
+		
+		if (floorEvents.size() > 0) {
+			this.setState(new ActiveState(this));
+		}
 		System.out.println("Operations has been called for elevator " + t.getElevatorId());
 	}
 

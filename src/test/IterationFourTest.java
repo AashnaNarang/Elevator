@@ -15,7 +15,7 @@ import main.Scheduler;
 public class IterationFourTest {
 
 	@Test
-	public void TestInputFive() {
+	public void TestInputSeven() {
 		try {
 			Elevator elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT, Configurations.ELEVATOR_SCHEDULAR_PORT,
 					Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
@@ -35,7 +35,7 @@ public class IterationFourTest {
 			elevatorThread.start();
 			elevatorThread2.start();
 			elevatorThread2.sleep(4000);
-			TimeUnit.SECONDS.sleep(40);
+			TimeUnit.SECONDS.sleep(80);
 			assertEquals("The elevator is currently on floor: 5", elevator.toString());
 			assertEquals("The elevator is currently on floor: 7", elevator2.toString());
 		} catch (InterruptedException e) {
