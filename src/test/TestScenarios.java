@@ -12,15 +12,18 @@ import main.FloorSubsystem;
 import main.Scheduler;
 
 public class TestScenarios {
-	
-	
+
 	@Test
 	public void ScenarioTwo() {
 		try {
-			int numFloors = 6;
-			Elevator elevator = new Elevator(63, 73, 43, 120, 101);
-			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input2.txt", 23, 33), "floorSubsystem");
-			Thread schedThread = new Thread(new Scheduler(33, 43, 120, 23, 101, Configurations.TIMER_PORT), "scheduler");
+			Elevator elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT, Configurations.ELEVATOR_SCHEDULAR_PORT,
+					Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
+			Thread floorSubsystemThread = new Thread(
+					new FloorSubsystem("input2.txt", Configurations.FLOOR_PORT, Configurations.FLOOR_EVENT_PORT),
+					"floorSubsystem");
+			Thread schedThread = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT, Configurations.ARRIVAL_PORT,
+					Configurations.DEST_PORT, Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT,
+					Configurations.TIMER_PORT), "scheduler");
 			Thread elevatorThread = new Thread(elevator, "elevato2");
 			floorSubsystemThread.start();
 			schedThread.start();
@@ -30,14 +33,18 @@ public class TestScenarios {
 		} catch (InterruptedException e) {
 		}
 	}
-	
+
 	@Test
 	public void ScenarioThree() {
 		try {
-			int numFloors = 6;
-			Elevator elevator = new Elevator(64, 74, 44, 121, 102);
-			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input3.txt", 24, 34), "floorSubsystem");
-			Thread schedThread = new Thread(new Scheduler(34, 44, 121, 24, 102, Configurations.TIMER_PORT + 1), "scheduler");
+			Elevator elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 1,
+					Configurations.ELEVATOR_SCHEDULAR_PORT + 1, Configurations.ARRIVAL_PORT + 1,
+					Configurations.DEST_PORT + 1, Configurations.ELEVATOR_STAT_PORT + 1);
+			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input3.txt", Configurations.FLOOR_PORT + 1,
+					Configurations.FLOOR_EVENT_PORT + 1), "floorSubsystem");
+			Thread schedThread = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT + 1,
+					Configurations.ARRIVAL_PORT + 1, Configurations.DEST_PORT + 1, Configurations.FLOOR_PORT + 1,
+					Configurations.ELEVATOR_STAT_PORT + 1, Configurations.TIMER_PORT + 1), "scheduler");
 			Thread elevatorThread = new Thread(elevator, "elevator3");
 			floorSubsystemThread.start();
 			schedThread.start();
@@ -45,17 +52,22 @@ public class TestScenarios {
 			TimeUnit.SECONDS.sleep(15);
 			assertEquals("The elevator is currently on floor: 4", elevator.toString());
 		} catch (InterruptedException e) {
-			
+
 		}
 	}
-	
+
 	@Test
 	public void ScenarioFour() {
 		try {
-			int numFloors = 6;
-			Elevator elevator = new Elevator(65, 75, 45, 122, 103);
-			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input4.txt", 25, 35), "floorSubsystem");
-			Thread schedThread = new Thread(new Scheduler(35, 45, 122, 25, 103, Configurations.TIMER_PORT + 2), "scheduler");
+			Elevator elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 2,
+					Configurations.ELEVATOR_SCHEDULAR_PORT + 2, Configurations.ARRIVAL_PORT + 2,
+					Configurations.DEST_PORT + 2, Configurations.ELEVATOR_STAT_PORT + 2);
+			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input4.txt", Configurations.FLOOR_PORT + 2,
+					Configurations.FLOOR_EVENT_PORT + 2), "floorSubsystem");
+			Thread schedThread = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT + 2,
+					Configurations.ARRIVAL_PORT + 2, Configurations.DEST_PORT + 2, Configurations.FLOOR_PORT + 2,
+					Configurations.ELEVATOR_STAT_PORT + 2, Configurations.TIMER_PORT + 2),
+					"scheduler");
 			Thread elevatorThread = new Thread(elevator, "elevator4");
 			floorSubsystemThread.start();
 			schedThread.start();
