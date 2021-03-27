@@ -7,6 +7,9 @@ import events.FloorEvent;
 import events.SchedulerEvent;
 import events.StationaryEvent;
 import events.Event;
+import main.Configurations;
+import main.Direction;
+import main.InvalidRequestException;
 import main.Scheduler;
 
 /**
@@ -55,8 +58,9 @@ public class ActiveState extends SchedulerState {
 	/**
 	 * Analyze the arrival event to see if elevator needs to stop or not. Send scheduler event to elevator 
 	 * to tell it what to do and send arrival event to floor subsystem
+	 * @throws InvalidRequestException 
 	 */
-	public void handleArrivalEvent() {
+	public void handleArrivalEvent() throws InvalidRequestException {
 		floorEventFlag = false;
 		destinationEventFlag= false;
 		
@@ -100,7 +104,15 @@ public class ActiveState extends SchedulerState {
 			schedulerEvent = new SchedulerEvent(arrivalEvent.getCurrentFloor(), true, false, true,
 					currentFloorEvent, currentFloorEvent.getDirection(), LocalTime.now());
 		}
-
+		//handle invalid scheduler event
+		if(arrivalEvent.getCurrentFloor() == 1 && schedulerEvent.getDirection() == Direction.DOWN && 
+				schedulerEvent.shouldIKeepGoing() == true) {
+				throw new InvalidRequestException("Invalid Scheduler Event sending elevator to negative floor ");
+		}else if(arrivalEvent.getCurrentFloor() == Configurations.NUMBER_OF_FLOORS && schedulerEvent.getDirection() == Direction.UP
+				&& schedulerEvent.shouldIKeepGoing() == true) {
+				throw new InvalidRequestException("Invalid Scheduler Event sending elevator above the max floor");
+		}
+		
 		scheduler.sendSchedulerEventToElevator(schedulerEvent, arrivalEvent.getSchedPort());
 		if (elevatorKeepsGoing) scheduler.startElevatorTimer(arrivalEvent.getElevatorId(), false, 1);
 		scheduler.sendArrivalEventToFloor(arrivalEvent);
