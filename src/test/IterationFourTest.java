@@ -1,6 +1,9 @@
 package test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.TimeUnit;
 
@@ -19,7 +22,7 @@ public class IterationFourTest {
 		try {
 			Elevator elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT, Configurations.ELEVATOR_SCHEDULAR_PORT,
 					Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
-			Elevator elevator2 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 1,
+			Elevator elevator1 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 1,
 					Configurations.ELEVATOR_SCHEDULAR_PORT + 1, Configurations.ARRIVAL_PORT, Configurations.DEST_PORT,
 					Configurations.ELEVATOR_STAT_PORT);
 			Thread floorSubsystemThread = new Thread(
@@ -28,15 +31,22 @@ public class IterationFourTest {
 			Thread schedThread = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT, Configurations.ARRIVAL_PORT,
 					Configurations.DEST_PORT, Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT,
 					Configurations.TIMER_PORT), "scheduler");
-			Thread elevatorThread = new Thread(elevator, "elevator 1");
-			Thread elevatorThread2 = new Thread(elevator2, "elevator 2");
+			Thread elevatorThread = new Thread(elevator, "elevator 0");
+			Thread elevatorThread1 = new Thread(elevator1, "elevator 1");
 			floorSubsystemThread.start();
 			schedThread.start();
 			elevatorThread.start();
-			elevatorThread2.start();
-			TimeUnit.SECONDS.sleep(80);
-			assertEquals("The elevator is currently on floor: 6", elevator.toString());
-			assertEquals("The elevator is currently on floor: 6", elevator2.toString());
+			elevatorThread1.start();
+			TimeUnit.SECONDS.sleep(120);
+			boolean elevatorStatus = elevator.isRunning();
+			boolean elevator1Status = elevator1.isRunning();
+			assertNotEquals(elevatorStatus, elevator1Status);
+			if(elevatorStatus) {
+				assertEquals("The elevator is currently on floor: 6", elevator.toString());
+			}else {
+				assertEquals("The elevator is currently on floor: 6", elevator1.toString());
+			}
+			
 		} catch (InterruptedException e) {
 		}
 	}

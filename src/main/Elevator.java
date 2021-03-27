@@ -38,6 +38,8 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	private DatagramSocket sendReceiveScheduleSocket; //declaration of socket
 	private int id;
 	private boolean running;
+
+
 	private ElevatorTimer elevatorTimer;
 	private boolean isDoorsOpen;
 	private boolean didTimeout;
@@ -361,5 +363,12 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 */
 	public synchronized void setDidTimeout(boolean didTimeout) {
 		this.didTimeout = didTimeout;
+	}
+	
+	/*
+	 * Check if the status of the Elevator is operational
+	 */
+	public boolean isRunning() {
+		return running;
 	}
 }
