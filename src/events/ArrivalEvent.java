@@ -63,6 +63,8 @@ public class ArrivalEvent implements Serializable{
 		this.currentFloor = currentFloor;
 		this.time = time;
 		this.direction = direction;
+		this.schedPort = schedPort;
+		this.id = id;
 		this.didNotMoveYet = didNotMoveYet;
 	}
 

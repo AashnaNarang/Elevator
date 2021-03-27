@@ -80,6 +80,8 @@ public class ActiveState extends SchedulerState {
 
 		if (arrivalEvent.didNotMoveYet()) {
 			// No need to send scheduler event if elevator hasn't started moving, elevator already has instructions
+			scheduler.startElevatorTimer(arrivalEvent.getElevatorId(), false, 1);
+			scheduler.sendArrivalEventToFloor(arrivalEvent);
 			return;
 		}
 		
