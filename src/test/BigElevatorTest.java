@@ -31,12 +31,7 @@ public class BigElevatorTest {
 			Elevator elevator3 = new Elevator(68, 78, 46, 123, 104);
 			Elevator elevator4 = new Elevator(69, 79, 46, 123, 104);
 
-<<<<<<< HEAD
-			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input10.txt", 26, 36),
-=======
-			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input8.txt", 26, 36),
->>>>>>> 821b4aebc2d789498faeb3ea40d699d07c4f17e7
-					"floorSubsystem");
+			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input10.txt", 26, 36), "floorSubsystem");
 			Thread schedThread = new Thread(new Scheduler(36, 46, 123, 26, 104, Configurations.TIMER_PORT), "scheduler");
 
 			Thread elevatorThread1 = new Thread(elevator1, "elevator1");
@@ -75,12 +70,7 @@ public class BigElevatorTest {
 			Elevator elevator3 = new Elevator(64, 74, 44, 121, 102);
 			Elevator elevator4 = new Elevator(65, 75, 44, 121, 102);
 
-<<<<<<< HEAD
-			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input11.txt", 22, 35),
-=======
-			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input9.txt", 22, 35),
->>>>>>> 821b4aebc2d789498faeb3ea40d699d07c4f17e7
-					"floorSubsystem");
+			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input11.txt", 22, 35), "floorSubsystem");
 			Thread schedThread = new Thread(new Scheduler(35, 44, 121, 22, 102, Configurations.TIMER_PORT), "scheduler");
 
 			Thread elevatorThread1 = new Thread(elevator1, "elevator1");
@@ -121,12 +111,8 @@ public class BigElevatorTest {
 			Elevator elevator3 = new Elevator(68, 78, 46, 123, 104);
 			Elevator elevator4 = new Elevator(69, 79, 46, 123, 104);
 
-<<<<<<< HEAD
+
 			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input12.txt", 26, 36),
-=======
-			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input10.txt", 26, 36),
->>>>>>> 821b4aebc2d789498faeb3ea40d699d07c4f17e7
-					"floorSubsystem");
 			Thread schedThread = new Thread(new Scheduler(36, 46, 123, 26, 104, Configurations.TIMER_PORT), "scheduler");
 
 			Thread elevatorThread1 = new Thread(elevator1, "elevator1");
