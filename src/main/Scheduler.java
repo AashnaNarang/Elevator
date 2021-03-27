@@ -77,7 +77,12 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 			getTimeoutEvent();
 			currentState.handleFloorEvent();
 			currentState.handleDestinationEvent();
-			currentState.handleArrivalEvent();
+			try {
+				currentState.handleArrivalEvent();
+			} catch (InvalidRequestException e) {
+				System.out.println(e);
+				System.exit(0);
+			}
 		}
 	}
 	

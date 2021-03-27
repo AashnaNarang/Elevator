@@ -1,5 +1,6 @@
 package states;
 import events.FloorEvent;
+import main.InvalidRequestException;
 import main.Scheduler;
 import java.time.LocalTime;
 public abstract class SchedulerState {
@@ -22,7 +23,7 @@ protected Scheduler scheduler;
 		}
 	}
 	
-	public void handleArrivalEvent() {
+	public void handleArrivalEvent() throws InvalidRequestException {
 	}
 	
 	public void handleDestinationEvent() {
