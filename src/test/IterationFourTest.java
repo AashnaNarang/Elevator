@@ -15,7 +15,7 @@ import main.Scheduler;
 public class IterationFourTest {
 
 	@Test
-	public void TestInputSeven() {
+	public void TestInputNine() {
 		try {
 			Elevator elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT, Configurations.ELEVATOR_SCHEDULAR_PORT,
 					Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
@@ -23,7 +23,7 @@ public class IterationFourTest {
 					Configurations.ELEVATOR_SCHEDULAR_PORT + 1, Configurations.ARRIVAL_PORT, Configurations.DEST_PORT,
 					Configurations.ELEVATOR_STAT_PORT);
 			Thread floorSubsystemThread = new Thread(
-					new FloorSubsystem("input7.txt", Configurations.FLOOR_PORT, Configurations.FLOOR_EVENT_PORT),
+					new FloorSubsystem("input9.txt", Configurations.FLOOR_PORT, Configurations.FLOOR_EVENT_PORT),
 					"floorSubsystem");
 			Thread schedThread = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT, Configurations.ARRIVAL_PORT,
 					Configurations.DEST_PORT, Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT,
@@ -34,28 +34,27 @@ public class IterationFourTest {
 			schedThread.start();
 			elevatorThread.start();
 			elevatorThread2.start();
-			elevatorThread2.sleep(4000);
 			TimeUnit.SECONDS.sleep(80);
-			assertEquals("The elevator is currently on floor: 5", elevator.toString());
-			assertEquals("The elevator is currently on floor: 7", elevator2.toString());
+			assertEquals("The elevator is currently on floor: 6", elevator.toString());
+			assertEquals("The elevator is currently on floor: 6", elevator2.toString());
 		} catch (InterruptedException e) {
 		}
 	}
 
-	@Test
-	public void TestPermanentError() {
-		Elevator elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 2, Configurations.ELEVATOR_SCHEDULAR_PORT + 2,
-				Configurations.ARRIVAL_PORT + 2, Configurations.DEST_PORT + 2, Configurations.ELEVATOR_STAT_PORT + 2);
-		Elevator elevator2 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 2,
-				Configurations.ELEVATOR_SCHEDULAR_PORT + 3, Configurations.ARRIVAL_PORT + 2, Configurations.DEST_PORT + 2,
-				Configurations.ELEVATOR_STAT_PORT + 2);
-		Thread floorSubsystemThread = new Thread(
-				new FloorSubsystem("input7.txt", Configurations.FLOOR_PORT + 1, Configurations.FLOOR_EVENT_PORT + 1),
-				"floorSubsystem");
-		Thread schedThread = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT + 1, Configurations.ARRIVAL_PORT + 2,
-				Configurations.DEST_PORT + 2, Configurations.FLOOR_PORT + 1, Configurations.ELEVATOR_STAT_PORT + 2,
-				Configurations.TIMER_PORT + 2), "scheduler");
-		
-	}
+//	@Test
+//	public void TestPermanentError() {
+//		Elevator elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 2, Configurations.ELEVATOR_SCHEDULAR_PORT + 2,
+//				Configurations.ARRIVAL_PORT + 2, Configurations.DEST_PORT + 2, Configurations.ELEVATOR_STAT_PORT + 2);
+//		Elevator elevator2 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 2,
+//				Configurations.ELEVATOR_SCHEDULAR_PORT + 3, Configurations.ARRIVAL_PORT + 2, Configurations.DEST_PORT + 2,
+//				Configurations.ELEVATOR_STAT_PORT + 2);
+//		Thread floorSubsystemThread = new Thread(
+//				new FloorSubsystem("input7.txt", Configurations.FLOOR_PORT + 1, Configurations.FLOOR_EVENT_PORT + 1),
+//				"floorSubsystem");
+//		Thread schedThread = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT + 1, Configurations.ARRIVAL_PORT + 2,
+//				Configurations.DEST_PORT + 2, Configurations.FLOOR_PORT + 1, Configurations.ELEVATOR_STAT_PORT + 2,
+//				Configurations.TIMER_PORT + 2), "scheduler");
+//		
+//	}
 
 }
