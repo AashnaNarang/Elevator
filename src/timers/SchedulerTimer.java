@@ -20,7 +20,6 @@ public class SchedulerTimer extends NetworkCommunicator implements Runnable {
 	private int timerPort;
 	private DatagramSocket sendTimerSocket;
 	private Thread t;
-	
 	/**
 	 * Scheduler constructor to intialize instance variables 
 	 * @param scheduler

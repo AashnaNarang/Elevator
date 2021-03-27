@@ -212,7 +212,6 @@ Event classes,
 Floor lamp, 
 ReadMe
 
-
 ## Instructions for running the file using the ZIP folder: 
 Make sure you extract the zip folder first. 
 1. Open eclipse
