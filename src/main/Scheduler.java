@@ -3,6 +3,7 @@ package main;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -13,6 +14,7 @@ import events.FloorEvent;
 import events.SchedulerEvent;
 import events.StationaryEvent;
 import events.TimeoutEvent;
+import states.ActiveState;
 import states.IdleState;
 import states.SchedulerState;
 import timers.SchedulerTimer;
@@ -102,6 +104,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	}
 	
 	public void permanentFault(TimeoutEvent t) {
+		System.out.println(Thread.currentThread().getName() + " received packet with timeout event.  {Time: " + LocalTime.now() + "}");
 		ArrayList<FloorEvent> floorEventRemove = new ArrayList<FloorEvent>();
 		ArrayList<Event> destEventRemove = new ArrayList<Event>();
 
@@ -122,7 +125,11 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 			}
 		}
 		destinationEvents.removeAll(destEventRemove);
-		System.out.println("Operations has been called for elevator " + t.getElevatorId());
+		
+		if (floorEvents.size() > 0) {
+			this.setState(new ActiveState(this));
+		}
+		System.out.println("Operations has been called for elevator " + t.getElevatorId() + ".  {Time: " + LocalTime.now() + "}");
 	}
 
 	/**
@@ -146,7 +153,6 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 		if (receivePacket == null) {
 			return;
 		}
-		System.out.println("received timer packet " + receivePacket.getPort());
 		permanentFault(Serial.deSerialize(receivePacket.getData(), TimeoutEvent.class));
 	}
 
@@ -241,7 +247,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	}
 	
 	public void removeFloorEvent(FloorEvent e) {
-		System.out.println(Thread.currentThread().getName() + " is removing FloorEvent. " + e);
+		System.out.println(Thread.currentThread().getName() + " is removing FloorEvent. " + e + ".  {Time: " + LocalTime.now() + "}");
 		floorEvents.remove(e);
 	}
 	

@@ -102,10 +102,8 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 * @param e FloorEvent to listen to 
 	 */
 	public void move(FloorEvent e) {
-		
 		int diffFloors = e.getSource() - currentFloor;
 		
-		//might have to move logic to scheduler maybe
 		if (diffFloors != 0) {
 			Direction direction = diffFloors < 0 ? Direction.DOWN : Direction.UP; 
 			e = new FloorEvent(e.getTime(), currentFloor, direction, e.getSource(), e.getElevatorId()); 
@@ -117,6 +115,10 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", about to move " + this.direction + ".  {Time: " + LocalTime.now() + "}");
 		ArrivalEvent arrEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this.direction, this.sendReceiveScheduleSocket.getLocalPort(), this.id, true);
 		sendArrivalEvent(arrEvent);
+		if (e.getErrorCode() == 3) {
+			this.stop();
+			return;
+		}
 		while(currentState.getClass() == MovingState.class) {
 			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
 			currentFloor += direction == Direction.UP ? 1 : -1;
@@ -132,7 +134,6 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		FloorEvent e1;
 		int diffFloors = e.getSource() - currentFloor;
 		
-		//might have to move logic to scheduler maybe
 		if (diffFloors != 0) {
 			Direction direction = diffFloors < 0 ? Direction.DOWN : Direction.UP; 
 			e1 = new FloorEvent(e.getTime(), currentFloor, direction, e.getSource(), e.getElevatorId());
@@ -336,7 +337,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	
 	public void stop() {
 		// Okay to use running boolean because this will only be called when elevator thread is running
-		System.out.println(Thread.currentThread().getName() + " broke down. Stopping now.");
+		System.out.println(Thread.currentThread().getName() + " broke down. Stopping now." + ".  {Time: " + LocalTime.now() + "}");
 		running = false;
 	}
 	

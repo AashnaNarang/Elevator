@@ -18,6 +18,7 @@ protected Scheduler scheduler;
 	public void handleFloorEvent() {
 		FloorEvent floorEvent = scheduler.getFloorEventFromFloor();
 		if (floorEvent != null) {
+			System.out.println(Thread.currentThread().getName() + " received floor event " + floorEvent + " from floor subsystem" + ".  {Time: " + LocalTime.now() + " }");
 			scheduler.addToFloorEventsList(floorEvent);
 			scheduler.setState(new ActiveState(scheduler));
 		}

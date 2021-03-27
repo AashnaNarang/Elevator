@@ -13,7 +13,6 @@ import events.FloorEvent;
 import main.Configurations;
 import main.Direction;
 import main.Elevator;
-import main.Floor;
 import main.FloorSubsystem;
 import main.Scheduler;
 import states.ActiveState;
@@ -53,10 +52,10 @@ public class IterationThreeTest {
 
 	@Test
 	public void testElevatorToScheduler() throws InterruptedException {
-		elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 1, 74, Configurations.ARRIVAL_PORT + 1,
-				Configurations.DEST_PORT + 1, Configurations.ELEVATOR_STAT_PORT + 1);
+		elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 1, Configurations.ELEVATOR_SCHEDULAR_PORT + 1,
+				Configurations.ARRIVAL_PORT + 1, Configurations.DEST_PORT + 1, Configurations.ELEVATOR_STAT_PORT + 1);
 		scheduler = new Scheduler(Configurations.FLOOR_EVENT_PORT + 1, Configurations.ARRIVAL_PORT + 1,
-				Configurations.DEST_PORT + 1, Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT + 1,
+				Configurations.DEST_PORT + 1, Configurations.FLOOR_PORT + 1, Configurations.ELEVATOR_STAT_PORT + 1,
 				Configurations.TIMER_PORT + 1);
 		Thread sched = new Thread(scheduler, "scheduler");
 		Thread elevatorThread = new Thread(elevator, "elevator");
@@ -71,7 +70,7 @@ public class IterationThreeTest {
 	@Test
 	public void testSchedulerToFloor() throws InterruptedException {
 		scheduler = new Scheduler(Configurations.FLOOR_EVENT_PORT + 2, Configurations.ARRIVAL_PORT + 2,
-				Configurations.DEST_PORT + 2, 25, Configurations.ELEVATOR_STAT_PORT + 2, Configurations.TIMER_PORT + 2);
+				Configurations.DEST_PORT + 2, Configurations.FLOOR_PORT + 2, Configurations.ELEVATOR_STAT_PORT + 2, Configurations.TIMER_PORT + 2);
 		floorSubsystems = new FloorSubsystem("input6.txt", Configurations.FLOOR_PORT + 2,
 				Configurations.FLOOR_EVENT_PORT + 2);
 		// The input file is going up
@@ -91,9 +90,11 @@ public class IterationThreeTest {
 
 	@Test
 	public void loadBalancingTest() throws InterruptedException {
-		Elevator elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 3, 76, Configurations.ARRIVAL_PORT + 3,
-				Configurations.DEST_PORT + 3, Configurations.ELEVATOR_STAT_PORT + 3);
-		Elevator elevator2 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 4, 77, Configurations.ARRIVAL_PORT + 3,
+		Elevator elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 2,
+				Configurations.ELEVATOR_SCHEDULAR_PORT + 2, Configurations.ARRIVAL_PORT + 2,
+				Configurations.DEST_PORT + 2, Configurations.ELEVATOR_STAT_PORT + 2);
+		Elevator elevator2 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 3,
+				Configurations.ELEVATOR_SCHEDULAR_PORT + 3, Configurations.ARRIVAL_PORT + 3,
 				Configurations.DEST_PORT + 3, Configurations.ELEVATOR_STAT_PORT + 3);
 		Thread floorSubsystem = new Thread(
 				new FloorSubsystem("input5.txt", Configurations.FLOOR_PORT + 3, Configurations.FLOOR_EVENT_PORT + 3),
