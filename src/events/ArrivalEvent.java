@@ -119,7 +119,7 @@ public class ArrivalEvent implements Serializable{
 	    if (getClass() != o.getClass()) return false;
 	    ArrivalEvent a = (ArrivalEvent) o;
 	    return (currentFloor == a.getCurrentFloor()) && (time == a.getTime()) &&
-	           (direction == a.getDirection()) && (didNotMoveYet == a.didNotMoveYet());
+	           (direction == a.getDirection()) && (didNotMoveYet == a.didNotMoveYet() && (id == a.getElevatorId()));
 	}
 
 	/**
