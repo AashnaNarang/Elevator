@@ -4,6 +4,8 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import events.ArrivalEvent;
 import events.Event;
@@ -13,6 +15,7 @@ import events.StationaryEvent;
 import states.ElevatorState;
 import states.MovingState;
 import states.StationaryState;
+import timers.ElevatorTimer;
 
 
 /*
@@ -35,6 +38,9 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	private DatagramSocket sendReceiveScheduleSocket; //declaration of socket
 	private int id;
 	private boolean running;
+	private ElevatorTimer elevatorTimer;
+	private boolean isDoorsOpen;
+	private boolean didTimeout;
 
 	/**
 	 * Elevator constructor to intialize instance variables 
@@ -57,6 +63,8 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		this.statPort = statPort;
 		this.id = ELEVATOR_ID;
 		running = true;
+		isDoorsOpen = false;
+		didTimeout = false;
 		
 		ELEVATOR_ID++;
 		try {
@@ -185,12 +193,39 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	/**
 	 * Start the door timer and call handler when timer expires
 	 */
-	public void startTimer() {
-		try {
-			Thread.sleep(5);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+	public void startTimer(FloorEvent fe) {
+		while (true) {
+			this.setDoorsOpen(true);
+			Elevator tempElevator = this;
+			ElevatorTimer elevatorTimer = new ElevatorTimer(this);
+			TimerTask closeDoorsTask = new TimerTask() {
+		        public void run() {
+		            tempElevator.setDoorsOpen(false);
+		        }
+		    };
+		    Timer timer = new Timer("Timer");
+		    long delay = fe == null ? 500 : 
+		    	fe.getErrorCode() == 1 ? 1000 : 500;
+		    timer.schedule(closeDoorsTask, delay);
+		    elevatorTimer.start();
+			while (this.getIsDoorsOpen()) {};
+			if (this.getDidTimeout()) {
+				closeDoorsTask.cancel();
+				timer.cancel();
+				this.setDidTimeout(false);
+				fe.setErrorCode(0);
+				System.out.println("WOOOOOHOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+			} else {
+				elevatorTimer.cancel();
+				break;
+			}
 		}
+		
+//		try {
+//			Thread.sleep(5);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 		currentState.handleDoorTimerExpiry();
 	}
 
@@ -303,5 +338,33 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		// Okay to use running boolean because this will only be called when elevator thread is running
 		System.out.println(Thread.currentThread().getName() + " broke down. Stopping now.");
 		running = false;
+	}
+	
+	/**
+	 * @return the isDoorsOpen
+	 */
+	public synchronized boolean getIsDoorsOpen() {
+		return isDoorsOpen;
+	}
+
+	/**
+	 * @param isDoorsOpen the isDoorsOpen to set
+	 */
+	public synchronized void setDoorsOpen(boolean isDoorsOpen) {
+		this.isDoorsOpen = isDoorsOpen;
+	}
+
+	/**
+	 * @return the didTimeout
+	 */
+	public synchronized boolean getDidTimeout() {
+		return didTimeout;
+	}
+
+	/**
+	 * @param didTimeout the didTimeout to set
+	 */
+	public synchronized void setDidTimeout(boolean didTimeout) {
+		this.didTimeout = didTimeout;
 	}
 }
