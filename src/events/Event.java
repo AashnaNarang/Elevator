@@ -47,7 +47,7 @@ public class Event implements Serializable{
 	 * Print destination event
 	 */
 	public String toString() {
-		return "{Time: "+ time + ", Destination:" + getDestination() + "}";
+		return "{Time: "+ time + ", Destination:" + getDestination() + ", Id: " + id + "}";
 	}
 	
 	/**
