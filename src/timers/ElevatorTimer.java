@@ -14,7 +14,6 @@ import main.Serial;
 public class ElevatorTimer implements Runnable {
 	private Elevator elevator;
 	private Thread t;
-	
 	/**
 	 * Elevator constructor to intialize instance variables
 	 * @param elevator
