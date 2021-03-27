@@ -14,7 +14,7 @@ public class Main {
 		floorSubsystem.start();
 		sched.start();
 		elevator.start();
-		elevator2.start();
+		elevator2.start();		
 	}
 
 }
