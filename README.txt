@@ -1,4 +1,5 @@
 # Elevator
+***Note*** This is the same file as the README.txt, but in markdown format
 
 ## ArrivalEvent.java 
 Is an event that holds information when an elevator arrives at a floor. 
@@ -39,6 +40,12 @@ Represents the scheduler which checks for new updates and sends to the elevator 
 ## SchedulerEvent.java
 This class represents the information being sent to elevator to either stop or have the elevator keepgoing.
 
+##StationaryEvent.java
+This class will handle when the stationary events are required. I will message, floorport, elevatorid, and The current floor. 
+
+##TimeoutEvent.java
+This class will handle the timeout events where it will provide the elevator id, and the status before it arrived at the source floor.
+
 ## DoorOpenState.java
 This class will handle the opening and closing of the door with a given expiry time. This will also make it so that when the elevator is in moving state it will not open the doors. 
 
@@ -49,22 +56,63 @@ This class represents that the elevator is moving towards its destination locati
 This class represents the information on which state the elevator is in. This class will also update the Middleman with what floor the elevator is currently moving through. 
 
 ## StationaryState.java
-This class is used by elevators to tell the scheduler that they're stationary
+This class is the representation of the state in which the elevator will have to decide what to do when the elevator has reached the destination or when it's at a stand still.
 
 ## IdleState.java
 This class represents when the Scheduler is at a standstill and wait for floor event and arrival event to pass in events/information.
 
 ## ActiveState.java
-It sends floor events to the elevator, receives and saves destination events, and analyze arrival events to tell the elevator what to do next 
+It puts FloorEvents, DestinationEvents and ArrivalEvents into lists and moves to IdleState when they are empty. 
 
 ##SchedulerState.java
-This class will get the information which state the scheduler is moving into.
+This class will get the infomation which state the scheduler is moving into.
 
 ## Serial.java
-This class is a method for the information to be serialized and deserialized.
+This class is a method for the information to be serialize and deserialize.
 
 ## NetworkCommunicator.java
 This class will send the datagram packets in a byte array format to a destination port. This is all done using UDP.
+
+##InvalidRequestException.java
+This class is strictly designed so the the scheduler will not allow any invalid commands to elevator.
+
+##ElevatorTimer.java
+This class will provide us with the timer for the Elevator where it will provide us with time elevator started with, if the timer timed out or if the timer got cancelled.
+
+##SchedulerTimer.java
+This class will provide us with the timer for the scheduler where it will provide us with time scheduler started with, if the timer timed out or if the timer got cancelled.
+
+## Work Breakdown for iteration 4
+## Everyone 
+Design how to handle permanent and transient faults 
+
+## Aashna
+Build timer class (SchedulerTimer.java and TimeoutEvent.java). 
+Implement permanent fault (error code 2). 
+Help fix failing test cases. 
+Fix various bugs in the code. 
+Clean up print statements. 
+Debug issues appearing with 4 elevators. 
+
+## Krishan
+Implement transient fault (error code 1). 
+Add usage of elevator Ids to Floor Event class. 
+Debug issues appearing with 4 elevators. 
+
+## Abdalla
+Alter the system to parse error codes from text files. 
+Add code in scheduler to thrown an exception/shut down system if the scheduler is about to tell the elevator to make an illegal move. 
+Test cases. 
+
+## Dani
+Iteration 4 JUnit test cases.
+
+## Issac 
+JUnit Test cases for 4 elevators and 22 floors. 
+
+## Yuvraj
+ReadMe file. 
+javadoc
 
 ## Work Breakdown for iteration 3
 ## Aashna
@@ -171,7 +219,7 @@ Make sure you extract the zip folder first.
 2. Right click anywhere in the package explorer on the left
 3. Click import
 4. General
-5. Existing projects into workspace
+5. Existing projects into workplace
 6. Select the folder. 
 7. Run the java application using Main.java. 
 
@@ -182,6 +230,6 @@ Make sure you extract the zip folder first.
 4. Use steps 1-7 in the instructions shown above.
 
 ## Instructions for testing
-1. Go to any of the test files in the src\test package
-2. Click on the Run as JUnit test
+1. Go to TestElevatorSystem.java inside src 
+2. Click on the Run as Junit test
 
