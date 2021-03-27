@@ -2,6 +2,7 @@ package timers;
 
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.time.LocalTime;
 
 import events.TimeoutEvent;
 import main.NetworkCommunicator;
@@ -34,14 +35,14 @@ public class SchedulerTimer extends NetworkCommunicator implements Runnable {
 	@Override
 	public void run() {
 		try {
-			System.out.println("Timer for elevator with ID " + elevatorId + " started with " + numFloors);
+			System.out.println("Timer for elevator with ID " + elevatorId + " started with " + numFloors + ".  {Time: " + LocalTime.now() + "}");
 			Thread.sleep(numFloors * 6500);
-			System.out.println("Timer for elevator with ID " + elevatorId + " timed out");
+			System.out.println("Timer for elevator with ID " + elevatorId + " timed out" + ".  {Time: " + LocalTime.now() + "}");
 			byte[] data = Serial.serialize(new TimeoutEvent(elevatorId, beforeArrivedAtSrcFloor));
 			send(sendTimerSocket, data, data.length, timerPort);
 			// send UDP to scheduler? but that would cause a delay
 		} catch (InterruptedException e) {
-			System.out.println("Timer for elevator with ID " + elevatorId + " cancelled");
+			System.out.println("Timer for elevator with ID " + elevatorId + " cancelled" + ".  {Time: " + LocalTime.now() + "}");
 		}
 	}
 	

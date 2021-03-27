@@ -80,6 +80,8 @@ public class ActiveState extends SchedulerState {
 
 		if (arrivalEvent.didNotMoveYet()) {
 			// No need to send scheduler event if elevator hasn't started moving, elevator already has instructions
+			scheduler.startElevatorTimer(arrivalEvent.getElevatorId(), false, 1);
+			scheduler.sendArrivalEventToFloor(arrivalEvent);
 			return;
 		}
 		
@@ -149,8 +151,18 @@ public class ActiveState extends SchedulerState {
 	 */
 	private boolean isAtFloor(ArrivalEvent arrivalEvent, FloorEvent fEvent) {
 		return (arrivalEvent.getCurrentFloor() == fEvent.getSource())
-				&& fEvent.getDirection() == arrivalEvent.getDirection()
-				&& fEvent.getElevatorId() == arrivalEvent.getElevatorId();
+				&& (fEvent.getDirection() == arrivalEvent.getDirection());
+	}
+	
+	/**
+	 * Check if elevator should stop at given floor and elevator ids match
+	 * @param arrivalEvent arrival event to check what floor elevator is at
+	 * @param fEvent floor event to check
+	 * @return
+	 */
+	private boolean isAtFloorCheckWithId(ArrivalEvent arrivalEvent, FloorEvent fEvent) {
+		return isAtFloor(arrivalEvent, fEvent)
+				&& (fEvent.getElevatorId() == arrivalEvent.getElevatorId());
 	}
 	
 	/**
@@ -179,7 +191,7 @@ public class ActiveState extends SchedulerState {
 	private FloorEvent analyzeFloorEvents(ArrivalEvent arrivalEvent) {
 		FloorEvent currentFloorEvent = null;
 		for (FloorEvent fEvent : scheduler.getSentFloorEventsList()) {
-			if (isAtFloor(arrivalEvent, fEvent)) {
+			if (isAtFloorCheckWithId(arrivalEvent, fEvent)) {
 				currentFloorEvent = fEvent;
 				floorEventFlag = true;
 				scheduler.removeSentFloorEvent(fEvent);
@@ -187,7 +199,7 @@ public class ActiveState extends SchedulerState {
 				break;
 			}
 		}
-
+		
 		if (currentFloorEvent == null) {
 			for (FloorEvent fEvent : scheduler.getFloorEventsList()) {
 				if (isAtFloor(arrivalEvent, fEvent)) {

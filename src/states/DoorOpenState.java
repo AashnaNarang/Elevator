@@ -38,7 +38,7 @@ public class DoorOpenState extends ElevatorState {
 		// Factory Pattern
 		DoorOpenState d = new DoorOpenState(e, event);
 		e.setState(d);
-		e.startTimer();
+		e.startTimer(event.getFloorEvent());
 	}
 	
 	/**
@@ -50,7 +50,7 @@ public class DoorOpenState extends ElevatorState {
 		// Factory Pattern
 		DoorOpenState d = new DoorOpenState(e, event);
 		e.setState(d);
-		e.startTimer();
+		e.startTimer(event);
 	}
 
 	@Override

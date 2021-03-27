@@ -33,7 +33,7 @@ public final class Configurations {
 	
 	public static final int NUMBER_OF_FLOORS = 22;
 	
-	public static final int NUM_ELEVATORS = 2;
+	public static final int NUM_ELEVATORS = 4;
 
 	// Amount of time that should occur between receiving a packet and sending
 	// another
