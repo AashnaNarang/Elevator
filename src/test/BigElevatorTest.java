@@ -112,7 +112,7 @@ public class BigElevatorTest {
 			Elevator elevator4 = new Elevator(69, 79, 46, 123, 104);
 
 
-			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input12.txt", 26, 36),
+			Thread floorSubsystemThread = new Thread(new FloorSubsystem("input12.txt", 26, 36));
 			Thread schedThread = new Thread(new Scheduler(36, 46, 123, 26, 104, Configurations.TIMER_PORT), "scheduler");
 
 			Thread elevatorThread1 = new Thread(elevator1, "elevator1");

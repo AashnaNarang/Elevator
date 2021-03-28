@@ -88,7 +88,7 @@ public class FloorEvent extends Event {
 	 * @return String representation of the event.
 	 */
 	public String toString() {
-		return "{Time:"+ time + ", Source floor:" + source+ ", Direction:" + direction + ", Destination floor:" + destination+"}";
+		return "{Time:"+ time + ", Source floor:" + source+ ", Direction:" + direction + ", Destination floor:" + destination+", Error Code: " + errorCode + "}";
 	}
 	
 	public boolean equals(Object o) {
