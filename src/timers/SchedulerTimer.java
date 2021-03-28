@@ -9,6 +9,9 @@ import main.NetworkCommunicator;
 import main.Scheduler;
 import main.Serial;
 
+/**
+ * declaration of instance variables
+ */
 public class SchedulerTimer extends NetworkCommunicator implements Runnable {
 	private Scheduler scheduler;
 	private int numFloors;
@@ -18,6 +21,14 @@ public class SchedulerTimer extends NetworkCommunicator implements Runnable {
 	private DatagramSocket sendTimerSocket;
 	private Thread t;
 	
+	/**
+	 * Scheduler constructor to intialize instance variables 
+	 * @param scheduler Scheduler object
+	 * @param name To name the timer thread
+	 * @param beforeArrivedAtSrcFloor If the timer is for when the elevator
+	 * @param elevatorId Id of the elevator
+	 * @param timerPort Port to send timeout packet to scheduler
+	 */
 	public SchedulerTimer(Scheduler scheduler, String name, boolean beforeArrivedAtSrcFloor, int elevatorId, int timerPort) {
 		this.scheduler = scheduler;
 		this.numFloors = 1;
@@ -32,6 +43,9 @@ public class SchedulerTimer extends NetworkCommunicator implements Runnable {
 		}
 	}
 	
+	/**
+	 * Run the method and get back the print statemensts for elevator where the timer starts with, timed out, and cancelled.
+	 */
 	@Override
 	public void run() {
 		try {
@@ -46,11 +60,18 @@ public class SchedulerTimer extends NetworkCommunicator implements Runnable {
 		}
 	}
 	
+	/**
+	 * start the timer
+	 * @param numFloors number of floors the elevator will be travelling
+	 */
 	public void start(int numFloors) {
 		this.numFloors = numFloors;
 		t.start();
 	}
 	
+	/**
+	 * cancel the timer 
+	 */
 	public void cancel() {
 		t.interrupt();
 	}
