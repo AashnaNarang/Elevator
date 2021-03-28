@@ -40,14 +40,14 @@ public class ElevatorTimer implements Runnable {
 	}
 	
 	/**
-	 * start 
+	 * start the timer
 	 */
 	public void start() {
 		t.start();
 	}
 	
 	/**
-	 * stop/cancel 
+	 * stop/cancel the timer
 	 */
 	public void cancel() {
 		t.interrupt();

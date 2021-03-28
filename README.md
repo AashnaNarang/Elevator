@@ -40,11 +40,11 @@ Represents the scheduler which checks for new updates and sends to the elevator 
 ## SchedulerEvent.java
 This class represents the information being sent to elevator to either stop or have the elevator keepgoing.
 
-##StationaryEvent.java
-This class will handle when the stationary events are required. I will message, floorport, elevatorid, and The current floor. 
+## StationaryEvent.java
+This class is used by the elevator to tell the scheduler that it is stationary and ready for a floor event. It includes the elevator's id, ports to use to communicate back, and the current floor the elevator is on. 
 
-##TimeoutEvent.java
-This class will handle the timeout events where it will provide the elevator id, and the status before it arrived at the source floor.
+## TimeoutEvent.java
+This class will handle the timeout events where it will provide the elevator id, and the status if the timeout occured before arriving at the source floor.
 
 ## DoorOpenState.java
 This class will handle the opening and closing of the door with a given expiry time. This will also make it so that when the elevator is in moving state it will not open the doors. 
@@ -105,7 +105,7 @@ Debug issues appearing with 4 elevators.
 ## Abdalla
 Alter the system to parse error codes from text files. 
 Add code in scheduler to thrown an exception/shut down system if the scheduler is about to tell the elevator to make an illegal move. 
-Test cases. 
+Worked with Isaac and Dani to fix test cases. 
 
 ## Dani
 Iteration 4 JUnit test cases.

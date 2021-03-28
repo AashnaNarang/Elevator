@@ -1,5 +1,5 @@
 # Elevator
-***Note*** This is the same file as the README.txt, but in markdown format
+***Note*** This is the same file as the README.txt, but in MarkDown format
 
 ## ArrivalEvent.java 
 Is an event that holds information when an elevator arrives at a floor. 
@@ -40,11 +40,11 @@ Represents the scheduler which checks for new updates and sends to the elevator 
 ## SchedulerEvent.java
 This class represents the information being sent to elevator to either stop or have the elevator keepgoing.
 
-##StationaryEvent.java
-This class will handle when the stationary events are required. I will message, floorport, elevatorid, and The current floor. 
+## StationaryEvent.java
+This class is used by the elevator to tell the scheduler that it is stationary and ready for a floor event. It includes the elevator's id, ports to use to communicate back, and the current floor the elevator is on. 
 
-##TimeoutEvent.java
-This class will handle the timeout events where it will provide the elevator id, and the status before it arrived at the source floor.
+## TimeoutEvent.java
+This class will handle the timeout events where it will provide the elevator id, and the status if the timeout occured before arriving at the source floor.
 
 ## DoorOpenState.java
 This class will handle the opening and closing of the door with a given expiry time. This will also make it so that when the elevator is in moving state it will not open the doors. 
@@ -64,8 +64,8 @@ This class represents when the Scheduler is at a standstill and wait for floor e
 ## ActiveState.java
 It puts FloorEvents, DestinationEvents and ArrivalEvents into lists and moves to IdleState when they are empty. 
 
-##SchedulerState.java
-This class will get the infomation which state the scheduler is moving into.
+## SchedulerState.java
+This class will get the information on which state the scheduler is moving into.
 
 ## Serial.java
 This class is a method for the information to be serialize and deserialize.
@@ -95,17 +95,17 @@ Implement permanent fault (error code 2).
 Help fix failing test cases. 
 Fix various bugs in the code. 
 Clean up print statements. 
-Debug issues appearing with 4 elevators. 
+Test + debug issues appearing with 4 elevators. 
 
 ## Krishan
 Implement transient fault (error code 1). 
 Add usage of elevator Ids to Floor Event class. 
-Debug issues appearing with 4 elevators. 
+Test + debug issues appearing with 4 elevators. 
 
 ## Abdalla
 Alter the system to parse error codes from text files. 
 Add code in scheduler to thrown an exception/shut down system if the scheduler is about to tell the elevator to make an illegal move. 
-Test cases. 
+Worked with Isaac and Dani to fix test cases. 
 
 ## Dani
 Iteration 4 JUnit test cases.
@@ -115,7 +115,7 @@ JUnit Test cases for 4 elevators and 22 floors.
 
 ## Yuvraj
 ReadMe file. 
-javadoc
+Javadoc
 
 ## Work Breakdown for iteration 3
 ## Aashna
