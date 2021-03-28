@@ -175,6 +175,7 @@ public class ActiveState extends SchedulerState {
 			if (destEvent.getDestination() == arrivalEvent.getCurrentFloor() && destEvent.getElevatorId() == arrivalEvent.getElevatorId()) {
 				destinationEventFlag = true;
 				toRemove.add(destEvent);
+				scheduler.incrementNumOfProcessedEvents();
 			}
 		}
 		

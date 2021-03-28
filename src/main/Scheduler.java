@@ -26,6 +26,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	private Queue<ArrivalEvent> arrivalEvents;
 	private Queue<Event> destinationEvents;
 	private SchedulerState currentState;
+	private int numOfProcessedEvents;
 	
 	private DatagramSocket sendReceiveFloorSocket; 
 	private DatagramSocket sendReceiveArrSocket;
@@ -53,6 +54,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 		this.floorPort = floorPort;
 		this.timerPort = timerPort;
 		this.timers = new SchedulerTimer[Configurations.NUM_ELEVATORS];
+		this.numOfProcessedEvents = 0;
 		for(int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
 			timers[i] = new SchedulerTimer(this, Integer.toString(i), true, i, timerPort);
 		}
@@ -301,4 +303,13 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 	public void addToDestinationEventsList(Event event) {
 		destinationEvents.add(event);
 	}
+
+	public int getNumOfProcessedEvents() {
+		return numOfProcessedEvents;
+	}
+
+	public void incrementNumOfProcessedEvents() {
+		this.numOfProcessedEvents++;
+	}
+	
 }
