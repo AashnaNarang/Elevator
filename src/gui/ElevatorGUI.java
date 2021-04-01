@@ -135,7 +135,7 @@ public class ElevatorGUI extends JFrame {
 		cmboNumFloors.addActionListener (new ActionListener () {
 		    public void actionPerformed(ActionEvent e) {
 		        Configurations.NUMBER_OF_FLOORS = floorUserInput;
-		        cmboNumFloors.setSelectedItem(cmboNumFloors.getSelectedIndex());
+		        cmboNumFloors.setSelectedIndex(cmboNumFloors.getSelectedIndex());
 		    }
 		});
 		
