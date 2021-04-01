@@ -20,7 +20,12 @@ import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTabbedPane;
 
@@ -29,7 +34,7 @@ public class ElevatorGUI extends JFrame {
 	private JPanel contentPane;
 	// Create a file chooser
 	final JFileChooser fc = new JFileChooser();
-	public FloorSubsystem floorSubsystem; 
+	public FloorSubsystem floorSubsystem;
 
 	/**
 	 * Launch the application.
@@ -64,26 +69,58 @@ public class ElevatorGUI extends JFrame {
 				int returnVal = fc.showOpenDialog(ElevatorGUI.this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
-					floorSubsystem =  new FloorSubsystem(file.getName(), Configurations.FLOOR_PORT, Configurations.FLOOR_EVENT_PORT);
+					parseAndValidateFile(file); 
+					floorSubsystem = new FloorSubsystem(file.getName(), Configurations.FLOOR_PORT,
+							Configurations.FLOOR_EVENT_PORT);
 					RunElevator(floorSubsystem);
 				} else {
 				}
 			}
 
+			private File parseAndValidateFile(File file) {
+				FileReader fr;
+				FileWriter fw = null;
+				try {
+					fr = new FileReader(file);
+			        BufferedReader br = new BufferedReader(fr); 
+			        fw = new FileWriter(file.getName()); 
+			        
+			        String line;
+
+			        while((line = br.readLine()) != null)
+			        { 
+			            line = line.trim(); // remove leading and trailing whitespace
+			            line=line.replaceAll("\\s+", " ");
+			            fw.write(line);
+			        }
+			        
+			        fr.close();
+			        fw.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} 
+				
+				return file; 
+			}
+
 			private void RunElevator(FloorSubsystem floorSubsystem) {
-				Thread sched = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT
-						, Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT, Configurations.TIMER_PORT), "scheduler");
-				Thread elevator0 = new Thread(new Elevator(Configurations.ELEVATOR_FLOOR_PORT, Configurations.ELEVATOR_SCHEDULAR_PORT, 
-						Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT), "elevator0");
-				Thread elevator1 = new Thread(new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 1, 
-						Configurations.ELEVATOR_SCHEDULAR_PORT + 1,
-						Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT), "elevator1");
-				Thread elevator2 = new Thread(new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 2, 
-						Configurations.ELEVATOR_SCHEDULAR_PORT + 2,
-						Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT), "elevator2");
-				Thread elevator3 = new Thread(new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 3, 
-						Configurations.ELEVATOR_SCHEDULAR_PORT + 3,
-						Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT), "elevator3");
+				Thread sched = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT, Configurations.ARRIVAL_PORT,
+						Configurations.DEST_PORT, Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT,
+						Configurations.TIMER_PORT), "scheduler");
+				Thread elevator0 = new Thread(new Elevator(Configurations.ELEVATOR_FLOOR_PORT,
+						Configurations.ELEVATOR_SCHEDULAR_PORT, Configurations.ARRIVAL_PORT, Configurations.DEST_PORT,
+						Configurations.ELEVATOR_STAT_PORT), "elevator0");
+				Thread elevator1 = new Thread(new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 1,
+						Configurations.ELEVATOR_SCHEDULAR_PORT + 1, Configurations.ARRIVAL_PORT,
+						Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT), "elevator1");
+				Thread elevator2 = new Thread(new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 2,
+						Configurations.ELEVATOR_SCHEDULAR_PORT + 2, Configurations.ARRIVAL_PORT,
+						Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT), "elevator2");
+				Thread elevator3 = new Thread(new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 3,
+						Configurations.ELEVATOR_SCHEDULAR_PORT + 3, Configurations.ARRIVAL_PORT,
+						Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT), "elevator3");
 				Thread threadFloorSubsystem = new Thread(floorSubsystem, "floorSubsystem");
 				threadFloorSubsystem.start();
 				sched.start();
@@ -105,17 +142,17 @@ public class ElevatorGUI extends JFrame {
 		tabbedPane.addTab("Tab 2", null, panel2, "Does twice as much nothing");
 		tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 
-        //Add the tabbed pane to this panel.
-        getContentPane().add(tabbedPane);
+		// Add the tabbed pane to this panel.
+		getContentPane().add(tabbedPane);
 	}
 
 	protected JComponent makeTextPanel(String text) {
-        JPanel panel = new JPanel(false);
-        JLabel filler = new JLabel(text);
-        filler.setHorizontalAlignment(JLabel.CENTER);
-        panel.setLayout(new GridLayout(1, 1));
-        panel.add(filler);
-        return panel;
+		JPanel panel = new JPanel(false);
+		JLabel filler = new JLabel(text);
+		filler.setHorizontalAlignment(JLabel.CENTER);
+		panel.setLayout(new GridLayout(1, 1));
+		panel.add(filler);
+		return panel;
 	}
 
 }
