@@ -117,9 +117,8 @@ public class ElevatorGUI extends JFrame {
 		
 		cmboNumElevator.addActionListener (new ActionListener () {
 		    public void actionPerformed(ActionEvent e) {
-		    	int elevatorNum = elevatorUserInput;
 		        Configurations.NUM_ELEVATORS = elevatorUserInput;
-		        cmboNumElevator.setSelectedIndex(elevatorNum);
+		        cmboNumElevator.setSelectedIndex(cmboNumElevator.getSelectedIndex());
 		    }
 		});
 		
@@ -135,9 +134,8 @@ public class ElevatorGUI extends JFrame {
 		
 		cmboNumFloors.addActionListener (new ActionListener () {
 		    public void actionPerformed(ActionEvent e) {
-		    	int floorNum = elevatorUserInput;
-		        Configurations.NUMBER_OF_FLOORS = floorNum;
-		        cmboNumFloors.setSelectedItem(floorNum);
+		        Configurations.NUMBER_OF_FLOORS = floorUserInput;
+		        cmboNumFloors.setSelectedItem(cmboNumFloors.getSelectedIndex());
 		    }
 		});
 		
