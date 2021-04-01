@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -26,8 +27,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 import java.awt.event.ActionEvent;
 import javax.swing.JTabbedPane;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
 public class ElevatorGUI extends JFrame {
 
@@ -69,7 +74,6 @@ public class ElevatorGUI extends JFrame {
 				int returnVal = fc.showOpenDialog(ElevatorGUI.this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
-					parseAndValidateFile(file); 
 					floorSubsystem = new FloorSubsystem(file.getName(), Configurations.FLOOR_PORT,
 							Configurations.FLOOR_EVENT_PORT);
 					RunElevator(floorSubsystem);
@@ -77,33 +81,6 @@ public class ElevatorGUI extends JFrame {
 				}
 			}
 
-			private File parseAndValidateFile(File file) {
-				FileReader fr;
-				FileWriter fw = null;
-				try {
-					fr = new FileReader(file);
-			        BufferedReader br = new BufferedReader(fr); 
-			        fw = new FileWriter(file.getName()); 
-			        
-			        String line;
-
-			        while((line = br.readLine()) != null)
-			        { 
-			            line = line.trim(); // remove leading and trailing whitespace
-			            line=line.replaceAll("\\s+", " ");
-			            fw.write(line);
-			        }
-			        
-			        fr.close();
-			        fw.close();
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} 
-				
-				return file; 
-			}
 
 			private void RunElevator(FloorSubsystem floorSubsystem) {
 				Thread sched = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT, Configurations.ARRIVAL_PORT,
@@ -130,29 +107,42 @@ public class ElevatorGUI extends JFrame {
 				elevator3.start();
 			}
 		});
-		contentPane.add(btnNewButton);
-
-		JTabbedPane tabbedPane = new JTabbedPane();
-
-		JComponent panel1 = makeTextPanel("Panel #1");
-		tabbedPane.addTab("Tab 1", null, panel1, "Does nothing");
-		tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
-
-		JComponent panel2 = makeTextPanel("Panel #2");
-		tabbedPane.addTab("Tab 2", null, panel2, "Does twice as much nothing");
-		tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
-
-		// Add the tabbed pane to this panel.
-		getContentPane().add(tabbedPane);
+		
+		JComboBox cmboNumElevator = new JComboBox();
+		
+		final int elevatorUserInput = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Elevators: "));
+		for (int i = 1; i <= elevatorUserInput; i++) {
+			cmboNumElevator.addItem(new Integer(i));
+		}
+		
+		cmboNumElevator.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {
+		    	int elevatorNum = elevatorUserInput;
+		        Configurations.NUM_ELEVATORS = elevatorUserInput;
+		        cmboNumElevator.setSelectedIndex(elevatorNum);
+		    }
+		});
+		
+		JLabel lblNumElevators = new JLabel("Elevators:");
+		contentPane.add(lblNumElevators);
+		contentPane.add(cmboNumElevator);
+		
+		JComboBox cmboNumFloors = new JComboBox();
+		final int floorUserInput = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Floors: "));
+		for (int i = 1; i <= floorUserInput; i++) {
+			cmboNumFloors.addItem(new Integer(i));
+		}
+		
+		cmboNumFloors.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {
+		    	int floorNum = elevatorUserInput;
+		        Configurations.NUMBER_OF_FLOORS = floorNum;
+		        cmboNumFloors.setSelectedItem(floorNum);
+		    }
+		});
+		
+		JLabel lblNumFloors = new JLabel("Floors: ");
+		contentPane.add(lblNumFloors);
+		contentPane.add(cmboNumFloors);
 	}
-
-	protected JComponent makeTextPanel(String text) {
-		JPanel panel = new JPanel(false);
-		JLabel filler = new JLabel(text);
-		filler.setHorizontalAlignment(JLabel.CENTER);
-		panel.setLayout(new GridLayout(1, 1));
-		panel.add(filler);
-		return panel;
-	}
-
 }
