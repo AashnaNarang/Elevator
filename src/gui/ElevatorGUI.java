@@ -108,11 +108,11 @@ public class ElevatorGUI extends JFrame {
 			}
 		});
 		
-		JComboBox cmboNumElevator = new JComboBox();
+		JComboBox<Integer> cmboNumElevator = new JComboBox<Integer>();
 		
 		final int elevatorUserInput = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Elevators: "));
 		for (int i = 1; i <= elevatorUserInput; i++) {
-			cmboNumElevator.addItem(new Integer(i));
+			cmboNumElevator.addItem(i);
 		}
 		
 		cmboNumElevator.addActionListener (new ActionListener () {
@@ -126,10 +126,10 @@ public class ElevatorGUI extends JFrame {
 		contentPane.add(lblNumElevators);
 		contentPane.add(cmboNumElevator);
 		
-		JComboBox cmboNumFloors = new JComboBox();
+		JComboBox<Integer> cmboNumFloors = new JComboBox<Integer>();
 		final int floorUserInput = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Floors: "));
 		for (int i = 1; i <= floorUserInput; i++) {
-			cmboNumFloors.addItem(new Integer(i));
+			cmboNumFloors.addItem(i);
 		}
 		
 		cmboNumFloors.addActionListener (new ActionListener () {
