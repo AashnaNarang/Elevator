@@ -29,7 +29,7 @@ public class TestScenarios {
 			schedThread.start();
 			elevatorThread.start();
 			TimeUnit.SECONDS.sleep(5);
-			assertEquals("The elevator is currently on floor: 5", elevator.toString());
+			assertEquals("The elevator is currently on floor: 5 with error code 0", elevator.toString());
 		} catch (InterruptedException e) {
 		}
 	}
@@ -50,7 +50,7 @@ public class TestScenarios {
 			schedThread.start();
 			elevatorThread.start();
 			TimeUnit.SECONDS.sleep(15);
-			assertEquals("The elevator is currently on floor: 4", elevator.toString());
+			assertEquals("The elevator is currently on floor: 4 with error code 0", elevator.toString());
 		} catch (InterruptedException e) {
 
 		}
@@ -73,7 +73,7 @@ public class TestScenarios {
 			schedThread.start();
 			elevatorThread.start();
 			TimeUnit.SECONDS.sleep(5);
-			assertEquals("The elevator is currently on floor: 2", elevator.toString());
+			assertEquals("The elevator is currently on floor: 2 with error code 0", elevator.toString());
 		} catch (InterruptedException e) {
 		}
 	}

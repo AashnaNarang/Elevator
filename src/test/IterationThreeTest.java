@@ -102,15 +102,15 @@ public class IterationThreeTest {
 		Thread sched = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT + 3, Configurations.ARRIVAL_PORT + 3,
 				Configurations.DEST_PORT + 3, Configurations.FLOOR_PORT + 3, Configurations.ELEVATOR_STAT_PORT + 3,
 				Configurations.TIMER_PORT + 3), "scheduler");
-		Thread elevatorThread = new Thread(elevator, "elevator");
-		Thread elevatorThread2 = new Thread(elevator2, "elevator2");
+		Thread elevatorThread = new Thread(elevator, "elevator 0 ");
+		Thread elevatorThread2 = new Thread(elevator2, "elevator 1");
 		floorSubsystem.start();
 		sched.start();
 		elevatorThread.start();
-		TimeUnit.SECONDS.sleep(1);
+//		TimeUnit.SECONDS.sleep(1);
 		elevatorThread2.start();
 		TimeUnit.SECONDS.sleep(10);
-		assertNotEquals("The elevator is currently on floor: 1", elevator.toString());
-		assertNotEquals("The elevator is currently on floor: 1", elevator2.toString());
+		assertNotEquals("The elevator is currently on floor: 1 with error code 0", elevator.toString());
+		assertNotEquals("The elevator is currently on floor: 1 with error code 0", elevator2.toString());
 	}
 }
