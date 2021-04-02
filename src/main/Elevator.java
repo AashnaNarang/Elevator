@@ -41,6 +41,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	private ElevatorTimer elevatorTimer;
 	private boolean isDoorsOpen;
 	private boolean didTimeout;
+	private int error;
 
 	/**
 	 * Elevator constructor to intialize instance variables 
@@ -65,6 +66,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		running = true;
 		isDoorsOpen = false;
 		didTimeout = false;
+		error = 0;
 		
 		ELEVATOR_ID++;
 		try {
@@ -180,7 +182,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 * @return String representation of the elevator.
 	 */
 	public String toString() {
-		return "The elevator is currently on floor: "+ this.currentFloor;
+		return "The elevator is currently on floor: "+ this.currentFloor + " with error code " + this.error;
 	}
 
 
@@ -211,12 +213,16 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		    elevatorTimer.start();
 			while (this.getIsDoorsOpen()) {};
 			if (this.getDidTimeout()) {
+				this.error = fe.getErrorCode();
+				System.out.println(Thread.currentThread().getName() + " is in error " + this.error + " state");
 				closeDoorsTask.cancel();
 				timer.cancel();
 				this.setDidTimeout(false);
 				fe.setErrorCode(0);
 			} else {
+				this.error = 0;
 				elevatorTimer.cancel();
+//				System.out.println(Thread.currentThread().getName() + " is in error " + this.error + " state");
 				break;
 			}
 		}
@@ -331,7 +337,9 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	
 	public void stop() {
 		// Okay to use running boolean because this will only be called when elevator thread is running
+		this.error = 2;
 		System.out.println(Thread.currentThread().getName() + " broke down. Stopping now." + ".  {Time: " + LocalTime.now() + "}");
+		System.out.println(Thread.currentThread().getName() + " is in error " + this.error + " state");
 		running = false;
 	}
 	
