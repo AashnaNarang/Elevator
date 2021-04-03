@@ -312,6 +312,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 
 	public void incrementNumOfProcessedEvents() {
 		this.numOfProcessedEvents++;
+		Timing.recordEvent();
 	}
 	
 }
