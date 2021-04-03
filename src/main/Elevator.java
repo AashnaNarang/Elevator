@@ -6,7 +6,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-
+import main.Configurations;
 import events.ArrivalEvent;
 import events.Event;
 import events.FloorEvent;
@@ -95,8 +95,15 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		while(currentState.getClass() == MovingState.class) {
 			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
 			currentFloor += direction == Direction.UP ? 1 : -1;
+			try {
+				Thread.sleep(Configurations.TIME_MOVING_BETWEEN_FLOOR);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			currentState.handleArrivedAtFloor();
 		}
+			
 	}
 	
 	/**
@@ -123,6 +130,11 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		}
 		while(currentState.getClass() == MovingState.class) {
 			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
+			try {
+				Thread.sleep(Configurations.TIME_MOVING_BETWEEN_FLOOR);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
 			currentFloor += direction == Direction.UP ? 1 : -1;
 			currentState.handleArrivedAtFloor();
 		}
@@ -206,6 +218,12 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		            tempElevator.setDoorsOpen(false);
 		        }
 		    };
+		    try {
+				Thread.sleep(Configurations.TIME_TO_LOAD_UNLOAD);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		    Timer timer = new Timer("Timer");
 		    long delay = fe == null ? 500 : 
 		    	fe.getErrorCode() == 1 ? 1000 : 500;
