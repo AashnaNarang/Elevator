@@ -108,39 +108,10 @@ public class ElevatorGUI extends JFrame {
 			}
 		});
 		
-		JComboBox<Integer> cmboNumElevator = new JComboBox<Integer>();
+		//set the configuration values for number of elevators/floors. 
+		Configurations.NUM_ELEVATORS = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Elevators: "));
+		Configurations.NUMBER_OF_FLOORS = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Floors: "));
 		
-		final int elevatorUserInput = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Elevators: "));
-		for (int i = 1; i <= elevatorUserInput; i++) {
-			cmboNumElevator.addItem(i);
-		}
-		
-		cmboNumElevator.addActionListener (new ActionListener () {
-		    public void actionPerformed(ActionEvent e) {
-		        Configurations.NUM_ELEVATORS = elevatorUserInput;
-		        cmboNumElevator.setSelectedIndex(cmboNumElevator.getSelectedIndex());
-		    }
-		});
-		
-		JLabel lblNumElevators = new JLabel("Elevators:");
-		contentPane.add(lblNumElevators);
-		contentPane.add(cmboNumElevator);
-		
-		JComboBox<Integer> cmboNumFloors = new JComboBox<Integer>();
-		final int floorUserInput = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Floors: "));
-		for (int i = 1; i <= floorUserInput; i++) {
-			cmboNumFloors.addItem(i);
-		}
-		
-		cmboNumFloors.addActionListener (new ActionListener () {
-		    public void actionPerformed(ActionEvent e) {
-		        Configurations.NUMBER_OF_FLOORS = floorUserInput;
-		        cmboNumFloors.setSelectedIndex(cmboNumFloors.getSelectedIndex());
-		    }
-		});
-		
-		JLabel lblNumFloors = new JLabel("Floors: ");
-		contentPane.add(lblNumFloors);
-		contentPane.add(cmboNumFloors);
+		contentPane.add(btnNewButton);
 	}
 }
