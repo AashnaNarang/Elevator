@@ -38,6 +38,12 @@ public final class Configurations {
 	// Amount of time that should occur between receiving a packet and sending
 	// another
 	// This can be set to 1000 if the code should run quickly
-	public static final int SLEEP_DURATION_MILLIS = 5000;
+	public static final int SLEEP_DURATION_MILLIS = 1000;
+	
+	public static final int TIME_MOVING_BETWEEN_FLOOR = 1000;
+	
+	public static final int TIME_TO_LOAD_UNLOAD = 5000;
+	
+	
 
 }
