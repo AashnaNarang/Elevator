@@ -40,6 +40,7 @@ public class ElevatorGUI extends JFrame {
 	// Create a file chooser
 	final JFileChooser fc = new JFileChooser();
 	public FloorSubsystem floorSubsystem;
+	public File file;
 
 	/**
 	 * Launch the application.
@@ -73,38 +74,9 @@ public class ElevatorGUI extends JFrame {
 				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 				int returnVal = fc.showOpenDialog(ElevatorGUI.this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					floorSubsystem = new FloorSubsystem(file.getName(), Configurations.FLOOR_PORT,
-							Configurations.FLOOR_EVENT_PORT);
-					RunElevator(floorSubsystem);
+					file = fc.getSelectedFile();
 				} else {
 				}
-			}
-
-
-			private void RunElevator(FloorSubsystem floorSubsystem) {
-				Thread sched = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT, Configurations.ARRIVAL_PORT,
-						Configurations.DEST_PORT, Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT,
-						Configurations.TIMER_PORT), "scheduler");
-				Thread elevator0 = new Thread(new Elevator(Configurations.ELEVATOR_FLOOR_PORT,
-						Configurations.ELEVATOR_SCHEDULAR_PORT, Configurations.ARRIVAL_PORT, Configurations.DEST_PORT,
-						Configurations.ELEVATOR_STAT_PORT), "elevator0");
-				Thread elevator1 = new Thread(new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 1,
-						Configurations.ELEVATOR_SCHEDULAR_PORT + 1, Configurations.ARRIVAL_PORT,
-						Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT), "elevator1");
-				Thread elevator2 = new Thread(new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 2,
-						Configurations.ELEVATOR_SCHEDULAR_PORT + 2, Configurations.ARRIVAL_PORT,
-						Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT), "elevator2");
-				Thread elevator3 = new Thread(new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 3,
-						Configurations.ELEVATOR_SCHEDULAR_PORT + 3, Configurations.ARRIVAL_PORT,
-						Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT), "elevator3");
-				Thread threadFloorSubsystem = new Thread(floorSubsystem, "floorSubsystem");
-				threadFloorSubsystem.start();
-				sched.start();
-				elevator0.start();
-				elevator1.start();
-				elevator2.start();
-				elevator3.start();
 			}
 		});
 		
@@ -113,5 +85,40 @@ public class ElevatorGUI extends JFrame {
 		Configurations.NUMBER_OF_FLOORS = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Floors: "));
 		
 		contentPane.add(btnNewButton);
+		
+		JButton btnStart = new JButton("Start");
+		btnStart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				floorSubsystem = new FloorSubsystem(file.getName(), Configurations.FLOOR_PORT,
+						Configurations.FLOOR_EVENT_PORT);
+				RunElevator(floorSubsystem);
+			}
+		});
+		contentPane.add(btnStart);
+	}
+	
+	private void RunElevator(FloorSubsystem floorSubsystem) {
+		Thread sched = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT, Configurations.ARRIVAL_PORT,
+				Configurations.DEST_PORT, Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT,
+				Configurations.TIMER_PORT), "scheduler");
+		Thread elevator0 = new Thread(new Elevator(Configurations.ELEVATOR_FLOOR_PORT,
+				Configurations.ELEVATOR_SCHEDULAR_PORT, Configurations.ARRIVAL_PORT, Configurations.DEST_PORT,
+				Configurations.ELEVATOR_STAT_PORT), "elevator0");
+		Thread elevator1 = new Thread(new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 1,
+				Configurations.ELEVATOR_SCHEDULAR_PORT + 1, Configurations.ARRIVAL_PORT,
+				Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT), "elevator1");
+		Thread elevator2 = new Thread(new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 2,
+				Configurations.ELEVATOR_SCHEDULAR_PORT + 2, Configurations.ARRIVAL_PORT,
+				Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT), "elevator2");
+		Thread elevator3 = new Thread(new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 3,
+				Configurations.ELEVATOR_SCHEDULAR_PORT + 3, Configurations.ARRIVAL_PORT,
+				Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT), "elevator3");
+		Thread threadFloorSubsystem = new Thread(floorSubsystem, "floorSubsystem");
+		threadFloorSubsystem.start();
+		sched.start();
+		elevator0.start();
+		elevator1.start();
+		elevator2.start();
+		elevator3.start();
 	}
 }
