@@ -118,7 +118,7 @@ public class ActiveState extends SchedulerState {
 		scheduler.sendSchedulerEventToElevator(schedulerEvent, arrivalEvent.getSchedPort());
 		if (elevatorKeepsGoing) scheduler.startElevatorTimer(arrivalEvent.getElevatorId(), false, 1);
 //		scheduler.sendArrivalEventToFloor(arrivalEvent);
-		 if (floorEventFlag || destinationEventFlag) scheduler.sendArrivalEventToFloor(arrivalEvent);
+		 if (floorEventFlag) scheduler.sendArrivalEventToFloor(arrivalEvent);
 		checkIfUpdateToIdleState();
 	}
 	
