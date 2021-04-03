@@ -59,13 +59,16 @@ public class DoorOpenState extends ElevatorState {
 	 */
 	public void handleDoorTimerExpiry() {
 		if((floorEvent != null) && (stopEvent == null)) {
+			elevator.addStatus("Door timer expired, " + Thread.currentThread().getName() + " is already at source floor" + ".  {Time: " + LocalTime.now() + "}");
 			System.out.println("Door timer expired, " + Thread.currentThread().getName() + " is already at source floor" + ".  {Time: " + LocalTime.now() + "}");
 			MovingState.createWithFloorEvent(elevator, floorEvent, true);
 		}
 		else if ((floorEvent == null) && stopEvent.shouldIKeepGoing()) {
+			elevator.addStatus("Door timer expired, scheduler told " + Thread.currentThread().getName() + " to stop then keep going" + ".  {Time: " + LocalTime.now() + "}");
 			System.out.println("Door timer expired, scheduler told " + Thread.currentThread().getName() + " to stop then keep going" + ".  {Time: " + LocalTime.now() + "}");
 			MovingState.createWithSchedulerEvent(elevator, stopEvent);
 		} else {
+			elevator.addStatus("Door timer expired, scheduler told " + Thread.currentThread().getName() + " to stop and do not continue moving" + ".  {Time: " + LocalTime.now() + "}");
 			System.out.println("Door timer expired, scheduler told " + Thread.currentThread().getName() + " to stop and do not continue moving" + ".  {Time: " + LocalTime.now() + "}");
 			StationaryState s = new StationaryState(elevator);
 			elevator.setState(s);
