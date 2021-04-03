@@ -17,7 +17,6 @@ import states.MovingState;
 import states.StationaryState;
 import timers.ElevatorTimer;
 
-
 /*
  * The Elevator class is designed so that it takes the task form the middleman
  * and moves the elevator up/down based on the given task it will receive.
