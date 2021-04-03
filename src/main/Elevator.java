@@ -220,7 +220,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 				this.setDidTimeout(false);
 				fe.setErrorCode(0);
 			} else {
-				this.errorCode = fe.getErrorCode();
+				this.errorCode = 0;
 				elevatorTimer.cancel();
 //				System.out.println(Thread.currentThread().getName() + " is in error " + this.error + " state");
 				break;
