@@ -116,7 +116,9 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 				floorEventRemove.add(e);
 			}
 		}
-		floorEvents.addAll(floorEventRemove);
+		if(t.isBeforeArrivedAtSrcFloor()) {
+			floorEvents.addAll(floorEventRemove);
+		}
 		sentFloorEvents.removeAll(floorEventRemove);
 		
 		if(!t.isBeforeArrivedAtSrcFloor()) {
@@ -310,6 +312,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 
 	public void incrementNumOfProcessedEvents() {
 		this.numOfProcessedEvents++;
+		Timing.recordEvent();
 	}
 	
 }

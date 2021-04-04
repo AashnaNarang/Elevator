@@ -4,6 +4,10 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -38,9 +42,12 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	private DatagramSocket sendReceiveScheduleSocket; //declaration of socket
 	private int id;
 	private boolean running;
-	private ElevatorTimer elevatorTimer;
 	private boolean isDoorsOpen;
 	private boolean didTimeout;
+	private int errorCode;
+	private List<String> statuses;
+    private final Object STATUS_LOCK = new Object();
+
 
 	/**
 	 * Elevator constructor to intialize instance variables 
@@ -65,6 +72,8 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		running = true;
 		isDoorsOpen = false;
 		didTimeout = false;
+		errorCode = 0;
+		this.statuses = new LinkedList<String>();
 		
 		ELEVATOR_ID++;
 		try {
@@ -88,9 +97,11 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		this.direction = e.getDirection();
 		this.switchLamps(true);
 		
+		this.statuses.add(Thread.currentThread().getName() + " is on floor " + currentFloor + ", about to move " + this.direction + ".  {Time: " + LocalTime.now() + "}");
 		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", about to move " + this.direction + ".  {Time: " + LocalTime.now() + "}");
 
 		while(currentState.getClass() == MovingState.class) {
+			this.statuses.add(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
 			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
 			currentFloor += direction == Direction.UP ? 1 : -1;
 			currentState.handleArrivedAtFloor();
@@ -112,6 +123,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		this.direction = e.getDirection();
 		this.switchLamps(true);
 		
+		this.statuses.add(Thread.currentThread().getName() + " is on floor " + currentFloor + ", about to move " + this.direction + ".  {Time: " + LocalTime.now() + "}");
 		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", about to move " + this.direction + ".  {Time: " + LocalTime.now() + "}");
 		ArrivalEvent arrEvent = new ArrivalEvent(this.currentFloor, LocalTime.now(), this.direction, this.sendReceiveScheduleSocket.getLocalPort(), this.id, true);
 		sendArrivalEvent(arrEvent);
@@ -120,6 +132,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 			return;
 		}
 		while(currentState.getClass() == MovingState.class) {
+			this.statuses.add(Thread.currentThread().getName() + " is on floor " + currentFloor + ", about to move " + this.direction + ".  {Time: " + LocalTime.now() + "}");
 			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
 			currentFloor += direction == Direction.UP ? 1 : -1;
 			currentState.handleArrivedAtFloor();
@@ -143,8 +156,10 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		}
 		
 		this.switchLamps(true);
+		this.statuses.add(Thread.currentThread().getName() + " is on floor " + currentFloor + ", moving towards source floor " + e.getSource() + ".  {Time: " + LocalTime.now() + "}");
 		System.out.println(Thread.currentThread().getName() + " is on floor " + currentFloor + ", moving towards source floor " + e.getSource() + ".  {Time: " + LocalTime.now() + "}");
 		for (int i = 0; i < Math.abs(diffFloors); i++) {
+			this.statuses.add(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
 			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
 			currentFloor += direction == Direction.UP ? 1 : -1;
 		}
@@ -180,7 +195,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 * @return String representation of the elevator.
 	 */
 	public String toString() {
-		return "The elevator is currently on floor: "+ this.currentFloor;
+		return "The elevator is currently on floor: "+ this.currentFloor + " with error code " + this.errorCode;
 	}
 
 
@@ -196,6 +211,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 */
 	public void startTimer(FloorEvent fe) {
 		while (true) {
+			this.statuses.add("Door opened for " + Thread.currentThread().getName() + ".  {Time: " + LocalTime.now() + "}");
 			this.setDoorsOpen(true);
 			Elevator tempElevator = this;
 			ElevatorTimer elevatorTimer = new ElevatorTimer(this);
@@ -211,12 +227,17 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		    elevatorTimer.start();
 			while (this.getIsDoorsOpen()) {};
 			if (this.getDidTimeout()) {
+				this.errorCode = fe.getErrorCode();
+				this.statuses.add(Thread.currentThread().getName() + " is in error " + this.errorCode + " state");
+				System.out.println(Thread.currentThread().getName() + " is in error " + this.errorCode + " state");
 				closeDoorsTask.cancel();
 				timer.cancel();
 				this.setDidTimeout(false);
 				fe.setErrorCode(0);
 			} else {
+				this.errorCode = 0;
 				elevatorTimer.cancel();
+//				System.out.println(Thread.currentThread().getName() + " is in error " + this.error + " state");
 				break;
 			}
 		}
@@ -331,7 +352,11 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	
 	public void stop() {
 		// Okay to use running boolean because this will only be called when elevator thread is running
+		this.errorCode = 2;
+		this.statuses.add(Thread.currentThread().getName() + " broke down. Stopping now." + ".  {Time: " + LocalTime.now() + "}");
 		System.out.println(Thread.currentThread().getName() + " broke down. Stopping now." + ".  {Time: " + LocalTime.now() + "}");
+		this.statuses.add(Thread.currentThread().getName() + " is in error " + this.errorCode + " state");
+		System.out.println(Thread.currentThread().getName() + " is in error " + this.errorCode + " state");
 		running = false;
 	}
 	
@@ -361,5 +386,27 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 */
 	public synchronized void setDidTimeout(boolean didTimeout) {
 		this.didTimeout = didTimeout;
+	}
+	
+	/**
+	 * 
+	 * @param status The status string to be added
+	 */
+	public void addStatus(String status) {
+        synchronized (STATUS_LOCK) {
+    		this.statuses.add(status);
+        }
+	}
+	
+	/**
+	 * 
+	 * @return The removed status string
+	 */
+	public LinkedList<String> getStatuses( ) {
+        synchronized (STATUS_LOCK) {
+        	LinkedList<String> temp = new LinkedList<String>(this.statuses);
+    		this.statuses.clear();
+    		return temp;
+        }
 	}
 }

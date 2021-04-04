@@ -58,6 +58,7 @@ public class DoorOpenState extends ElevatorState {
 	 * Handle door timer expired and switch state depending on elevator's current state
 	 */
 	public void handleDoorTimerExpiry() {
+		elevator.addStatus("Door closed, " + Thread.currentThread().getName() + ".  {Time: " + LocalTime.now() + "}");
 		if((floorEvent != null) && (stopEvent == null)) {
 			System.out.println("Door timer expired, " + Thread.currentThread().getName() + " is already at source floor" + ".  {Time: " + LocalTime.now() + "}");
 			MovingState.createWithFloorEvent(elevator, floorEvent, true);

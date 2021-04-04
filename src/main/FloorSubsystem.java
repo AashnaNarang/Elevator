@@ -26,8 +26,7 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 	private List<Floor> floors;
 	private String filename;
 	private int schedPort;
-	private DatagramSocket sendReceiveSocket; //declaration of socket
-
+	private DatagramSocket sendReceiveSocket;
 
 	/**
 	 * Constructor for FloorSubsystem
@@ -60,6 +59,7 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 	@Override
 	public void run() {
 		parseFile(filename);
+		Timing.startTime();
 		while (true) {
 			if (!eventList.isEmpty()) {
 				FloorEvent eventSent = eventList.remove();
@@ -71,6 +71,7 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 			DatagramPacket receivePacket = receive(sendReceiveSocket, true);
 			if (receivePacket != null) {
 				ArrivalEvent arrivalEvent = Serial.deSerialize(receivePacket.getData(), ArrivalEvent.class);
+				System.out.println(Thread.currentThread().getName() + " got arrival event " + arrivalEvent.toString());
 				int currentFloor = arrivalEvent.getCurrentFloor();
 				if (floors.get(currentFloor - 1).isUpButtonOn()) {
 					System.out.println(Thread.currentThread().getName() + " is turning off up button for floor " + currentFloor + ".  {Time: " + LocalTime.now() + "}");
@@ -80,6 +81,8 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 					floors.get(currentFloor - 1).switchButton(Direction.DOWN, false);
 				}
 			}
+			String s = Timing.getTimingInfo();
+			if(s != null) System.out.println(s);
 		}
 	}
 
@@ -89,6 +92,7 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 	 * @param filename the file to be parsed
 	 */
 	private void parseFile(String filename) {
+		int numEvents = 0;
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 			String currentLine = br.readLine();
 			while (currentLine != null) {
@@ -96,8 +100,10 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 				FloorEvent event = new FloorEvent(LocalTime.parse(inputEvent[0]), Integer.parseInt(inputEvent[1]),
 						Direction.valueOf(inputEvent[2].toUpperCase()), Integer.parseInt(inputEvent[3]), Integer.parseInt(inputEvent[4]));
 				eventList.add(event);
+				numEvents++;
 				currentLine = br.readLine();
 			}
+			Timing.setNumRequests(numEvents);
 
 		} catch (FileNotFoundException e) {
 		} catch (IOException e) {
