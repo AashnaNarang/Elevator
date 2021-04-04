@@ -231,6 +231,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		            tempElevator.setDoorsOpen(false);
 		        }
 		    };
+		    
 		    Timer timer = new Timer("Timer");
 		    long delay = fe == null ? Configurations.TIME_TO_LOAD_UNLOAD: 
 		    	fe.getErrorCode() == 1 ? Configurations.TIME_TO_LOAD_UNLOAD * 2 : Configurations.TIME_TO_LOAD_UNLOAD;
