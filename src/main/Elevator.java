@@ -207,7 +207,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 */
 	public void startTimer(FloorEvent fe) {
 		while (true) {
-			this.statuses.add("Door timer started for " + Thread.currentThread().getName() + ".  {Time: " + LocalTime.now() + "}");
+			this.statuses.add("Door opened for " + Thread.currentThread().getName() + ".  {Time: " + LocalTime.now() + "}");
 			this.setDoorsOpen(true);
 			Elevator tempElevator = this;
 			ElevatorTimer elevatorTimer = new ElevatorTimer(this);
@@ -349,7 +349,9 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	public void stop() {
 		// Okay to use running boolean because this will only be called when elevator thread is running
 		this.errorCode = 2;
+		this.statuses.add(Thread.currentThread().getName() + " broke down. Stopping now." + ".  {Time: " + LocalTime.now() + "}");
 		System.out.println(Thread.currentThread().getName() + " broke down. Stopping now." + ".  {Time: " + LocalTime.now() + "}");
+		this.statuses.add(Thread.currentThread().getName() + " is in error " + this.errorCode + " state");
 		System.out.println(Thread.currentThread().getName() + " is in error " + this.errorCode + " state");
 		running = false;
 	}
