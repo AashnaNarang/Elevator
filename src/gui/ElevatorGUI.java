@@ -29,9 +29,12 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
-import javax.swing.JComboBox;
 import javax.swing.Timer;
 
+/**
+ * The GUI that represents the different elevators that are running.
+ * 
+ */
 public class ElevatorGUI extends JFrame {
 
 	private JPanel contentPane, elevatorOutput;
@@ -45,6 +48,7 @@ public class ElevatorGUI extends JFrame {
 
 	Thread elevator1, elevator0;
 	private Elevator e0, e1, e2, e3;
+	private JButton btnStart;
 
 	/**
 	 * Launch the application.
@@ -90,70 +94,23 @@ public class ElevatorGUI extends JFrame {
 				} else {
 				}
 			}
-
-			private void RunElevator(FloorSubsystem floorSubsystem) {
-				Thread sched = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT, Configurations.ARRIVAL_PORT,
-						Configurations.DEST_PORT, Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT,
-						Configurations.TIMER_PORT), "scheduler");
-				e0 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT, Configurations.ELEVATOR_SCHEDULAR_PORT,
-						Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
-				elevator0 = new Thread(e0, "elevator0");
-				e1 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 1, Configurations.ELEVATOR_SCHEDULAR_PORT + 1,
-						Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
-				elevator1 = new Thread(e1, "elevator1");
-				e2 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 2, Configurations.ELEVATOR_SCHEDULAR_PORT + 2,
-						Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
-				Thread elevator2 = new Thread(e2, "elevator2");
-				e3 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 3, Configurations.ELEVATOR_SCHEDULAR_PORT + 3,
-						Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
-				Thread elevator3 = new Thread(e3, "elevator3");
-				Thread threadFloorSubsystem = new Thread(floorSubsystem, "floorSubsystem");
-				threadFloorSubsystem.start();
-				sched.start();
-				elevator0.start();
-				elevator1.start();
-				elevator2.start();
-				elevator3.start();
-			}
 		});
 
 		addOutputConsoles();
 
-		JComboBox<Integer> cmboNumElevator = new JComboBox<Integer>();
-
-		final int elevatorUserInput = Integer
+		Configurations.NUM_ELEVATORS = Integer
 				.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Elevators: "));
-		for (int i = 1; i <= elevatorUserInput; i++) {
-			cmboNumElevator.addItem(i);
-		}
-
-		cmboNumElevator.addActionListener(new ActionListener() {
+		Configurations.NUMBER_OF_FLOORS = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Floors: "));
+		
+		btnStart = new JButton("Start");
+		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Configurations.NUM_ELEVATORS = elevatorUserInput;
-				cmboNumElevator.setSelectedIndex(cmboNumElevator.getSelectedIndex());
+				floorSubsystem = new FloorSubsystem(file.getName(), Configurations.FLOOR_PORT,
+						Configurations.FLOOR_EVENT_PORT);
+				RunElevator(floorSubsystem);
 			}
 		});
-
-		JLabel lblNumElevators = new JLabel("Elevators:");
-		contentPane.add(lblNumElevators);
-		contentPane.add(cmboNumElevator);
-
-		JComboBox<Integer> cmboNumFloors = new JComboBox<Integer>();
-		final int floorUserInput = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Floors: "));
-		for (int i = 1; i <= floorUserInput; i++) {
-			cmboNumFloors.addItem(i);
-		}
-
-		cmboNumFloors.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Configurations.NUMBER_OF_FLOORS = floorUserInput;
-				cmboNumFloors.setSelectedIndex(cmboNumFloors.getSelectedIndex());
-			}
-		});
-
-		JLabel lblNumFloors = new JLabel("Floors: ");
-		contentPane.add(lblNumFloors);
-		contentPane.add(cmboNumFloors);
+		contentPane.add(btnStart);
 		contentPane.add(btnNewButton);
 		contentPane.add(elevatorOutput);
 	}
@@ -315,5 +272,37 @@ public class ElevatorGUI extends JFrame {
 		timer3.setRepeats(true);
 		timer3.start();
 		elevatorOutput.add(elevatorData3);
+	}
+	
+	/**
+	 * Creates the different threads for the elevators and schedulers - then runs them. 
+	 * @param floorSubsytem of the elevator. 
+	 */
+	private void RunElevator(FloorSubsystem floorSubsystem) {
+		//Create thread for the scheduler
+		Thread sched = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT, Configurations.ARRIVAL_PORT,
+				Configurations.DEST_PORT, Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT,
+				Configurations.TIMER_PORT), "scheduler");
+		//create the elevators and their threads. 
+		e0 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT, Configurations.ELEVATOR_SCHEDULAR_PORT,
+				Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
+		elevator0 = new Thread(e0, "elevator0");
+		e1 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 1, Configurations.ELEVATOR_SCHEDULAR_PORT + 1,
+				Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
+		elevator1 = new Thread(e1, "elevator1");
+		e2 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 2, Configurations.ELEVATOR_SCHEDULAR_PORT + 2,
+				Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
+		Thread elevator2 = new Thread(e2, "elevator2");
+		e3 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 3, Configurations.ELEVATOR_SCHEDULAR_PORT + 3,
+				Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
+		Thread elevator3 = new Thread(e3, "elevator3");
+		Thread threadFloorSubsystem = new Thread(floorSubsystem, "floorSubsystem");
+		//start all the threads. 
+		threadFloorSubsystem.start();
+		sched.start();
+		elevator0.start();
+		elevator1.start();
+		elevator2.start();
+		elevator3.start();
 	}
 }
