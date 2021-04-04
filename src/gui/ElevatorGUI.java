@@ -38,6 +38,7 @@ public class ElevatorGUI extends JFrame {
 	// Create a file chooser
 	final JFileChooser fc = new JFileChooser();
 	public FloorSubsystem floorSubsystem;
+	public File file;
 
 	private JCheckBox debugMode;
 	private JTextArea elevatorData0, elevatorData1, elevatorData2, elevatorData3;
@@ -85,10 +86,7 @@ public class ElevatorGUI extends JFrame {
 				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 				int returnVal = fc.showOpenDialog(ElevatorGUI.this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					floorSubsystem = new FloorSubsystem(file.getName(), Configurations.FLOOR_PORT,
-							Configurations.FLOOR_EVENT_PORT);
-					RunElevator(floorSubsystem);
+					file = fc.getSelectedFile();
 				} else {
 				}
 			}
