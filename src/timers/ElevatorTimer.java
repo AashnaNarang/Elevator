@@ -5,6 +5,7 @@ import java.net.SocketException;
 import java.time.LocalTime;
 
 import events.TimeoutEvent;
+import main.Configurations;
 import main.Elevator;
 import main.NetworkCommunicator;
 import main.Scheduler;
@@ -31,7 +32,7 @@ public class ElevatorTimer implements Runnable {
 	public void run() {
 		try {
 			System.out.println("Timer for Door with ID " + elevator.getId() + " started" + ".  {Time: " + LocalTime.now() + "}");
-			Thread.sleep(14085);
+			Thread.sleep((long) (Configurations.TIME_TO_LOAD_UNLOAD * 1.5));
 			System.out.println("Timer for Door with ID " + elevator.getId() + " timed out" + ".  {Time: " + LocalTime.now() + "}");
 			elevator.setDidTimeout(true);
 			elevator.setDoorsOpen(true);

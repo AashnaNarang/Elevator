@@ -5,6 +5,7 @@ import java.net.SocketException;
 import java.time.LocalTime;
 
 import events.TimeoutEvent;
+import main.Configurations;
 import main.NetworkCommunicator;
 import main.Scheduler;
 import main.Serial;
@@ -50,7 +51,7 @@ public class SchedulerTimer extends NetworkCommunicator implements Runnable {
 	public void run() {
 		try {
 			System.out.println("Timer for elevator with ID " + elevatorId + " started with " + numFloors + ".  {Time: " + LocalTime.now() + "}");
-			Thread.sleep(numFloors * 20000);
+			Thread.sleep(numFloors * Configurations.TIME_MOVING_BETWEEN_FLOOR * 5);
 			System.out.println("Timer for elevator with ID " + elevatorId + " timed out" + ".  {Time: " + LocalTime.now() + "}");
 			byte[] data = Serial.serialize(new TimeoutEvent(elevatorId, beforeArrivedAtSrcFloor));
 			send(sendTimerSocket, data, data.length, timerPort);
