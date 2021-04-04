@@ -47,7 +47,6 @@ public class ElevatorGUI extends JFrame {
 	private JCheckBox debugMode;
 	private JTextArea elevatorData0, elevatorData1, elevatorData2, elevatorData3;
 
-	Thread elevator1, elevator0;
 	private Elevator e0, e1, e2, e3;
 	private JButton btnStart;
 
@@ -119,7 +118,10 @@ public class ElevatorGUI extends JFrame {
 		contentPane.add(elevatorOutput);
 	}
 
-	public void elevatorFinished(JFrame frame) {
+	/**
+	* Produces a pop up whenever the system is finished with an input file
+	*/
+	private void elevatorFinished(JFrame frame) {
 		Timer checkIfFinished = new Timer(5000, new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				String timingInfo = Timing.getTimingInfo();
@@ -132,7 +134,11 @@ public class ElevatorGUI extends JFrame {
 		checkIfFinished.start();
 	}
 
-	public void addOutputConsoles() {
+	/**
+	* Creates the text area outputs and handles whenever an status update is available
+	* for a particular elevator
+	*/
+	private void addOutputConsoles() {
 		// Create new grid panel
 		GridLayout gridlayout = new GridLayout(0, 4);
 		gridlayout.setVgap(10);
@@ -238,10 +244,10 @@ public class ElevatorGUI extends JFrame {
 		// create the elevators and their threads.
 		e0 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT, Configurations.ELEVATOR_SCHEDULAR_PORT,
 				Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
-		elevator0 = new Thread(e0, "elevator0");
+		Thread elevator0 = new Thread(e0, "elevator0");
 		e1 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 1, Configurations.ELEVATOR_SCHEDULAR_PORT + 1,
 				Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
-		elevator1 = new Thread(e1, "elevator1");
+		Thread elevator1 = new Thread(e1, "elevator1");
 		e2 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 2, Configurations.ELEVATOR_SCHEDULAR_PORT + 2,
 				Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
 		Thread elevator2 = new Thread(e2, "elevator2");
