@@ -40,8 +40,8 @@ public final class Configurations {
 	// This can be set to 1000 if the code should run quickly
 	public static final int SLEEP_DURATION_MILLIS = 1000;
 	
-	public static final int TIME_MOVING_BETWEEN_FLOOR = 1000;
+	public static final int TIME_MOVING_BETWEEN_FLOOR = 3645;
 	
-	public static final int TIME_TO_LOAD_UNLOAD = 500;
+	public static final int TIME_TO_LOAD_UNLOAD = 9390;
 	
 }

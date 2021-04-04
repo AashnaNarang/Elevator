@@ -31,7 +31,7 @@ public class ElevatorTimer implements Runnable {
 	public void run() {
 		try {
 			System.out.println("Timer for Door with ID " + elevator.getId() + " started" + ".  {Time: " + LocalTime.now() + "}");
-			Thread.sleep(750);
+			Thread.sleep(14085);
 			System.out.println("Timer for Door with ID " + elevator.getId() + " timed out" + ".  {Time: " + LocalTime.now() + "}");
 			elevator.setDidTimeout(true);
 			elevator.setDoorsOpen(true);
