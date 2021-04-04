@@ -44,5 +44,4 @@ public final class Configurations {
 	
 	public static final int TIME_TO_LOAD_UNLOAD = 9390;
 	
-	
 }
