@@ -234,7 +234,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		    
 		    Timer timer = new Timer("Timer");
 		    long delay = fe == null ? Configurations.TIME_TO_LOAD_UNLOAD: 
-		    	fe.getErrorCode() == 1 ? 1000 : Configurations.TIME_TO_LOAD_UNLOAD;
+		    	fe.getErrorCode() == 1 ? Configurations.TIME_TO_LOAD_UNLOAD * 2 : Configurations.TIME_TO_LOAD_UNLOAD;
 		    timer.schedule(closeDoorsTask, delay);
 		    elevatorTimer.start();
 			while (this.getIsDoorsOpen()) {};
