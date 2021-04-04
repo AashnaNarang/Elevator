@@ -18,7 +18,7 @@ import events.FloorEvent;
 /**
  * The FloorSubsystem Class parses events and processes the information from the
  * events, sending floorEvents and taking arrival events from scheduler
- * 
+ *
  */
 public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 
@@ -30,7 +30,7 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 
 	/**
 	 * Constructor for FloorSubsystem
-	 * 
+	 *
 	 * @param filename    the file to be parsed
 	 * @param numOfFloors the number of floors
 	 */
@@ -54,7 +54,7 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 	/**
 	 * The run method passes to middleMan the events parsed and then receives from
 	 * the middleMan arrivalEvent, triggers the buttons pressed to be on/off
-	 * 
+	 *
 	 */
 	@Override
 	public void run() {
@@ -88,7 +88,7 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 
 	/**
 	 * Parsed the file to return a list of events
-	 * 
+	 *
 	 * @param filename the file to be parsed
 	 */
 	private void parseFile(String filename) {
