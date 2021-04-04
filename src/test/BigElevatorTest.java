@@ -1,19 +1,14 @@
 package test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import events.FloorEvent;
-import java.time.LocalTime;
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
-import main.Configurations;
-import main.Direction;
+
+import org.junit.Test;
+
 import main.Elevator;
 import main.FloorSubsystem;
 import main.Scheduler;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
 public class BigElevatorTest {
 
