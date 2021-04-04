@@ -42,7 +42,6 @@ public final class Configurations {
 	
 	public static final int TIME_MOVING_BETWEEN_FLOOR = 1000;
 	
-	public static final int TIME_TO_LOAD_UNLOAD = 5000;
+	public static final int TIME_TO_LOAD_UNLOAD = 500;
 	
-
 }
