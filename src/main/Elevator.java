@@ -4,7 +4,9 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -43,7 +45,9 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	private boolean isDoorsOpen;
 	private boolean didTimeout;
 	private int errorCode;
-	private Queue<String> statuses;
+	private List<String> statuses;
+    private final Object STATUS_LOCK = new Object();
+
 
 	/**
 	 * Elevator constructor to intialize instance variables 
@@ -171,6 +175,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	public void run() {
 		while (running) {
 			currentState.handleFloorEvent();
+			this.getStatuses();
 		}
 	}
 	
@@ -389,14 +394,20 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	 * @param status The status string to be added
 	 */
 	public void addStatus(String status) {
-		this.statuses.add(status);
+        synchronized (STATUS_LOCK) {
+    		this.statuses.add(status);
+        }
 	}
 	
 	/**
 	 * 
 	 * @return The removed status string
 	 */
-	public String removeStatus( ) {
-		return this.statuses.poll();
+	public LinkedList<String> getStatuses( ) {
+        synchronized (STATUS_LOCK) {
+        	LinkedList<String> temp = new LinkedList<String>(this.statuses);
+    		this.statuses.clear();
+    		return temp;
+        }
 	}
 }
