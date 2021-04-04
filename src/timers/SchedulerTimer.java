@@ -59,7 +59,6 @@ public class SchedulerTimer extends NetworkCommunicator implements Runnable {
 			System.out.println("Timer for elevator with ID " + elevatorId + " cancelled" + ".  {Time: " + LocalTime.now() + "}");
 		}
 	}
-	
 	/**
 	 * start the timer
 	 * @param numFloors number of floors the elevator will be travelling
