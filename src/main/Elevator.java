@@ -175,7 +175,6 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	public void run() {
 		while (running) {
 			currentState.handleFloorEvent();
-			this.getStatuses();
 		}
 	}
 	
