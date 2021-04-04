@@ -72,6 +72,7 @@ public class MovingState extends ElevatorState {
 	 * Send arrival event when arrived at a floor, wait to receive scheduler event and follow instructions given by scheduler
 	 */
 	public void handleArrivedAtFloor() {
+		this.elevator.addStatus(Thread.currentThread().getName() + " arrived at floor " + elevator.getCurrentFloor() + ".  {Time: " + LocalTime.now() + "}");
 		System.out.println(Thread.currentThread().getName() + " arrived at floor " + elevator.getCurrentFloor() + " and sending arrival event" + ".  {Time: " + LocalTime.now() + "}");
 		ArrivalEvent e = new ArrivalEvent(elevator.getCurrentFloor(), LocalTime.now(), elevator.getDirection(),
 				elevator.getSendReceiveScheduleSocket().getLocalPort(), elevator.getId());
