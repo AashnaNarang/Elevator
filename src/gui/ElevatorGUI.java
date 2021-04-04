@@ -7,13 +7,11 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Utilities;
 
 import main.Configurations;
 import main.Elevator;
@@ -27,13 +25,16 @@ import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.LinkedList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
 
+import main.Timing;
+
 /**
  * The GUI that represents the different elevators that are running.
- * 
+ *
  */
 public class ElevatorGUI extends JFrame {
 
@@ -70,13 +71,13 @@ public class ElevatorGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public ElevatorGUI() {
-		//Get the screen size of the computer
+		// Get the screen size of the computer
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int frameWidth = (int)screenSize.getWidth()/2 + 100;
-		int frameHeight = (int)screenSize.getHeight()/2;
+		int frameWidth = (int) screenSize.getWidth();
+		int frameHeight = (int) screenSize.getHeight() / 2 + 100;
 
-		int x = (int)(screenSize.getWidth() - frameWidth)/2;
-		int y = (int)(screenSize.getHeight() - frameHeight)/2;
+		int x = (int) (screenSize.getWidth() - frameWidth) / 2;
+		int y = (int) (screenSize.getHeight() - frameHeight) / 2;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(x, y, frameWidth, frameHeight);
@@ -98,10 +99,13 @@ public class ElevatorGUI extends JFrame {
 
 		addOutputConsoles();
 
+		elevatorFinished(this);
+
 		Configurations.NUM_ELEVATORS = Integer
 				.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Elevators: "));
-		Configurations.NUMBER_OF_FLOORS = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Floors: "));
-		
+		Configurations.NUMBER_OF_FLOORS = Integer
+				.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Floors: "));
+
 		btnStart = new JButton("Start");
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -115,175 +119,123 @@ public class ElevatorGUI extends JFrame {
 		contentPane.add(elevatorOutput);
 	}
 
+	public void elevatorFinished(JFrame frame) {
+		Timer checkIfFinished = new Timer(5000, new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				String timingInfo = Timing.getTimingInfo();
+				if(timingInfo != null) {
+					JOptionPane.showMessageDialog(frame, "This is the resulting performance time: \n" + timingInfo, "Performance Results", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		});
+		checkIfFinished.setRepeats(true);
+		checkIfFinished.start();
+	}
+
 	public void addOutputConsoles() {
-		//Create new grid panel
-		GridLayout gridlayout = new GridLayout(0,4);
+		// Create new grid panel
+		GridLayout gridlayout = new GridLayout(0, 4);
 		gridlayout.setVgap(10);
 		elevatorOutput = new JPanel();
 		elevatorOutput.setLayout(gridlayout);
 
-		//Create generic border
+		// Create generic border
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
 
 		// Elevator data text output
-		elevatorData0 = new JTextArea(20,20);
+		elevatorData0 = new JTextArea(30, 30);
 		elevatorData0.setBorder(border);
 		elevatorData0.setEditable(false);
 		Timer timer0 = new Timer(1, new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				int end = elevatorData0.getDocument().getLength();
-				int start = 0;
-				try {
-					start = Utilities.getRowStart(elevatorData0, end);
-				} catch (BadLocationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				while (start == end) {
-					end--;
-					try {
-						start = Utilities.getRowStart(elevatorData0, end);
-					} catch (BadLocationException e) {
-
+				String elevatorStatus = "";
+				if (e0 != null) {
+					LinkedList<String> statuses = e0.getStatuses();
+					for (String s : statuses) {
+						elevatorStatus = elevatorStatus + s + "\n";
 					}
-				}
-				String text = "";
-				try {
-					text = elevatorData0.getText(start, end - start);
-				} catch (BadLocationException e) {
-
-				}
-				if (e0 != null && !text.equals(e0.toString())) {
-					elevatorData0.append(e0.toString() + "\n");
+					elevatorData0.append(elevatorStatus);
 				}
 			}
 		});
 		timer0.setRepeats(true);
 		timer0.start();
-		elevatorOutput.add(elevatorData0);
+		elevatorOutput.add(new JScrollPane(elevatorData0));
 
 		// Elevator data text output
-		elevatorData1 = new JTextArea(20,20);
+		elevatorData1 = new JTextArea(30, 30);
 		elevatorData1.setBorder(border);
 		elevatorData1.setEditable(false);
 		Timer timer1 = new Timer(1, new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				int end = elevatorData1.getDocument().getLength();
-				int start = 0;
-				try {
-					start = Utilities.getRowStart(elevatorData1, end);
-				} catch (BadLocationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				while (start == end) {
-					end--;
-					try {
-						start = Utilities.getRowStart(elevatorData1, end);
-					} catch (BadLocationException e) {
-
+				String elevatorStatus = "";
+				if (e1 != null) {
+					LinkedList<String> statuses = e1.getStatuses();
+					for (String s : statuses) {
+						elevatorStatus = elevatorStatus + s + "\n";
 					}
-				}
-				String text = "";
-				try {
-					text = elevatorData1.getText(start, end - start);
-				} catch (BadLocationException e) {
-
-				}
-				if (e1 != null && !text.equals(e1.toString())) {
-					elevatorData1.append(e1.toString() + "\n");
+					elevatorData1.append(elevatorStatus);
 				}
 			}
 		});
 		timer1.setRepeats(true);
 		timer1.start();
-		elevatorOutput.add(elevatorData1);
+		elevatorOutput.add(new JScrollPane(elevatorData1));
 
 		// Elevator data text output
-		elevatorData2 = new JTextArea(20,20);
+		elevatorData2 = new JTextArea(30, 30);
 		elevatorData2.setBorder(border);
 		elevatorData2.setEditable(false);
 		Timer timer2 = new Timer(1, new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				int end = elevatorData2.getDocument().getLength();
-				int start = 0;
-				try {
-					start = Utilities.getRowStart(elevatorData2, end);
-				} catch (BadLocationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				while (start == end) {
-					end--;
-					try {
-						start = Utilities.getRowStart(elevatorData2, end);
-					} catch (BadLocationException e) {
-
+				String elevatorStatus = "";
+				if (e2 != null) {
+					LinkedList<String> statuses = e2.getStatuses();
+					for (String s : statuses) {
+						elevatorStatus = elevatorStatus + s + "\n";
 					}
-				}
-				String text = "";
-				try {
-					text = elevatorData2.getText(start, end - start);
-				} catch (BadLocationException e) {
-
-				}
-				if (e2 != null && !text.equals(e2.toString())) {
-					elevatorData2.append(e2.toString() + "\n");
+					elevatorData2.append(elevatorStatus);
 				}
 			}
 		});
 		timer2.setRepeats(true);
 		timer2.start();
-		elevatorOutput.add(elevatorData2);
+		elevatorOutput.add(new JScrollPane(elevatorData2));
 
 		// Elevator data text output
-		elevatorData3 = new JTextArea(20,20);
+		elevatorData3 = new JTextArea(30, 30);
 		elevatorData3.setBorder(border);
 		elevatorData3.setEditable(false);
 		Timer timer3 = new Timer(1, new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				int end = elevatorData3.getDocument().getLength();
-				int start = 0;
-				try {
-					start = Utilities.getRowStart(elevatorData3, end);
-				} catch (BadLocationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				while (start == end) {
-					end--;
-					try {
-						start = Utilities.getRowStart(elevatorData3, end);
-					} catch (BadLocationException e) {
-
+				String elevatorStatus = "";
+				if (e3 != null) {
+					LinkedList<String> statuses = e3.getStatuses();
+					for (String s : statuses) {
+						elevatorStatus = elevatorStatus + s + "\n";
 					}
-				}
-				String text = "";
-				try {
-					text = elevatorData3.getText(start, end - start);
-				} catch (BadLocationException e) {
-
-				}
-				if (e3 != null && !text.equals(e3.toString())) {
-					elevatorData3.append(e3.toString() + "\n");
+					elevatorData3.append(elevatorStatus);
 				}
 			}
 		});
 		timer3.setRepeats(true);
 		timer3.start();
-		elevatorOutput.add(elevatorData3);
+		elevatorOutput.add(new JScrollPane(elevatorData3));
 	}
-	
+
 	/**
-	 * Creates the different threads for the elevators and schedulers - then runs them. 
-	 * @param floorSubsytem of the elevator. 
+	 * Creates the different threads for the elevators and schedulers - then runs
+	 * them.
+	 *
+	 * @param floorSubsytem of the elevator.
 	 */
 	private void RunElevator(FloorSubsystem floorSubsystem) {
-		//Create thread for the scheduler
-		Thread sched = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT, Configurations.ARRIVAL_PORT,
-				Configurations.DEST_PORT, Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT,
-				Configurations.TIMER_PORT), "scheduler");
-		//create the elevators and their threads. 
+		// Create thread for the scheduler
+		Thread sched = new Thread(
+				new Scheduler(Configurations.FLOOR_EVENT_PORT, Configurations.ARRIVAL_PORT, Configurations.DEST_PORT,
+						Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT, Configurations.TIMER_PORT),
+				"scheduler");
+		// create the elevators and their threads.
 		e0 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT, Configurations.ELEVATOR_SCHEDULAR_PORT,
 				Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
 		elevator0 = new Thread(e0, "elevator0");
@@ -297,7 +249,7 @@ public class ElevatorGUI extends JFrame {
 				Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT);
 		Thread elevator3 = new Thread(e3, "elevator3");
 		Thread threadFloorSubsystem = new Thread(floorSubsystem, "floorSubsystem");
-		//start all the threads. 
+		// start all the threads.
 		threadFloorSubsystem.start();
 		sched.start();
 		elevator0.start();
