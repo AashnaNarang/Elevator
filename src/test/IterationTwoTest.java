@@ -16,6 +16,8 @@ import states.ElevatorState;
 import states.StationaryState;
 
 // Commenting out these test cases because they are outdated
+//These tests do not use test-cases, the recenet iteration3 tests cover the functionality of these tests as well
+
 
 /** public class IterationTwoTest {
 	

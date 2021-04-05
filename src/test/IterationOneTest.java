@@ -26,6 +26,7 @@ public class IterationOneTest {
 	public void setUp() throws Exception {
 	}
 	
+	//This test is to see if the events have been parsed
 	@Test
 	public void parseEvents() {
 			//08:10:23.100 1 up 3
