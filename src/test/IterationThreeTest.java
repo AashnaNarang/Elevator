@@ -89,13 +89,15 @@ public class IterationThreeTest {
 	}
 
 	@Test
-	public void loadBalancingTest() throws InterruptedException {
+	public void loadBalancingTest() throws InterruptedException {   
 		Elevator elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 2,
-				Configurations.ELEVATOR_SCHEDULAR_PORT + 2, Configurations.ARRIVAL_PORT + 2,
-				Configurations.DEST_PORT + 2, Configurations.ELEVATOR_STAT_PORT + 2);
+				Configurations.ELEVATOR_SCHEDULAR_PORT + 2, Configurations.ARRIVAL_PORT + 3,
+				Configurations.DEST_PORT + 3, Configurations.ELEVATOR_STAT_PORT + 3);
+		
 		Elevator elevator2 = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 3,
 				Configurations.ELEVATOR_SCHEDULAR_PORT + 3, Configurations.ARRIVAL_PORT + 3,
 				Configurations.DEST_PORT + 3, Configurations.ELEVATOR_STAT_PORT + 3);
+		
 		Thread floorSubsystem = new Thread(
 				new FloorSubsystem("input5.txt", Configurations.FLOOR_PORT + 3, Configurations.FLOOR_EVENT_PORT + 3),
 				"floorSubsystem");
