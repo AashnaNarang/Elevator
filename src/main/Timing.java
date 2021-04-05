@@ -52,6 +52,11 @@ public class Timing {
 		}
 	}
 	
+	public static void lostFloorEventDueToError() {
+		count--;
+		System.out.println("Decremented count to " + count);
+	}
+	
 	public static String getTimingInfo() {
 		if (endTime == -1) {
 			// this means we haven't collected an end time yet, so no timing info is available
