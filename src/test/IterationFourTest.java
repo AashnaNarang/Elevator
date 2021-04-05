@@ -36,13 +36,15 @@ public class IterationFourTest {
 			schedThread.start();
 			elevatorThread.start();
 			elevatorThread2.start();
-			TimeUnit.SECONDS.sleep(80);
+			TimeUnit.SECONDS.sleep(600);
 			
 			ArrayList<String> elevStrings = new ArrayList<String>();
 			elevStrings.add("The elevator is currently on floor: 1 with error code 2");
 			elevStrings.add("The elevator is currently on floor: 5 with error code 2");
 			elevStrings.add("The elevator is currently on floor: 7 with error code 0");
 			elevStrings.add("The elevator is currently on floor: 6 with error code 0");
+			System.out.println(elevator.toString());
+			System.out.println(elevator2.toString());
 			// Check if elevator final state string is in a list of possible states because it is difficult to control 
 			// which elevator object will pick up with floor event
 			assertTrue(elevStrings.contains(elevator.toString()));
