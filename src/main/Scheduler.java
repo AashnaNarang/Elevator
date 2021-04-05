@@ -127,6 +127,7 @@ public class Scheduler extends NetworkCommunicator implements Runnable {
 					destEventRemove.add(e);
 				}
 			}
+			Timing.lostFloorEventDueToError();
 		}
 		destinationEvents.removeAll(destEventRemove);
 		
