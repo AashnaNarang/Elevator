@@ -3,7 +3,9 @@ package gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
@@ -20,7 +22,6 @@ import main.Scheduler;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
@@ -40,7 +41,7 @@ import main.Timing;
  */
 public class ElevatorGUI extends JFrame {
 
-	private JPanel contentPane, elevatorOutput;
+	private JPanel contentPane, elevatorOutput, elevatorPanel;
 	// Create a file chooser
 	final JFileChooser fc = new JFileChooser();
 	public FloorSubsystem floorSubsystem;
@@ -71,9 +72,9 @@ public class ElevatorGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public ElevatorGUI() {
-		//This is to create the output of the GUI, to display data
+		// This is to create the output of the GUI, to display data
 		elevatorsData = new ArrayList<>();
-		elevators =  new ArrayList<>();
+		elevators = new ArrayList<>();
 		// Get the screen size of the computer
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int frameWidth = (int) screenSize.getWidth();
@@ -100,15 +101,13 @@ public class ElevatorGUI extends JFrame {
 			}
 		});
 
-
 		elevatorFinished(this);
 
 		Configurations.NUM_ELEVATORS = Integer
 				.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Elevators: "));
 		Configurations.NUMBER_OF_FLOORS = Integer
 				.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Floors: "));
-		
-		
+
 		btnStart = new JButton("Start");
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -121,18 +120,20 @@ public class ElevatorGUI extends JFrame {
 		contentPane.add(btnStart);
 		contentPane.add(btnNewButton);
 		contentPane.add(elevatorOutput);
+		contentPane.add(createElevatorButtons());
 
 	}
 
 	/**
-	* Produces a pop up whenever the system is finished with an input file
-	*/
+	 * Produces a pop up whenever the system is finished with an input file
+	 */
 	private void elevatorFinished(JFrame frame) {
 		Timer checkIfFinished = new Timer(5000, new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				String timingInfo = Timing.getTimingInfo();
-				if(timingInfo != null) {
-					JOptionPane.showMessageDialog(frame, "This is the resulting performance time: \n" + timingInfo, "Performance Results", JOptionPane.INFORMATION_MESSAGE);
+				if (timingInfo != null) {
+					JOptionPane.showMessageDialog(frame, "This is the resulting performance time: \n" + timingInfo,
+							"Performance Results", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		});
@@ -140,10 +141,39 @@ public class ElevatorGUI extends JFrame {
 		checkIfFinished.start();
 	}
 
+	private JPanel createElevatorButtons() {
+		JPanel panel = new JPanel();
+		// Create new grid panel
+		GridLayout gridlayout = new GridLayout(2, Configurations.NUM_ELEVATORS);
+		gridlayout.setVgap(30);
+
+		panel.setLayout(gridlayout);
+
+		for (int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
+			JButton elevatorButton = new JButton("Elevator: " + i);
+			JButton upButton = new JButton("Up");
+			JButton downButton = new JButton("Down");
+
+			elevatorButton.setBorderPainted(false);
+			elevatorButton.setFocusPainted(false);
+
+			upButton.setBorderPainted(false);
+			upButton.setFocusPainted(false);
+
+			downButton.setBorderPainted(false);
+			downButton.setFocusPainted(false);
+
+			panel.add(elevatorButton);
+			panel.add(upButton);
+			panel.add(downButton);
+		}
+		return panel;
+	}
+
 	/**
-	* Creates the text area outputs and handles whenever an status update is available
-	* for a particular elevator
-	*/
+	 * Creates the text area outputs and handles whenever an status update is
+	 * available for a particular elevator
+	 */
 	private void addOutputConsoles() {
 		// Create new grid panel
 		GridLayout gridlayout = new GridLayout(2, Configurations.NUM_ELEVATORS);
@@ -153,14 +183,13 @@ public class ElevatorGUI extends JFrame {
 		elevatorOutput = new JPanel();
 		elevatorOutput.setLayout(gridlayout);
 
-
 		// Create generic border
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
-		for(int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
-			elevatorsData.add(new JTextArea(30,30));
+		for (int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
+			elevatorsData.add(new JTextArea(30, 30));
 			elevatorsData.get(i).setBorder(border);
 			elevatorsData.get(i).setEditable(false);
-		    final int innerI = i;
+			final int innerI = i;
 			Timer timer = new Timer(1, new ActionListener() {
 				public void actionPerformed(ActionEvent evt) {
 					String elevatorStatus = "";
@@ -168,6 +197,7 @@ public class ElevatorGUI extends JFrame {
 						LinkedList<String> statuses = elevators.get(innerI).getStatuses();
 						for (String s : statuses) {
 							elevatorStatus = elevatorStatus + s + "\n";
+
 						}
 						elevatorsData.get(innerI).append(elevatorStatus);
 					}
@@ -177,7 +207,7 @@ public class ElevatorGUI extends JFrame {
 			timer.start();
 			elevatorOutput.add(new JScrollPane(elevatorsData.get(i)));
 		}
-		
+
 	}
 
 	/**
@@ -193,15 +223,16 @@ public class ElevatorGUI extends JFrame {
 						Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT, Configurations.TIMER_PORT),
 				"scheduler");
 		// create the elevators and their threads.
-		for(int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
-			elevators.add(new Elevator(Configurations.ELEVATOR_FLOOR_PORT + i, Configurations.ELEVATOR_SCHEDULAR_PORT + i,
-				Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT));
+		for (int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
+			elevators.add(
+					new Elevator(Configurations.ELEVATOR_FLOOR_PORT + i, Configurations.ELEVATOR_SCHEDULAR_PORT + i,
+							Configurations.ARRIVAL_PORT, Configurations.DEST_PORT, Configurations.ELEVATOR_STAT_PORT));
 		}
 		Thread threadFloorSubsystem = new Thread(floorSubsystem, "floorSubsystem");
 		threadFloorSubsystem.start();
 		sched.start();
-		for(int i = 0; i < elevators.size(); i++) {
-			Thread elevator = new Thread(elevators.get(i) , "elevator " + i);
+		for (int i = 0; i < elevators.size(); i++) {
+			Thread elevator = new Thread(elevators.get(i), "elevator " + i);
 			elevator.start();
 
 		}
