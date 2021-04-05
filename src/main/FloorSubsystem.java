@@ -81,8 +81,8 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 					floors.get(currentFloor - 1).switchButton(Direction.DOWN, false);
 				}
 			}
-			String s = Timing.getTimingInfo();
-			if(s != null) System.out.println(s);
+//			String s = Timing.getTimingInfo();
+//			if(s != null) System.out.println(s);
 		}
 	}
 

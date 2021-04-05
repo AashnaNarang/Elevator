@@ -45,7 +45,7 @@ public class BigElevatorTest3 {
       elevatorThread3.start();
       elevatorThread4.start();
 
-      TimeUnit.SECONDS.sleep(150);
+      TimeUnit.SECONDS.sleep(200);
 
       assertEquals(15, scheduler.getNumOfProcessedEvents());
     } catch (Exception e) {

@@ -24,12 +24,12 @@ public class TestScenarios {
 			Thread schedThread = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT, Configurations.ARRIVAL_PORT,
 					Configurations.DEST_PORT, Configurations.FLOOR_PORT, Configurations.ELEVATOR_STAT_PORT,
 					Configurations.TIMER_PORT), "scheduler");
-			Thread elevatorThread = new Thread(elevator, "elevato2");
+			Thread elevatorThread = new Thread(elevator, "elevator2");
 			floorSubsystemThread.start();
 			schedThread.start();
 			elevatorThread.start();
-			TimeUnit.SECONDS.sleep(5);
-			assertEquals("The elevator is currently on floor: 5 with error code 0", elevator.toString());
+			TimeUnit.SECONDS.sleep(80);
+			assertEquals("The elevator is currently on floor: 6 with error code 0", elevator.toString());
 		} catch (InterruptedException e) {
 		}
 	}
@@ -49,7 +49,7 @@ public class TestScenarios {
 			floorSubsystemThread.start();
 			schedThread.start();
 			elevatorThread.start();
-			TimeUnit.SECONDS.sleep(15);
+			TimeUnit.SECONDS.sleep(85);
 			assertEquals("The elevator is currently on floor: 4 with error code 0", elevator.toString());
 		} catch (InterruptedException e) {
 
@@ -72,7 +72,7 @@ public class TestScenarios {
 			floorSubsystemThread.start();
 			schedThread.start();
 			elevatorThread.start();
-			TimeUnit.SECONDS.sleep(5);
+			TimeUnit.SECONDS.sleep(80);
 			assertEquals("The elevator is currently on floor: 2 with error code 0", elevator.toString());
 		} catch (InterruptedException e) {
 		}
