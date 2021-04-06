@@ -58,8 +58,6 @@ public class ElevatorGUI extends JFrame {
 	
 	private Hashtable<String, JButton> buttonDictionary; 
 	
-	private boolean isFinished = false; 
-
 	/**
 	 * Launch the application.
 	 */
@@ -140,9 +138,12 @@ public class ElevatorGUI extends JFrame {
 			public void actionPerformed(ActionEvent evt) {
 				String timingInfo = Timing.getTimingInfo();
 				if (timingInfo != null) {
-					isFinished = true; 
 					JOptionPane.showMessageDialog(frame, "This is the resulting performance time: \n" + timingInfo,
 							"Performance Results", JOptionPane.INFORMATION_MESSAGE);
+					for(JButton button : buttonDictionary.values()) {
+						if(button.getText().contains("UP") || button.getText().contains("DOWN")) 
+							button.setBackground(null);
+					}
 				}
 			}
 		});
@@ -277,10 +278,6 @@ public class ElevatorGUI extends JFrame {
 								openDoor.setBackground(null); 
 								closedDoor.setBackground(null); 
 								permError.setBackground(Color.RED);
-							}
-							if(isFinished) {
-								buttonDown.setBackground(null);
-								buttonUp.setBackground(null);
 							}
 						}
 						elevatorsData.get(innerI).append(elevatorStatus);
