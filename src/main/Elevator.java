@@ -216,6 +216,13 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 	public int getCurrentFloor() {
 		return currentFloor;
 	}
+	
+	/**
+	 * @return the error code
+	 */
+	public int getErrorCode() {
+		return errorCode;
+	}
 
 	/**
 	 * Start the door timer and call handler when timer expires
