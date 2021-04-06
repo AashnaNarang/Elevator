@@ -1,6 +1,8 @@
 package gui;
 
+import java.awt.Button;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
@@ -27,6 +29,7 @@ import javax.swing.JFileChooser;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -51,6 +54,8 @@ public class ElevatorGUI extends JFrame {
 	private List<Elevator> elevators;
 
 	private JButton btnStart;
+	
+	private Hashtable<String, JButton> buttonDictionary; 
 
 	/**
 	 * Launch the application.
@@ -75,6 +80,7 @@ public class ElevatorGUI extends JFrame {
 		// This is to create the output of the GUI, to display data
 		elevatorsData = new ArrayList<>();
 		elevators = new ArrayList<>();
+		buttonDictionary = new Hashtable<String, JButton>(); 
 		// Get the screen size of the computer
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int frameWidth = (int) screenSize.getWidth();
@@ -149,10 +155,10 @@ public class ElevatorGUI extends JFrame {
 
 		panel.setLayout(gridlayout);
 
-		for (int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
+		for (int i = 1; i <= Configurations.NUM_ELEVATORS; i++) {
 			JButton elevatorButton = new JButton("Elevator: " + i);
-			JButton upButton = new JButton("Up");
-			JButton downButton = new JButton("Down");
+			JButton upButton = new JButton("UP");
+			JButton downButton = new JButton("DOWN");
 
 			elevatorButton.setBorderPainted(false);
 			elevatorButton.setFocusPainted(false);
@@ -162,6 +168,10 @@ public class ElevatorGUI extends JFrame {
 
 			downButton.setBorderPainted(false);
 			downButton.setFocusPainted(false);
+			
+			buttonDictionary.put(elevatorButton.getText(), elevatorButton);
+			buttonDictionary.put(elevatorButton.getText() + " " + upButton.getText(), upButton);
+			buttonDictionary.put(elevatorButton.getText() + " " + downButton.getText(), downButton);
 
 			panel.add(elevatorButton);
 			panel.add(upButton);
@@ -197,7 +207,19 @@ public class ElevatorGUI extends JFrame {
 						LinkedList<String> statuses = elevators.get(innerI).getStatuses();
 						for (String s : statuses) {
 							elevatorStatus = elevatorStatus + s + "\n";
-
+							if(s.contains("moving") && s.contains("UP")) {
+								JButton buttonUp = buttonDictionary.get("Elevator: " + (innerI+1) + " UP");
+								JButton buttonDown = buttonDictionary.get("Elevator: " + (innerI+1) + " DOWN");
+								buttonUp.setBackground(Color.GREEN);
+								buttonDown.setBackground(null);
+							}
+							else if(s.contains("moving") && s.contains("DOWN")) {
+								JButton buttonDown = buttonDictionary.get("Elevator: " + (innerI+1) + " DOWN");
+								JButton buttonUp = buttonDictionary.get("Elevator: " + (innerI+1) + " UP");
+								buttonDown.setBackground(Color.GREEN);
+								buttonUp.setBackground(null);
+							}
+								
 						}
 						elevatorsData.get(innerI).append(elevatorStatus);
 					}
