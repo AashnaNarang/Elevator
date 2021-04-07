@@ -225,8 +225,8 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 			this.statuses.add("Door opened for " + Thread.currentThread().getName() + ".  {Time: " + LocalTime.now() + "}");
 			this.setDoorsOpen(true);
 			Elevator tempElevator = this;
-			ElevatorTimer elevatorTimer = new ElevatorTimer(this);
-			TimerTask closeDoorsTask = new TimerTask() {
+			ElevatorTimer elevatorTimer = new ElevatorTimer(this); //timer used to determine if error occurred
+			TimerTask closeDoorsTask = new TimerTask() { //timer used to close doors
 		        public void run() {
 		            tempElevator.setDoorsOpen(false);
 		        }
@@ -235,15 +235,16 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		    Timer timer = new Timer("Timer");
 		    long delay = fe == null ? Configurations.TIME_TO_LOAD_UNLOAD: 
 		    	fe.getErrorCode() == 1 ? Configurations.TIME_TO_LOAD_UNLOAD * 2 : Configurations.TIME_TO_LOAD_UNLOAD;
-		    timer.schedule(closeDoorsTask, delay);
+		    timer.schedule(closeDoorsTask, delay); //start timers
 		    elevatorTimer.start();
-			while (this.getIsDoorsOpen()) {};
-			if (this.getDidTimeout()) {
+			while (this.getIsDoorsOpen()) {}; //wait till one of the timers comes back
+			if (this.getDidTimeout()) { //this happens when the doors do not close in time (transient error) 
 				this.errorCode = fe.getErrorCode();
 				this.statuses.add(Thread.currentThread().getName() + " is in error " + this.errorCode + " state");
 				System.out.println(Thread.currentThread().getName() + " is in error " + this.errorCode + " state");
 				closeDoorsTask.cancel();
 				timer.cancel();
+				this.setDoorsOpen(true);
 				this.setDidTimeout(false);
 				fe.setErrorCode(0);
 			} else {
