@@ -51,7 +51,7 @@ public class SchedulerTimer extends NetworkCommunicator implements Runnable {
 	public void run() {
 		try {
 			System.out.println("Timer for elevator with ID " + elevatorId + " started with " + numFloors + ".  {Time: " + LocalTime.now() + "}");
-			Thread.sleep((long) 37000);
+			Thread.sleep((long) 55000);
 			System.out.println("Timer for elevator with ID " + elevatorId + " timed out" + ".  {Time: " + LocalTime.now() + "}");
 			byte[] data = Serial.serialize(new TimeoutEvent(elevatorId, beforeArrivedAtSrcFloor));
 			send(sendTimerSocket, data, data.length, timerPort);
