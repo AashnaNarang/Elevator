@@ -1,42 +1,38 @@
 package gui;
 
-import java.awt.Button;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.GridBagConstraints;
+import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.Toolkit;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-
-import main.Configurations;
-import main.Direction;
-import main.Elevator;
-import main.FloorSubsystem;
-import main.Scheduler;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
-import java.awt.event.ActionEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
+import javax.swing.border.Border;
 
+import main.Configurations;
+import main.Direction;
+import main.Elevator;
+import main.FloorSubsystem;
+import main.Scheduler;
 import main.Timing;
 
 /**
@@ -45,7 +41,7 @@ import main.Timing;
  */
 public class ElevatorGUI extends JFrame {
 
-	private JPanel contentPane, elevatorOutput, elevatorPanel;
+	private JPanel elevatorOutput, elevatorPanel;
 	// Create a file chooser
 	final JFileChooser fc = new JFileChooser();
 	public FloorSubsystem floorSubsystem;
@@ -54,10 +50,23 @@ public class ElevatorGUI extends JFrame {
 	private List<JTextArea> elevatorsData;
 	private List<Elevator> elevators;
 
-	private JButton btnStart;
-	
-	private Hashtable<String, JButton> buttonDictionary; 
-	
+	private JButton btnStart, fileImport;
+
+	private Hashtable<String, JButton> buttonDictionary;
+
+	private JTable jtable;
+	private ArrayList<Integer> previousSpot = new ArrayList<Integer>();
+
+	private JTabbedPane mainLayout;
+	private JPanel mainContentConsole, tableContent, buttonList;
+	private GridLayout consoleAndButton;
+	private BoxLayout mainContentVisual;
+
+	private int frameWidth;
+	private int frameHeight;
+	private int x;
+	private int y;
+
 	/**
 	 * Launch the application.
 	 */
@@ -81,23 +90,65 @@ public class ElevatorGUI extends JFrame {
 		// This is to create the output of the GUI, to display data
 		elevatorsData = new ArrayList<>();
 		elevators = new ArrayList<>();
-		buttonDictionary = new Hashtable<String, JButton>(); 
+		buttonDictionary = new Hashtable<String, JButton>();
 		// Get the screen size of the computer
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int frameWidth = (int) screenSize.getWidth();
-		int frameHeight = (int) screenSize.getHeight() / 2 + 100;
+		frameWidth = (int) screenSize.getWidth();
+		frameHeight = (int) screenSize.getHeight();
 
-		int x = (int) (screenSize.getWidth() - frameWidth) / 2;
-		int y = (int) (screenSize.getHeight() - frameHeight) / 2;
+		x = (int) (screenSize.getWidth() - frameWidth) / 2;
+		y = (int) (screenSize.getHeight() - frameHeight) / 2;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(x, y, 28, 29);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
+		setBounds(x, y, frameWidth, frameHeight);
 
-		JButton btnNewButton = new JButton("Import Input File");
-		btnNewButton.addActionListener(new ActionListener() {
+		elevatorFinished(this);
+
+		Configurations.NUM_ELEVATORS = Integer
+				.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Elevators: "));
+		Configurations.NUMBER_OF_FLOORS = Integer
+				.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Floors: "));
+
+		addOutputConsoles();
+		createVisualElevator();
+		elevatorLayoutSetup();
+		createElevatorButtons();
+
+		this.add(mainLayout);
+		this.setTitle("ELEVATOR CONTROL SYSTEM");
+		this.pack();
+		this.setVisible(true);
+	}
+
+	private void elevatorLayoutSetup() {
+		//Tabs Layout
+		mainLayout = new JTabbedPane();
+
+		//The two main panels
+		mainContentConsole = new JPanel();
+		tableContent = new JPanel();
+
+		//Adding the two main panels into the tabs layout
+		mainLayout.addTab("Console", mainContentConsole);
+		mainLayout.addTab("Visual", tableContent);
+
+		//Setup the console side layout
+		consoleAndButton = new GridLayout(2,0);
+		mainContentConsole.setLayout(consoleAndButton);
+		mainContentConsole.add(elevatorOutput);
+
+		//Setup button side layout
+		JPanel buttonHold = new JPanel();
+		btnStart = new JButton("Start");
+		btnStart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				floorSubsystem = new FloorSubsystem(file.getName(), Configurations.FLOOR_PORT,
+						Configurations.FLOOR_EVENT_PORT);
+				RunElevator(floorSubsystem);
+			}
+		});
+		fileImport = new JButton("Import Input File");
+		fileImport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 				int returnVal = fc.showOpenDialog(ElevatorGUI.this);
@@ -107,27 +158,19 @@ public class ElevatorGUI extends JFrame {
 				}
 			}
 		});
+		buttonHold.add(btnStart);
+		buttonHold.add(fileImport);
+		mainContentConsole.add(buttonHold);
 
-		elevatorFinished(this);
+		//Setup Visual Side
+		mainContentVisual = new BoxLayout(tableContent,BoxLayout.Y_AXIS);
+		tableContent.setLayout(mainContentVisual);
+		tableContent.add(jtable);
 
-		Configurations.NUM_ELEVATORS = Integer
-				.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Elevators: "));
-		Configurations.NUMBER_OF_FLOORS = Integer
-				.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Floors: "));
+		buttonList = new JPanel();
+		buttonList.setLayout(new BoxLayout(buttonList, BoxLayout.Y_AXIS));
+		tableContent.add(buttonList);
 
-		btnStart = new JButton("Start");
-		btnStart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				floorSubsystem = new FloorSubsystem(file.getName(), Configurations.FLOOR_PORT,
-						Configurations.FLOOR_EVENT_PORT);
-				RunElevator(floorSubsystem);
-			}
-		});
-		addOutputConsoles();
-		contentPane.add(btnStart);
-		contentPane.add(btnNewButton);
-		contentPane.add(elevatorOutput);
-		createElevatorButtons(); 
 	}
 
 	/**
@@ -140,8 +183,8 @@ public class ElevatorGUI extends JFrame {
 				if (timingInfo != null) {
 					JOptionPane.showMessageDialog(frame, "This is the resulting performance time: \n" + timingInfo,
 							"Performance Results", JOptionPane.INFORMATION_MESSAGE);
-					for(JButton button : buttonDictionary.values()) {
-						if(button.getText().contains("UP") || button.getText().contains("DOWN")) 
+					for (JButton button : buttonDictionary.values()) {
+						if (button.getText().contains("UP") || button.getText().contains("DOWN"))
 							button.setBackground(null);
 					}
 				}
@@ -152,14 +195,9 @@ public class ElevatorGUI extends JFrame {
 	}
 
 	private void createElevatorButtons() {
-//		JPanel panel = new JPanel();
-//		// Create new grid panel
-//		GridLayout gridlayout = new GridLayout(2, Configurations.NUM_ELEVATORS);
-//		gridlayout.setVgap(30);
-//
-//		panel.setLayout(gridlayout);
 
 		for (int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
+			JPanel buttons = new JPanel();
 			JButton elevatorButton = new JButton("Elevator: " + i);
 			JButton upButton = new JButton("UP");
 			JButton downButton = new JButton("DOWN");
@@ -176,19 +214,19 @@ public class ElevatorGUI extends JFrame {
 
 			downButton.setBorderPainted(false);
 			downButton.setFocusPainted(false);
-			
+
 			transientErrorButton.setBorderPainted(false);
 			transientErrorButton.setFocusPainted(false);
 
 			permErrorButton.setBorderPainted(false);
 			permErrorButton.setFocusPainted(false);
-			
+
 			doorOpened.setBorderPainted(false);
 			doorOpened.setFocusPainted(false);
-			
+
 			doorClosed.setBorderPainted(false);
 			doorClosed.setFocusPainted(false);
-			
+
 			buttonDictionary.put(elevatorButton.getText() + " " + upButton.getText(), upButton);
 			buttonDictionary.put(elevatorButton.getText() + " " + downButton.getText(), downButton);
 			buttonDictionary.put(elevatorButton.getText() + " " + transientErrorButton.getText(), transientErrorButton);
@@ -196,13 +234,40 @@ public class ElevatorGUI extends JFrame {
 			buttonDictionary.put(doorOpened.getText(), doorOpened);
 			buttonDictionary.put(doorClosed.getText(), doorClosed);
 
-			contentPane.add(elevatorButton);
-			contentPane.add(upButton);
-			contentPane.add(downButton);
-			contentPane.add(transientErrorButton);
-			contentPane.add(permErrorButton);
-			contentPane.add(doorOpened);
-			contentPane.add(doorClosed);
+			buttons.add(elevatorButton);
+			buttons.add(upButton);
+			buttons.add(downButton);
+			buttons.add(transientErrorButton);
+			buttons.add(permErrorButton);
+			buttons.add(doorOpened);
+			buttons.add(doorClosed);
+
+			buttonList.add(buttons);
+		}
+	}
+
+	private void createVisualElevator() {
+		JPanel visualElevator = new JPanel();
+		jtable = new JTable(Configurations.NUMBER_OF_FLOORS + 1, Configurations.NUM_ELEVATORS + 1);
+		jtable.setDefaultEditor(Object.class, null);
+		jtable.setDefaultRenderer(Object.class, new CustomRenderer());
+		jtable.setFont(jtable.getFont().deriveFont(Font.BOLD, jtable.getFont().getSize()));
+
+		//Set up the initial locations of the elevators
+		for(Elevator e: elevators) {
+			jtable.setValueAt("Elevator Here", Configurations.NUMBER_OF_FLOORS, e.getId());
+		}
+
+		//Set up floor labels
+		jtable.setValueAt("Floor", Configurations.NUMBER_OF_FLOORS, Configurations.NUM_ELEVATORS);
+		for(int i = 1; i < jtable.getRowCount();i++) {
+			jtable.setValueAt(i, jtable.getRowCount() - i - 1, jtable.getColumnCount() - 1);
+		}
+		visualElevator.add(jtable);
+
+		//Set up list
+		for(int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
+			previousSpot.add(Configurations.NUMBER_OF_FLOORS);
 		}
 	}
 
@@ -222,11 +287,11 @@ public class ElevatorGUI extends JFrame {
 		// Create generic border
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
 		for (int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
-			elevatorsData.add(new JTextArea(30, 30));
+			elevatorsData.add(new JTextArea(30,30));
 			elevatorsData.get(i).setBorder(border);
 			elevatorsData.get(i).setEditable(false);
 			final int innerI = i;
-			Timer timer = new Timer(1, new ActionListener() {
+			Timer timer = new Timer(50, new ActionListener() {
 				public void actionPerformed(ActionEvent evt) {
 					String elevatorStatus = "";
 					if (!elevators.isEmpty()) {
@@ -235,52 +300,68 @@ public class ElevatorGUI extends JFrame {
 							elevatorStatus = elevatorStatus + s + "\n";
 							JButton buttonUp = buttonDictionary.get("Elevator: " + innerI + " UP");
 							JButton buttonDown = buttonDictionary.get("Elevator: " + innerI + " DOWN");
-							JButton transientError = buttonDictionary.get("Elevator: " + innerI + " Transient Error: " + innerI);
-							JButton permError = buttonDictionary.get("Elevator: " + innerI + " Permanent Error: " + innerI);
+							JButton transientError = buttonDictionary
+									.get("Elevator: " + innerI + " Transient Error: " + innerI);
+							JButton permError = buttonDictionary
+									.get("Elevator: " + innerI + " Permanent Error: " + innerI);
 							JButton openDoor = buttonDictionary.get("Door " + innerI + " Open");
 							JButton closedDoor = buttonDictionary.get("Door " + innerI + " Closed");
-							
-							//handle up and down movement
-							if(s.contains("moving") && elevators.get(innerI).getDirection() == Direction.UP) {
+
+							// handle up and down movement
+							if (s.contains("moving") && elevators.get(innerI).getDirection() == Direction.UP) {
 								buttonUp.setBackground(Color.GREEN);
 								transientError.setBackground(null);
 								buttonDown.setBackground(null);
 								permError.setBackground(null);
-							}
-							else if(s.contains("moving") && elevators.get(innerI).getDirection() == Direction.DOWN) {
+							} else if (s.contains("moving") && elevators.get(innerI).getDirection() == Direction.DOWN) {
 								buttonDown.setBackground(Color.GREEN);
 								transientError.setBackground(null);
 								buttonUp.setBackground(null);
 								permError.setBackground(null);
 							}
-							
-							//handle door open/closed
-							if(elevators.get(innerI).getIsDoorsOpen()) {
+
+							// handle door open/closed
+							if (elevators.get(innerI).getIsDoorsOpen()) {
 								openDoor.setBackground(Color.YELLOW);
 								closedDoor.setBackground(null);
-							}
-							else if(!(elevators.get(innerI).getIsDoorsOpen())) {
+							} else if (!(elevators.get(innerI).getIsDoorsOpen())) {
 								openDoor.setBackground(null);
 								closedDoor.setBackground(Color.YELLOW);
 							}
-							if(elevators.get(innerI).getErrorCode() == 1) {
+							if (elevators.get(innerI).getErrorCode() == 1) {
 								buttonDown.setBackground(null);
 								buttonUp.setBackground(null);
 								permError.setBackground(null);
-								openDoor.setBackground(null); 
-								closedDoor.setBackground(null); 
+								openDoor.setBackground(null);
+								closedDoor.setBackground(null);
 								transientError.setBackground(Color.RED);
-							}
-							else if(elevators.get(innerI).getErrorCode() == 2) {
+							} else if (elevators.get(innerI).getErrorCode() == 2) {
 								buttonDown.setBackground(null);
 								buttonUp.setBackground(null);
 								transientError.setBackground(null);
-								openDoor.setBackground(null); 
-								closedDoor.setBackground(null); 
+								openDoor.setBackground(null);
+								closedDoor.setBackground(null);
 								permError.setBackground(Color.RED);
 							}
 						}
 						elevatorsData.get(innerI).append(elevatorStatus);
+
+						for (Elevator e : elevators) {
+							if (jtable.getValueAt(Configurations.NUMBER_OF_FLOORS - e.getCurrentFloor(), e.getId()) == null) {
+								jtable.setValueAt("", previousSpot.get(e.getId()), e.getId());
+								jtable.setValueAt("Elevator Here", Configurations.NUMBER_OF_FLOORS - e.getCurrentFloor(), e.getId());
+								jtable.setValueAt("Elevator: " + e.getId(), Configurations.NUMBER_OF_FLOORS, e.getId());
+								previousSpot.set(e.getId(), Configurations.NUMBER_OF_FLOORS - e.getCurrentFloor());
+							}
+							else {
+								if (!jtable.getValueAt(Configurations.NUMBER_OF_FLOORS - e.getCurrentFloor(), e.getId()).equals("Elevator Here")) {
+									jtable.setValueAt("", previousSpot.get(e.getId()), e.getId());
+									jtable.setValueAt("Elevator Here", Configurations.NUMBER_OF_FLOORS - e.getCurrentFloor(), e.getId());
+									jtable.setValueAt("Elevator: " + e.getId(), Configurations.NUMBER_OF_FLOORS, e.getId());
+									previousSpot.set(e.getId(), Configurations.NUMBER_OF_FLOORS - e.getCurrentFloor());
+								}
+							}
+						}
 					}
 				}
 			});
