@@ -36,12 +36,13 @@ import main.Scheduler;
 import main.Timing;
 
 /**
- * The GUI that represents the different elevators that are running.
- *
+ * The GUI that represents the different elevators that are running. Includes both a console like view and a visual view
+ * that shows the locations of the elevators and their states.
  */
 public class ElevatorGUI extends JFrame {
 
-	private JPanel elevatorOutput, elevatorPanel;
+	private JPanel elevatorOutput;
+
 	// Create a file chooser
 	final JFileChooser fc = new JFileChooser();
 	public FloorSubsystem floorSubsystem;
@@ -54,18 +55,27 @@ public class ElevatorGUI extends JFrame {
 
 	private Hashtable<String, JButton> buttonDictionary;
 
+	//Holds the locations and previous locations of the elevators
 	private JTable jtable;
 	private ArrayList<Integer> previousSpot = new ArrayList<Integer>();
 
+	//Helper Panels/Layouts for the GUI
 	private JTabbedPane mainLayout;
 	private JPanel mainContentConsole, tableContent, buttonList;
 	private GridLayout consoleAndButton;
 	private BoxLayout mainContentVisual;
 
+	//Keep the computer screen dimensions
 	private int frameWidth;
 	private int frameHeight;
 	private int x;
 	private int y;
+
+	//Handle error cases for users
+	private boolean selectedFile = false;
+	private boolean systemRan = false;
+
+	private JFrame frame = this;
 
 	/**
 	 * Launch the application.
@@ -91,6 +101,7 @@ public class ElevatorGUI extends JFrame {
 		elevatorsData = new ArrayList<>();
 		elevators = new ArrayList<>();
 		buttonDictionary = new Hashtable<String, JButton>();
+
 		// Get the screen size of the computer
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frameWidth = (int) screenSize.getWidth();
@@ -102,17 +113,32 @@ public class ElevatorGUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(x, y, frameWidth, frameHeight);
 
+		//Create a check that checks when the system is finished running
 		elevatorFinished(this);
 
+		//Asks the user for the number of elevators/floors
 		Configurations.NUM_ELEVATORS = Integer
 				.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Elevators: "));
 		Configurations.NUMBER_OF_FLOORS = Integer
 				.parseInt(JOptionPane.showInputDialog(this, "Enter the number of Floors: "));
 
-		addOutputConsoles();
-		createVisualElevator();
-		elevatorLayoutSetup();
-		createElevatorButtons();
+		//Display a help message
+		JOptionPane.showMessageDialog(this,
+				"How to use the system:\nThe system is meant to be used to simulate one scenario. "
+						+ "After running once, the system must reset in order to simulate a new scenario."
+						+ "\n\nHow the system works:\nThe Frame is a tabbed pane. "
+						+ "In the top left you can click the tabs to change looks."
+						+ "\nIn the console tab you can import a file and start the simulation."
+						+ " The white squares you see will display SIMPLE lines describing the location of the elevator and whenever errors occur when you run a simulation."
+						+ "\n\nThe visual tab shows the elevators moving, which is represented by the red boxes. "
+						+ "It also has a section below which shows the current state of the elevator."
+						+ "\nAs the simulation runs, you will see the labelled buttons turn on for corresponding elevators, reporting its current state (ex. UP will be highlighted when the elevator is moving up)"
+						+ "\nHave fun with the elevator control system :)");
+
+		addOutputConsoles(); //Creates a console like output displaying where the elevator is
+		createVisualElevator();	//Creates a visual look of the elevator, displaying where they currently are
+		elevatorLayoutSetup();	//Creates the layout of the GUI
+		createElevatorButtons(); //Creates the elevator state buttons
 
 		this.add(mainLayout);
 		this.setTitle("ELEVATOR CONTROL SYSTEM");
@@ -120,33 +146,49 @@ public class ElevatorGUI extends JFrame {
 		this.setVisible(true);
 	}
 
+	/**
+	 * Creates an organized layout of the GUI and sets up the location of each panel
+	 */
 	private void elevatorLayoutSetup() {
-		//Tabs Layout
+		// Tabs Layout
 		mainLayout = new JTabbedPane();
 
-		//The two main panels
+		// The two main panels
 		mainContentConsole = new JPanel();
 		tableContent = new JPanel();
 
-		//Adding the two main panels into the tabs layout
+		// Adding the two main panels into the tabs layout
 		mainLayout.addTab("Console", mainContentConsole);
 		mainLayout.addTab("Visual", tableContent);
 
-		//Setup the console side layout
-		consoleAndButton = new GridLayout(2,0);
+		// Setup the console side layout
+		consoleAndButton = new GridLayout(2, 0);
 		mainContentConsole.setLayout(consoleAndButton);
 		mainContentConsole.add(elevatorOutput);
 
-		//Setup button side layout
+		// Setup button side layout
 		JPanel buttonHold = new JPanel();
+
+		//Creates the start button
 		btnStart = new JButton("Start");
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				floorSubsystem = new FloorSubsystem(file.getName(), Configurations.FLOOR_PORT,
-						Configurations.FLOOR_EVENT_PORT);
-				RunElevator(floorSubsystem);
+				if (selectedFile && !systemRan) {
+					floorSubsystem = new FloorSubsystem(file.getName(), Configurations.FLOOR_PORT,
+							Configurations.FLOOR_EVENT_PORT);
+					RunElevator(floorSubsystem);
+					systemRan = true;
+				} else if (!selectedFile) {
+					JOptionPane.showMessageDialog(frame, "Select a file first");
+				}
+				if (systemRan && selectedFile) {
+					JOptionPane.showMessageDialog(frame,
+							"Thank you for using the system, please restart the system if you want to try another simulation");
+				}
 			}
 		});
+
+		//Creates the file import button
 		fileImport = new JButton("Import Input File");
 		fileImport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -154,7 +196,9 @@ public class ElevatorGUI extends JFrame {
 				int returnVal = fc.showOpenDialog(ElevatorGUI.this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					file = fc.getSelectedFile();
-				} else {
+					if (file != null) {
+						selectedFile = true;
+					}
 				}
 			}
 		});
@@ -162,8 +206,8 @@ public class ElevatorGUI extends JFrame {
 		buttonHold.add(fileImport);
 		mainContentConsole.add(buttonHold);
 
-		//Setup Visual Side
-		mainContentVisual = new BoxLayout(tableContent,BoxLayout.Y_AXIS);
+		// Setup Visual Side
+		mainContentVisual = new BoxLayout(tableContent, BoxLayout.Y_AXIS);
 		tableContent.setLayout(mainContentVisual);
 		tableContent.add(jtable);
 
@@ -177,10 +221,12 @@ public class ElevatorGUI extends JFrame {
 	 * Produces a pop up whenever the system is finished with an input file
 	 */
 	private void elevatorFinished(JFrame frame) {
+		//Every 5 seconds, checks if the simulation is finished running
 		Timer checkIfFinished = new Timer(5000, new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				String timingInfo = Timing.getTimingInfo();
 				if (timingInfo != null) {
+					//Displays the performance time when the simulation is finished running
 					JOptionPane.showMessageDialog(frame, "This is the resulting performance time: \n" + timingInfo,
 							"Performance Results", JOptionPane.INFORMATION_MESSAGE);
 					for (JButton button : buttonDictionary.values()) {
@@ -194,6 +240,9 @@ public class ElevatorGUI extends JFrame {
 		checkIfFinished.start();
 	}
 
+	/**
+	 * Creates buttons that are used to display the elevator state
+	 */
 	private void createElevatorButtons() {
 
 		for (int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
@@ -246,6 +295,9 @@ public class ElevatorGUI extends JFrame {
 		}
 	}
 
+	/**
+	 * Creates a table that is used to color cells indicating the elevator's position
+	 */
 	private void createVisualElevator() {
 		JPanel visualElevator = new JPanel();
 		jtable = new JTable(Configurations.NUMBER_OF_FLOORS + 1, Configurations.NUM_ELEVATORS + 1);
@@ -253,20 +305,20 @@ public class ElevatorGUI extends JFrame {
 		jtable.setDefaultRenderer(Object.class, new CustomRenderer());
 		jtable.setFont(jtable.getFont().deriveFont(Font.BOLD, jtable.getFont().getSize()));
 
-		//Set up the initial locations of the elevators
-		for(Elevator e: elevators) {
+		// Set up the initial locations of the elevators
+		for (Elevator e : elevators) {
 			jtable.setValueAt("Elevator Here", Configurations.NUMBER_OF_FLOORS, e.getId());
 		}
 
-		//Set up floor labels
+		// Set up floor labels
 		jtable.setValueAt("Floor", Configurations.NUMBER_OF_FLOORS, Configurations.NUM_ELEVATORS);
-		for(int i = 1; i < jtable.getRowCount();i++) {
+		for (int i = 1; i < jtable.getRowCount(); i++) {
 			jtable.setValueAt(i, jtable.getRowCount() - i - 1, jtable.getColumnCount() - 1);
 		}
 		visualElevator.add(jtable);
 
-		//Set up list
-		for(int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
+		// Set up list
+		for (int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
 			previousSpot.add(Configurations.NUMBER_OF_FLOORS);
 		}
 	}
@@ -287,7 +339,7 @@ public class ElevatorGUI extends JFrame {
 		// Create generic border
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
 		for (int i = 0; i < Configurations.NUM_ELEVATORS; i++) {
-			elevatorsData.add(new JTextArea(30,30));
+			elevatorsData.add(new JTextArea(30, 30));
 			elevatorsData.get(i).setBorder(border);
 			elevatorsData.get(i).setEditable(false);
 			final int innerI = i;
@@ -347,17 +399,21 @@ public class ElevatorGUI extends JFrame {
 						elevatorsData.get(innerI).append(elevatorStatus);
 
 						for (Elevator e : elevators) {
-							if (jtable.getValueAt(Configurations.NUMBER_OF_FLOORS - e.getCurrentFloor(), e.getId()) == null) {
+							if (jtable.getValueAt(Configurations.NUMBER_OF_FLOORS - e.getCurrentFloor(),
+									e.getId()) == null) {
 								jtable.setValueAt("", previousSpot.get(e.getId()), e.getId());
-								jtable.setValueAt("Elevator Here", Configurations.NUMBER_OF_FLOORS - e.getCurrentFloor(), e.getId());
+								jtable.setValueAt("Elevator Here",
+										Configurations.NUMBER_OF_FLOORS - e.getCurrentFloor(), e.getId());
 								jtable.setValueAt("Elevator: " + e.getId(), Configurations.NUMBER_OF_FLOORS, e.getId());
 								previousSpot.set(e.getId(), Configurations.NUMBER_OF_FLOORS - e.getCurrentFloor());
-							}
-							else {
-								if (!jtable.getValueAt(Configurations.NUMBER_OF_FLOORS - e.getCurrentFloor(), e.getId()).equals("Elevator Here")) {
+							} else {
+								if (!jtable.getValueAt(Configurations.NUMBER_OF_FLOORS - e.getCurrentFloor(), e.getId())
+										.equals("Elevator Here")) {
 									jtable.setValueAt("", previousSpot.get(e.getId()), e.getId());
-									jtable.setValueAt("Elevator Here", Configurations.NUMBER_OF_FLOORS - e.getCurrentFloor(), e.getId());
-									jtable.setValueAt("Elevator: " + e.getId(), Configurations.NUMBER_OF_FLOORS, e.getId());
+									jtable.setValueAt("Elevator Here",
+											Configurations.NUMBER_OF_FLOORS - e.getCurrentFloor(), e.getId());
+									jtable.setValueAt("Elevator: " + e.getId(), Configurations.NUMBER_OF_FLOORS,
+											e.getId());
 									previousSpot.set(e.getId(), Configurations.NUMBER_OF_FLOORS - e.getCurrentFloor());
 								}
 							}
