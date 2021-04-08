@@ -35,7 +35,7 @@ public class ElevatorTimer implements Runnable {
 			Thread.sleep((long) (Configurations.TIME_TO_LOAD_UNLOAD * 1.5));
 			System.out.println("Timer for Door with ID " + elevator.getId() + " timed out" + ".  {Time: " + LocalTime.now() + "}");
 			elevator.setDidTimeout(true);
-			elevator.setDoorsOpen(true);
+			elevator.setDoorsOpen(false);
 		} catch (InterruptedException e) {
 			System.out.println("Timer for Door with ID " + elevator.getId() + " cancelled" + ".  {Time: " + LocalTime.now() + "}");
 		}
