@@ -102,13 +102,14 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		while(currentState.getClass() == MovingState.class) {
 			this.statuses.add(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
 			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
-			currentFloor += direction == Direction.UP ? 1 : -1;
 			try {
 				Thread.sleep(Configurations.TIME_MOVING_BETWEEN_FLOOR);
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			currentFloor += direction == Direction.UP ? 1 : -1;
+			System.out.println(Thread.currentThread().getName() + " arrived at floor " + currentFloor + ".  {Time: " + LocalTime.now() + "}");
 			currentState.handleArrivedAtFloor();
 		}
 			
@@ -146,6 +147,7 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 				e1.printStackTrace();
 			}
 			currentFloor += direction == Direction.UP ? 1 : -1;
+			System.out.println(Thread.currentThread().getName() + " arrived at floor " + currentFloor + ".  {Time: " + LocalTime.now() + "}");
 			currentState.handleArrivedAtFloor();
 		}
 	}
@@ -172,7 +174,13 @@ public class Elevator extends NetworkCommunicator implements Runnable {
 		for (int i = 0; i < Math.abs(diffFloors); i++) {
 			this.statuses.add(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
 			System.out.println(Thread.currentThread().getName() + " is moving one floor " + direction + ".  {Time: " + LocalTime.now() + "}");
+			try {
+				Thread.sleep(Configurations.TIME_MOVING_BETWEEN_FLOOR);
+			} catch (InterruptedException e2) {
+				e2.printStackTrace();
+			}
 			currentFloor += direction == Direction.UP ? 1 : -1;
+			System.out.println(Thread.currentThread().getName() + " arrived at floor " + currentFloor + ".  {Time: " + LocalTime.now() + "}");
 		}
 		direction = e.getDirection();
 		currentState.handleArrivedAtFloor();
