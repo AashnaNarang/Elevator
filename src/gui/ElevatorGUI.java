@@ -229,6 +229,8 @@ public class ElevatorGUI extends JFrame {
 					//Displays the performance time when the simulation is finished running
 					JOptionPane.showMessageDialog(frame, "This is the resulting performance time: \n" + timingInfo,
 							"Performance Results", JOptionPane.INFORMATION_MESSAGE);
+					//When the system is finished running, reset all the up and down labelled buttons
+					//so they are no longer highlighted
 					for (JButton button : buttonDictionary.values()) {
 						if (button.getText().contains("UP") || button.getText().contains("DOWN"))
 							button.setBackground(null);
