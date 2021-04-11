@@ -1,5 +1,6 @@
 package main;
 
+import java.time.LocalTime;
 
 public class Timing {
 	private static long startTime = 0;
@@ -18,7 +19,7 @@ public class Timing {
 	 * @param numRequests the number of requests to set
 	 */
 	public static void setNumRequests(int numRequests) {
-		System.out.println("Setting num requests " + numRequests);
+		System.out.println("Setting num requests " + numRequests + ".  {Time: " + LocalTime.now() + "}");
 		Timing.numRequests = numRequests;
 	}
 	
@@ -29,7 +30,7 @@ public class Timing {
 		if (numRequests == -1) {
 			throw new IllegalStateException("Num requests has not been set yet");
 		}
-		System.out.println("Starting timer");
+		System.out.println("Starting timer" + ".  {Time: " + LocalTime.now() + "}");
 		startTime = System.nanoTime();
 	}
 	
@@ -44,17 +45,24 @@ public class Timing {
 			// than there are events, we should throw an error because this means the system is in a weird state
 			throw new IllegalStateException("Mystery request was serviced");
 		}
-		System.out.println("Incremented count to " + count);
+		System.out.println("Incremented count to " + count + ".  {Time: " + LocalTime.now() + "}");
+		getEndTime();
+	}
+	
+	/**
+	 * Capture the end time if finished servicing all requests
+	 */
+	private static void getEndTime() {
 		if (count == numRequests) {
 			// if we've reached the last event in the input file, we must collect the end time
-			System.out.println("Got end time");
+			System.out.println("Got end time" + ".  {Time: " + LocalTime.now() + "}");
 			Timing.endTime = System.nanoTime();
 		}
 	}
 	
 	public static void lostFloorEventDueToError() {
 		count--;
-		System.out.println("Decremented count to " + count);
+		System.out.println("Decremented count to " + count + ".  {Time: " + LocalTime.now() + "}");
 	}
 	
 	public static String getTimingInfo() {
