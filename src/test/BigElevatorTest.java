@@ -12,6 +12,7 @@ import main.Scheduler;
 
 public class BigElevatorTest {
 
+	//This test is to see if the 4 elevators process a 4 request input file
   @Test
   public void basicScenario() {
     try {

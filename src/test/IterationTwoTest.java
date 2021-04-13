@@ -29,7 +29,7 @@ public class IterationTwoTest {
 	Scheduler scheduler; 
 	Thread elevatorThread;
 
-
+	//This test is for state changes in the elevator`
 	@Test
 	public void test() throws InterruptedException {
 		Elevator elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT, Configurations.ELEVATOR_SCHEDULAR_PORT,
