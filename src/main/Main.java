@@ -2,6 +2,7 @@ package main;
 
 public class Main {
 
+	//This is seperate from the GUI
 	public static void main(String[] args) {
 		Thread floorSubsystem = new Thread(new FloorSubsystem("input7.txt", Configurations.FLOOR_PORT, Configurations.FLOOR_EVENT_PORT), "floorSubsystem");
 		Thread sched = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT
