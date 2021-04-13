@@ -1,6 +1,7 @@
 package test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -8,12 +9,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import main.Configurations;
 import main.Elevator;
 import main.FloorSubsystem;
 import main.Scheduler;
+import main.Timing;
 
 public class IterationFiveTest {
 	private List<String> elevatorListOfStatus;
@@ -50,9 +53,9 @@ public class IterationFiveTest {
 			assertEquals(21, elevatorListOfStatus.size());
 			String s = elevatorListOfStatus.get(18);
 			assertTrue(s.contains("elevator arrived at floor 6"));
-
-
+			assertNotNull(Timing.getTimingInfo());
 		} catch (InterruptedException e) {
 		}
 	}
+	
 }

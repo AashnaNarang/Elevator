@@ -223,7 +223,7 @@ Make sure you extract the zip folder first.
 4. General
 5. Existing projects into workplace
 6. Select the folder. 
-7. Run the java application using Main.java. 
+7. Run the java application using GUI.java. 
 
 ## Instructions for running the file using git:
 1. Open the git project
@@ -231,7 +231,12 @@ Make sure you extract the zip folder first.
 3. Download the ZIP folder.  
 4. Use steps 1-7 in the instructions shown above.
 
-## Instructions for testing
-1. Go to TestElevatorSystem.java inside src 
-2. Click on the Run as Junit test
+## Instructions for running the program
+1. Go to ElevatorGUI.java class 
+2. Right click on the class and select "run as java application" or click the top green button to run.
+3. Input a number of elevators preferred
+4. Input a number of Floors preferred
+5. Select "Import Input File" and find an input file to run 
+6. Click start
+7. It will then run until all events have been parsed
 
