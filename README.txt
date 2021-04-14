@@ -311,4 +311,4 @@ Make sure you extract the zip folder first.
 2. Click on the Run as Junit test
 
 ## Screenshot of GUI
-To the see the working GUI please open up the Iteration5Diagrams folder and double click on GUI.png
+To the see the working GUI please open up the Iteration5Diagrams folder and double click on GUI.png 
