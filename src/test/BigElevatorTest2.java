@@ -17,6 +17,8 @@ import org.junit.Test;
 
 public class BigElevatorTest2 {
 
+	//This test is to see if the 4 elevators process a 15 request input file that consistenly
+	//goes up
   @Test
   public void fifthteenFloorEvents() {
     try {

@@ -85,6 +85,54 @@ This class will provide us with the timer for the scheduler where it will provid
 ##Configurations.java
 The configuration needed across many other classes.
 
+## Work Breakdown for iteration 5
+
+## Aashna
+Add elevator error state instance variables and update to strings
+Design and implement timing how long it takes to service an input file (Timing.java)
+Write description for timing design choices + add comments to Timing.java
+Debug issues regarding configuring time for elevator to move to one floor
+Tested final product after integrating components and cleaned up some code/made small fixes
+Fix timing diagram from Iteration 4
+Fix state diagram to include faults
+Timing diagram from iteration 5
+Write up design reflection
+
+## Krishan
+Sequence diagrams for error sequences
+Added methods to provide elevator events to GUI
+Work Breakdown
+Review code
+
+## Abdalla
+Made the GUI allow for configurable values for elevator 
+Iteration 5 tests
+Fixed iteration 2 tests
+Fixed Load Balancing test
+Added comments to tests 
+Review Codebase to make sure everything has comments + java docs
+Write test instructions - updated readme
+
+## Dani
+Create initial GUI JFrame
+Get/Set # of elevators/floors
+Status of elevator
+UML class diagram
+
+## Isaac
+GUI layout
+GUI error checks for user control
+Moving elevator in the GUI
+Put final report together
+GUI console output and check for when the system is finished running
+GUI java docs/comments
+
+## Yuvi
+Fix config file + fix code so you can specify the time it takes to move between floors and the time it takes to load/unload an elevator
+Results from performance measurement
+Measurement results for determining door and floor movement times.
+ReadMe
+
 ## Work Breakdown for iteration 4
 ## Everyone 
 Design how to handle permanent and transient faults 
@@ -223,7 +271,7 @@ Make sure you extract the zip folder first.
 4. General
 5. Existing projects into workplace
 6. Select the folder. 
-7. Run the java application using Main.java. 
+7. Run the java application using GUI.java. 
 
 ## Instructions for running the file using git:
 1. Open the git project
@@ -231,7 +279,12 @@ Make sure you extract the zip folder first.
 3. Download the ZIP folder.  
 4. Use steps 1-7 in the instructions shown above.
 
-## Instructions for testing
-1. Go to TestElevatorSystem.java inside src 
-2. Click on the Run as Junit test
+## Instructions for running the program
+1. Go to ElevatorGUI.java class 
+2. Right click on the class and select "run as java application" or click the top green button to run.
+3. Input a number of elevators preferred
+4. Input a number of Floors preferred
+5. Select "Import Input File" and find an input file to run 
+6. Click start
+7. It will then run until all events have been parsed
 

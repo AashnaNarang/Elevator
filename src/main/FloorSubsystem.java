@@ -88,6 +88,7 @@ public class FloorSubsystem extends NetworkCommunicator implements Runnable {
 
 	/**
 	 * Parsed the file to return a list of events
+	 * Timing will set the number of events here 
 	 *
 	 * @param filename the file to be parsed
 	 */

@@ -16,6 +16,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 public class BigElevatorTest3 {
+	
+	//This test is to see if the 4 elevators process a 4 request input file
+
 
   @Test
   public void mixedFloorEvents() {

@@ -48,6 +48,7 @@ public class ElevatorGUI extends JFrame {
 	public FloorSubsystem floorSubsystem;
 	public File file;
 
+	//This is to allow multiple instances of the elevators 
 	private List<JTextArea> elevatorsData;
 	private List<Elevator> elevators;
 
