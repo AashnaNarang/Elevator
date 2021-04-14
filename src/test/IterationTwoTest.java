@@ -29,7 +29,9 @@ import states.StationaryState;
 public class IterationTwoTest {
 	
 
-	//This test is for state changes in the elevator`
+	//This test is for state changes in the elevator
+	//This test is not relying on time, once the elevator opens doors it will be in door state, so we can make sure when 
+	//we check it
 	@Test
 	public void stateChangeTest() throws InterruptedException {
 		Elevator elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT, Configurations.ELEVATOR_SCHEDULAR_PORT,
@@ -59,5 +61,27 @@ public class IterationTwoTest {
 		}
 
 	}
+	//This test is time reliant
+	@Test
+	public void testStateChanges() throws InterruptedException {
+		Elevator elevator = new Elevator(Configurations.ELEVATOR_FLOOR_PORT + 3,
+				Configurations.ELEVATOR_SCHEDULAR_PORT + 3, Configurations.ARRIVAL_PORT + 3,
+				Configurations.DEST_PORT + 3, Configurations.ELEVATOR_STAT_PORT + 3);
+		Thread floorSubsystemThread = new Thread(
+				new FloorSubsystem("input.txt", Configurations.FLOOR_PORT + 3, Configurations.FLOOR_EVENT_PORT + 3),
+				"floorSubsystem");
+		Thread schedThread = new Thread(new Scheduler(Configurations.FLOOR_EVENT_PORT + 3, Configurations.ARRIVAL_PORT + 3,
+				Configurations.DEST_PORT + 3, Configurations.FLOOR_PORT + 3, Configurations.ELEVATOR_STAT_PORT + 3,
+				Configurations.TIMER_PORT + 3), "scheduler");
+		assertEquals(StationaryState.class, elevator.getState().getClass());
+		Thread elevatorThread = new Thread(elevator, "elevator");
+		elevatorThread.start();
+		floorSubsystemThread.start();
+		schedThread.start();	
+		TimeUnit.SECONDS.sleep(7);
+		assertEquals(DoorOpenState.class, elevator.getState().getClass());
+
+	}
+	
 
 }
