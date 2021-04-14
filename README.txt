@@ -309,3 +309,6 @@ Make sure you extract the zip folder first.
 ## Instructions for testing
 1. Go to TestElevatorSystem.java inside src 
 2. Click on the Run as Junit test
+
+## Screenshot of GUI
+To the see the working GUI please open up the Iteration5Diagrams folder and double click on GUI.png
