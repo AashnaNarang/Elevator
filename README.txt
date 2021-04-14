@@ -64,8 +64,8 @@ This class represents when the Scheduler is at a standstill and wait for floor e
 ## ActiveState.java
 It puts FloorEvents, DestinationEvents and ArrivalEvents into lists and moves to IdleState when they are empty. 
 
-##SchedulerState.java
-This class will get the infomation which state the scheduler is moving into.
+## SchedulerState.java
+This class will get the infomation on which state the scheduler is moving into.
 
 ## Serial.java
 This class is a method for the information to be serialize and deserialize.
@@ -73,34 +73,34 @@ This class is a method for the information to be serialize and deserialize.
 ## NetworkCommunicator.java
 This class will send the datagram packets in a byte array format to a destination port. This is all done using UDP.
 
-##InvalidRequestException.java
+## InvalidRequestException.java
 This class is strictly designed so the the scheduler will not allow any invalid commands to elevator.
 
-##ElevatorTimer.java
+## ElevatorTimer.java
 This class will provide us with the timer for the Elevator where it will provide us with time elevator started with, if the timer timed out or if the timer got cancelled.
 
-##SchedulerTimer.java
+## SchedulerTimer.java
 This class will provide us with the timer for the scheduler where it will provide us with time scheduler started with, if the timer timed out or if the timer got cancelled.
 
-##Configurations.java
+## Configurations.java
 The configuration needed across many other classes.
 
-##Timing.java
+## Timing.java
 A static Timing class to measure the time it takes to finish servicing all of the events in the input file. It includes methods to start the timer, record when we’re done servicing an event, and then get timing info when the whole input file is complete. It is calculated by taking average time for one request by taking the total time and dividing it by the total number of requests because requests do not finish sequentially in our real time system.
 
-##CustomRenderer.java
+## CustomRenderer.java
 A class set so that it can force the background of the ElevatorGUI to be colored in red, white, or black.
  
-##ElevatorGUI.java
+## ElevatorGUI.java
 This class is a representation of our Elevator system working in a graphical interface unit. This class provides a visual representation of the elevator moving throughout the building with an indication in which direction the elevator is headed. 
 
-##ElevatorTimer.java
+## ElevatorTimer.java
 This Class is made for the specific print timing statements for the Elevator where it will print the time it started, timed out, or canceled. 
  
-##SchedulerTimer.java
+## SchedulerTimer.java
 This Class is made for the specific print timing statements for the Scheduler where it will print the time it started, timed out, or canceled. 
 
-##Test folder 
+## Test folder 
 This folder contains multiple Junit test java files which were made to test numerous scenarios for our elevator system. 
 
 ## Work Breakdown for iteration 5
