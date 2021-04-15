@@ -58,6 +58,7 @@ public class IterationTwoTest {
 				}
 
 			}
+			Timing.getTimingInfo(); // reset static var
 		}
 
 	}
@@ -80,7 +81,7 @@ public class IterationTwoTest {
 		schedThread.start();	
 		TimeUnit.SECONDS.sleep(7);
 		assertEquals(DoorOpenState.class, elevator.getState().getClass());
-
+		Timing.getTimingInfo(); // reset static var
 	}
 	
 

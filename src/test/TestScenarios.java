@@ -10,6 +10,7 @@ import main.Configurations;
 import main.Elevator;
 import main.FloorSubsystem;
 import main.Scheduler;
+import main.Timing;
 
 public class TestScenarios {
 
@@ -28,7 +29,8 @@ public class TestScenarios {
 			floorSubsystemThread.start();
 			schedThread.start();
 			elevatorThread.start();
-			TimeUnit.SECONDS.sleep(80);
+			TimeUnit.SECONDS.sleep(90);
+			Timing.getTimingInfo();
 			assertEquals("The elevator is currently on floor: 6 with error code 0", elevator.toString());
 		} catch (InterruptedException e) {
 		}
@@ -50,6 +52,7 @@ public class TestScenarios {
 			schedThread.start();
 			elevatorThread.start();
 			TimeUnit.SECONDS.sleep(85);
+			Timing.getTimingInfo();
 			assertEquals("The elevator is currently on floor: 4 with error code 0", elevator.toString());
 		} catch (InterruptedException e) {
 
@@ -72,7 +75,8 @@ public class TestScenarios {
 			floorSubsystemThread.start();
 			schedThread.start();
 			elevatorThread.start();
-			TimeUnit.SECONDS.sleep(80);
+			TimeUnit.SECONDS.sleep(90);
+			Timing.getTimingInfo();
 			assertEquals("The elevator is currently on floor: 2 with error code 0", elevator.toString());
 		} catch (InterruptedException e) {
 		}

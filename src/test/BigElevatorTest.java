@@ -9,6 +9,7 @@ import org.junit.Test;
 import main.Elevator;
 import main.FloorSubsystem;
 import main.Scheduler;
+import main.Timing;
 
 public class BigElevatorTest {
 
@@ -42,7 +43,7 @@ public class BigElevatorTest {
       TimeUnit.SECONDS.sleep(150);
 
       assertEquals(4, scheduler.getNumOfProcessedEvents());
-
+      Timing.getTimingInfo(); // reset static var
     } catch (Exception e) {
     }
   }

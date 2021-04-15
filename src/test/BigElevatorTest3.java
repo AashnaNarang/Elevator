@@ -11,6 +11,8 @@ import main.Direction;
 import main.Elevator;
 import main.FloorSubsystem;
 import main.Scheduler;
+import main.Timing;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -51,6 +53,7 @@ public class BigElevatorTest3 {
       TimeUnit.SECONDS.sleep(200);
 
       assertEquals(15, scheduler.getNumOfProcessedEvents());
+      Timing.getTimingInfo(); // reset static var
     } catch (Exception e) {
     }
   }

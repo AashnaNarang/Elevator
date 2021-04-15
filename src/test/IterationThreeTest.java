@@ -15,6 +15,7 @@ import main.Direction;
 import main.Elevator;
 import main.FloorSubsystem;
 import main.Scheduler;
+import main.Timing;
 import states.ActiveState;
 
 public class IterationThreeTest {
@@ -47,6 +48,7 @@ public class IterationThreeTest {
 		elevatorThread.start();
 		TimeUnit.SECONDS.sleep(3);
 		assertEquals(0, scheduler.getFloorEventsList().size());
+		Timing.getTimingInfo(); // reset static var
 		//assertNotNull(scheduler.getArrivalEventFromElevator());
 	}
 
@@ -65,6 +67,7 @@ public class IterationThreeTest {
 		elevatorThread.start();
 		TimeUnit.SECONDS.sleep(3);
 		assertEquals(0, scheduler.getFloorEventsList().size());
+		Timing.getTimingInfo(); // reset static var
 	}
 
 	@Test
@@ -86,6 +89,7 @@ public class IterationThreeTest {
 		scheduler.sendArrivalEventToFloor(ae);
 		TimeUnit.SECONDS.sleep(3);
 		assertFalse(floorSubsystems.getFloorList().get(1).isUpButtonOn());
+		Timing.getTimingInfo(); // reset static var
 	}
 
 	@Test
@@ -114,5 +118,6 @@ public class IterationThreeTest {
 		TimeUnit.SECONDS.sleep(10);
 		assertNotEquals("The elevator is currently on floor: 1 with error code 0", elevator.toString());
 		assertNotEquals("The elevator is currently on floor: 1 with error code 0", elevator2.toString());
+		Timing.getTimingInfo(); // reset static var
 	}
 }
