@@ -13,6 +13,7 @@ import main.Configurations;
 import main.Elevator;
 import main.FloorSubsystem;
 import main.Scheduler;
+import main.Timing;
 
 public class IterationFourTest {
 
@@ -43,13 +44,14 @@ public class IterationFourTest {
 			elevStrings.add("The elevator is currently on floor: 5 with error code 2");
 			elevStrings.add("The elevator is currently on floor: 7 with error code 0");
 			elevStrings.add("The elevator is currently on floor: 6 with error code 0");
+			elevStrings.add("The elevator is currently on floor: 15 with error code 2");
 			System.out.println(elevator.toString());
 			System.out.println(elevator2.toString());
 			// Check if elevator final state string is in a list of possible states because it is difficult to control 
 			// which elevator object will pick up with floor event
 			assertTrue(elevStrings.contains(elevator.toString()));
 			assertTrue(elevStrings.contains(elevator2.toString()));
-
+			Timing.getTimingInfo(); // reset static var
 		} catch (InterruptedException e) {
 		}
 	}

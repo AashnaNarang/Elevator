@@ -14,6 +14,7 @@ import main.Direction;
 import main.Elevator;
 import main.FloorSubsystem;
 import main.Scheduler;
+import main.Timing;
 
 public class IterationOneTest {
 
@@ -43,6 +44,7 @@ public class IterationOneTest {
 			assertEquals(floorEvent.getDestination(), 3);
 			assertEquals(floorEvent.getDirection(), Direction.UP);
 			assertEquals(floorEvent.getTime(), LocalTime.parse("08:10:23.100"));
+			Timing.getTimingInfo(); // reset static var
 			}catch (InterruptedException e) {
 			}
 	}
